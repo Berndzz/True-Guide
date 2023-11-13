@@ -3,6 +3,7 @@ package com.hardus.trueagencyapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -22,7 +23,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("TrueGuide")
+                    Column {
+                        Greeting("TrueGuide")
+                        New("By TrueAgency")
+                    }
+
                 }
             }
         }
@@ -37,10 +42,21 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
+@Composable
+fun New(name: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hello $name!",
+        modifier = modifier
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     TrueAgencyAppTheme {
-        Greeting("TrueGuide")
+        Column {
+            Greeting("TrueGuide")
+            New("By TrueAgency")
+        }
     }
 }

@@ -23,40 +23,33 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Column {
-                        Greeting("TrueGuide")
-                        New("By TrueAgency")
-                    }
-
+                    New("True Guide","True Agency")
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
 @Composable
-fun New(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun New(name: String, by:String,modifier: Modifier = Modifier) {
+    Column {
+        Text(
+            text = "Hello $name!",
+            modifier = modifier
+        )
+        Text(
+            text = "By $by!",
+            modifier = modifier
+        )
+    }
+
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     TrueAgencyAppTheme {
-        Column {
-            Greeting("TrueGuide")
-            New("By TrueAgency")
-        }
+        New("True Guide","True Agency")
     }
 }

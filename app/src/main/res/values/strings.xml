@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">TrueAgencyApp</string>
+    <string name="test">Login</string>
+    <string name="tesv">Register</string>
+    <string name="back">Back</string>
+    <string name="top_banner">Ini top baner</string>
+    <string name="login">Login</string>
+    <string name="password_toggle">Password Toggle</string>
+    <string name="enter_your_password">Enter Your Password</string>
+    <string name="enter_your_phone_number">Enter Your Phone Number</string>
+    <string name="log_in">Log in</string>
+    <string name="phone_icon">Phone Icon</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="enter_your_email">Enter Your Email</string>
+    <string name="forgot_password">Forgot Password ?</string>
+    <string name="don_t_have_an_account">Don\'t Have an Account ?</string>
+    <string name="i_have_an_account">I have an account?</string>
+    <string name="register">Register</string>
+    <string name="enter_your_username">Enter Your Username</string>
+    <string name="username">Username</string>
+
 </resources>

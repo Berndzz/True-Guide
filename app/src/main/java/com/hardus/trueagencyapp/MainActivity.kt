@@ -18,6 +18,7 @@ import com.hardus.trueagencyapp.auth.screen.RegisterScreen
 import com.hardus.trueagencyapp.ui.theme.TrueAgencyAppTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

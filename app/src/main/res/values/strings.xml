@@ -7,6 +7,7 @@
     <string name="login">Login</string>
     <string name="password_toggle">Password Toggle</string>
     <string name="enter_your_password">Enter Your Password</string>
+    <string name="repeat_your_password">Repeat Your Password</string>
     <string name="enter_your_phone_number">Enter Your Phone Number</string>
     <string name="log_in">Log in</string>
     <string name="phone_icon">Phone Icon</string>
@@ -18,5 +19,14 @@
     <string name="register">Register</string>
     <string name="enter_your_username">Enter Your Username</string>
     <string name="username">Username</string>
+    <string name="forgot_password_description">Don’t worry! It happens. Please enter the your email to get recovery code..</string>
+    <string name="otp_code_description">An 5 digit code has been sent to ......</string>
+    <string name="new_password_description">Please use a strong password minimum of 8 characters combined with numbers.</string>
+    <string name="submit">Submit</string>
+    <string name="enter_your_number">Enter\nYour Number</string>
+    <string name="enter_your_number_description">You could login via phone number</string>
+    <string name="enter_new_password">Enter\nNew Password</string>
+    <string name="enter_otp_code">Enter\nOTP Code !!</string>
+    <string name="an_4_digit_code_has_sent_to">An 4 Digit code has sent to %1$s</string>
 
 </resources>

@@ -50,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.hardus.trueagencyapp.R
 import com.hardus.trueagencyapp.auth.component.AppbarAuthentication
 import com.hardus.trueagencyapp.auth.navigation.Route
@@ -67,7 +68,7 @@ import com.hardus.trueagencyapp.util.validateUsername
 @Composable
 fun RegisterScreen(navController: NavHostController) {
     Scaffold {
-        Column() {
+        Column {
             AppbarAuthentication(name = stringResource(id = R.string.register))
             RegisterFilledInput(navigateToLogin = navController)
         }
@@ -107,9 +108,9 @@ fun RegisterFilledInput(navigateToLogin: NavHostController) {
                         .fillMaxWidth()
                         .focusRequester(focusUsername),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    keyboardActions = KeyboardActions(onNext = { focusUsername.requestFocus() }),
+                    keyboardActions = KeyboardActions(onNext = { focusEmail.requestFocus() }),
                     singleLine = true,
-                    label = { Text(text = stringResource(id = R.string.username)) })
+                    label = { Text(text = stringResource(id = R.string.enter_your_username)) })
                 Text(
                     text = if (validateUsername(username)) "" else getUsernameError(
                         username
@@ -125,7 +126,7 @@ fun RegisterFilledInput(navigateToLogin: NavHostController) {
                         .fillMaxWidth()
                         .focusRequester(focusEmail),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    keyboardActions = KeyboardActions(onNext = { focusEmail.requestFocus() }),
+                    keyboardActions = KeyboardActions(onNext = { focusPhoneNumber.requestFocus() }),
                     singleLine = true,
                     label = { Text(text = stringResource(R.string.enter_your_email)) })
                 Text(
@@ -148,7 +149,7 @@ fun RegisterFilledInput(navigateToLogin: NavHostController) {
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Phone, imeAction = ImeAction.Next
                     ),
-                    keyboardActions = KeyboardActions(onNext = { focusPhoneNumber.requestFocus() }),
+                    keyboardActions = KeyboardActions(onNext = { focusPassword.requestFocus() }),
                 )
                 Text(
                     text = if (validatePhoneNumber(phoneNumber)) "" else getPhoneNumberError(
@@ -203,7 +204,7 @@ fun RegisterFilledInput(navigateToLogin: NavHostController) {
                     ),
                     shape = RoundedCornerShape(6.dp)
                 ) {
-                    Text(text = stringResource(R.string.log_in), fontSize = 18.sp)
+                    Text(text = stringResource(R.string.register), fontSize = 18.sp)
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 Row(
@@ -212,7 +213,11 @@ fun RegisterFilledInput(navigateToLogin: NavHostController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = stringResource(R.string.i_have_an_account), fontSize = 12.sp)
-                    TextButton(onClick = { navigateToLogin.navigate(Route.screenLogin) }) {
+                    TextButton(onClick = {
+                        navigateToLogin.navigate(Route.screenLogin) {
+                            popUpTo(Route.screenLogin) { inclusive = true }
+                        }
+                    }) {
                         Text(
                             text = stringResource(R.string.login),
                             style = TextStyle(
@@ -232,9 +237,6 @@ fun RegisterFilledInput(navigateToLogin: NavHostController) {
 @Preview(showBackground = true, showSystemUi = true, name = "Hardus")
 @Composable
 fun CheckRegisterScreenPhone() {
-//    NavHost(navController = rememberNavController(), startDestination = Route.screenRegister) {
-//        composable(Route.screenRegister) {
-//            RegisterScreen(navController)
-//        }
-//    }
+    val navController = rememberNavController()
+    RegisterScreen(navController = navController)
 }

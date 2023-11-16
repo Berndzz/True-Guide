@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -58,7 +57,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hardus.trueagencyapp.R
-import com.hardus.trueagencyapp.auth.component.AppbarAuthentication
+import com.hardus.trueagencyapp.auth.component.AppbarAddOne
 import com.hardus.trueagencyapp.auth.navigation.Route
 import com.hardus.trueagencyapp.ui.theme.md_theme_light_surfaceVariant
 import com.hardus.trueagencyapp.util.getEmailError
@@ -66,31 +65,29 @@ import com.hardus.trueagencyapp.util.getPasswordError
 import com.hardus.trueagencyapp.util.validateEmail
 import com.hardus.trueagencyapp.util.validatePassword
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun NewPasswordScreen(navController: NavHostController) {
     Scaffold {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            AppbarAuthentication(stringResource(R.string.login))
-            LoginFilledInput(navigateScreeen = navController)
+        Column {
+            AppbarAddOne(
+                name = stringResource(R.string.enter_new_password),
+                description = "Please use a strong password minimum 8 characters combined with numbers"
+            )
+            NewPasswordFilledInput(navigateScreen = navController)
         }
     }
 }
-
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun LoginFilledInput(navigateScreeen: NavHostController) {
-    var email by remember { mutableStateOf("") }
+fun NewPasswordFilledInput(navigateScreen: NavHostController) {
     var password by remember { mutableStateOf("") }
-    val (focusEmail, focusPassword) = remember { FocusRequester.createRefs() }
+    var verifyPassword by remember { mutableStateOf("") }
+    val ( focusPassword,focusVerifyPassword) = remember { FocusRequester.createRefs() }
     val keyboardController = LocalSoftwareKeyboardController.current
     var isPasswordVisible by remember { mutableStateOf(false) }
+    var isVerifyPasswordVisible by remember { mutableStateOf(false) }
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -101,37 +98,47 @@ fun LoginFilledInput(navigateScreeen: NavHostController) {
         item {
             Spacer(modifier = Modifier.height(32.dp))
             Column(Modifier.fillMaxWidth()) {
-                OutlinedTextField(value = email,
-                    onValueChange = { email = it },
+                OutlinedTextField(value = password,
+                    onValueChange = { password = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .focusRequester(focusEmail),
+                        .focusRequester(focusPassword),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    keyboardActions = KeyboardActions(onNext = { focusPassword.requestFocus() }),
+                    keyboardActions = KeyboardActions(onNext = { focusVerifyPassword.requestFocus() }),
                     singleLine = true,
-                    label = { Text(text = stringResource(R.string.enter_your_email)) })
+                    label = { Text(text = stringResource(R.string.enter_your_password)) },
+                    visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                            Icon(
+                                imageVector = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                contentDescription = stringResource(R.string.password_toggle)
+                            )
+                        }
+                    }
+                )
                 Text(
-                    text = if (validateEmail(email)) "" else getEmailError(
-                        email
+                    text = if (validateEmail(password)) "" else getEmailError(
+                        password
                     ), style = TextStyle(color = Color.Red, fontSize = 12.sp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(modifier = Modifier
                     .fillMaxWidth()
                     .focusRequester(focusPassword),
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text(text = stringResource(R.string.enter_your_password)) },
+                    value = verifyPassword,
+                    onValueChange = { verifyPassword = it },
+                    label = { Text(text = stringResource(R.string.repeat_your_password)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password, imeAction = ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
-                    visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    visualTransformation = if (isVerifyPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
-                        IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                        IconButton(onClick = { isVerifyPasswordVisible = !isVerifyPasswordVisible }) {
                             Icon(
-                                imageVector = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                imageVector = if (isVerifyPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                                 contentDescription = stringResource(R.string.password_toggle)
                             )
                         }
@@ -142,104 +149,37 @@ fun LoginFilledInput(navigateScreeen: NavHostController) {
                     ), style = TextStyle(color = Color.Red, fontSize = 12.sp)
                 )
             }
-            Spacer(modifier = Modifier.height(12.dp))
-            Row(modifier = Modifier.fillMaxWidth(), Arrangement.End) {
-                TextButton(onClick = { navigateScreeen.navigate(Route.screenForgotPassword) }) {
-                    Text(
-                        text = stringResource(R.string.forgot_password), style = TextStyle(
-                            fontSize = 15.sp,
-                            fontFamily = FontFamily(Font(R.font.poppins)),
-                            fontWeight = FontWeight(700),
-                            color = Color(0xFFB22222),
-                        )
-                    )
-                }
-            }
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-                    if (validateEmail(email) && validatePassword(password)) {
-                        /* Do something */
-                    } else {
-                        // Tampilkan pesan error
-                    }
+                   navigateScreen.navigate(Route.screenLogin)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                colors = if (email.isNotEmpty() && password.isNotEmpty()) ButtonDefaults.buttonColors(
+                colors = if (password.isNotEmpty() && verifyPassword.isNotEmpty()) ButtonDefaults.buttonColors(
                     MaterialTheme.colorScheme.primaryContainer
                 ) else ButtonDefaults.buttonColors(
                     MaterialTheme.colorScheme.outline
                 ),
                 shape = RoundedCornerShape(6.dp)
             ) {
-                Text(text = stringResource(R.string.log_in), fontSize = 18.sp)
+                Text(text = stringResource(R.string.submit), fontSize = 18.sp)
             }
-            Spacer(modifier = Modifier.height(30.dp))
-            Image(
-                painter = painterResource(id = R.drawable.login_option),
-                contentDescription = "",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(23.dp)
-            )
-            Spacer(modifier = Modifier.height(37.dp))
-            Button(
-                onClick = {navigateScreeen.navigate(Route.screenLoginViaPhone)},
-                modifier = Modifier
-                    .width(171.dp)
-                    .height(56.dp),
-                elevation = ButtonDefaults.buttonElevation(),
-                colors = ButtonDefaults.buttonColors(
-                    md_theme_light_surfaceVariant,
-                    contentColor = Color.Black
-                ),
-                shape = RoundedCornerShape(6.dp),
-            ) {
-                Icon(
-                    modifier = Modifier.padding(end = 5.dp),
-                    imageVector = Icons.Default.Phone,
-                    contentDescription = stringResource(R.string.phone_icon)
-                )
-                Text(text = stringResource(R.string.phone_number), fontSize = 13.sp)
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-            Row(
-                Modifier.fillMaxWidth(),
-                Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = stringResource(R.string.don_t_have_an_account), fontSize = 12.sp)
-                TextButton(onClick = {
-                    navigateScreeen.navigate(Route.screenRegister)
-                }) {
-                    Text(
-                        text = stringResource(R.string.register),
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            fontFamily = FontFamily(Font(R.font.inter_medium)),
-                            fontWeight = FontWeight(700),
-                            color = Color(0xFFB22222),
-                        )
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }
 
+
 @Preview(showBackground = true, showSystemUi = true, name = "Hardus")
 @Composable
-fun CheckLoginScreenPhone() {
+fun CheckNewPasswordScreenPhone() {
     val navController = rememberNavController()
-    LoginScreen(navController = navController)
+    NewPasswordScreen(navController = navController)
 }
 
 @Preview(device = Devices.TABLET)
 @Composable
-fun CheckLoginScreenTablet() {
-    val navController = rememberNavController()
-    LoginScreen(navController = navController)
+fun CheckNewPasswordScreenTablet() {
+
 }

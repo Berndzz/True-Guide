@@ -1,6 +1,7 @@
 package com.hardus.trueagencyapp.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -40,10 +41,15 @@ val Typography = Typography(
     ),
     labelSmall = TextStyle(
         fontFamily = Inter,
-        fontWeight = FontWeight.Medium,
-        fontSize = 14.sp,
-        lineHeight = 16.sp,
+        fontWeight = FontWeight.Normal,
+        fontSize = 13.sp,
         letterSpacing = 0.5.sp
+    ),
+    displaySmall = TextStyle(
+        fontSize = 13.sp,
+        fontFamily = FontFamily(Font(R.font.poppins)),
+        fontWeight = FontWeight(400),
+        color = Color(0xFF4F4F4F),
     )
 
 )

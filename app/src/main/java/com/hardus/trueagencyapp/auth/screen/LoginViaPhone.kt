@@ -7,9 +7,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,6 +32,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,8 +49,10 @@ import com.hardus.trueagencyapp.util.validatePhoneNumber
 fun LoginPhoneNumberScreen(navController: NavHostController) {
     Scaffold {
         Column {
-            AppbarAddOne(stringResource(R.string.enter_your_number),
-                stringResource(R.string.enter_your_number_description))
+            AppbarAddOne(
+                stringResource(R.string.enter_your_number),
+                stringResource(R.string.enter_your_number_description)
+            )
             PhoneNumberFilledInput(navigateData = navController)
         }
     }
@@ -75,6 +82,7 @@ fun PhoneNumberFilledInput(navigateData: NavHostController) {
                 label = { Text(text = stringResource(R.string.enter_your_phone_number)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Phone,
                     imeAction = ImeAction.Done
                 ),
                 keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
@@ -84,7 +92,27 @@ fun PhoneNumberFilledInput(navigateData: NavHostController) {
                     phoneNumber
                 ), style = TextStyle(color = Color.Red, fontSize = 12.sp)
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(32.dp))
+            Button(
+                onClick = {
+                    if (validatePhoneNumber(phoneNumber)) {
+                        /* Do something */
+                    } else {
+                        // Tampilkan pesan error
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                colors = if (phoneNumber.isNotEmpty()) ButtonDefaults.buttonColors(
+                    MaterialTheme.colorScheme.primaryContainer
+                ) else ButtonDefaults.buttonColors(
+                    MaterialTheme.colorScheme.outline
+                ),
+                shape = RoundedCornerShape(6.dp)
+            ) {
+                Text(text = stringResource(R.string.log_in), fontSize = 18.sp)
+            }
         }
     }
 }

@@ -59,7 +59,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hardus.trueagencyapp.R
 import com.hardus.trueagencyapp.auth.component.AppbarAuthentication
-import com.hardus.trueagencyapp.auth.navigation.Route
+import com.hardus.trueagencyapp.navigations.Route
 import com.hardus.trueagencyapp.ui.theme.md_theme_light_surfaceVariant
 import com.hardus.trueagencyapp.util.getEmailError
 import com.hardus.trueagencyapp.util.getPasswordError
@@ -159,9 +159,10 @@ fun LoginFilledInput(navigateScreeen: NavHostController) {
             Button(
                 onClick = {
                     if (validateEmail(email) && validatePassword(password)) {
-                        /* Do something */
+//                        navigateScreeen.popBackStack()
+                        navigateScreeen.navigate(Route.screenHome)
                     } else {
-                        // Tampilkan pesan error
+                        //
                     }
                 },
                 modifier = Modifier
@@ -186,7 +187,7 @@ fun LoginFilledInput(navigateScreeen: NavHostController) {
             )
             Spacer(modifier = Modifier.height(37.dp))
             Button(
-                onClick = {navigateScreeen.navigate(Route.screenLoginViaPhone)},
+                onClick = { navigateScreeen.navigate(Route.screenLoginViaPhone) },
                 modifier = Modifier
                     .width(171.dp)
                     .height(56.dp),

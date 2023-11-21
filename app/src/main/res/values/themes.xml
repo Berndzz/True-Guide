@@ -2,4 +2,11 @@
 <resources>
 
     <style name="Theme.TrueAgencyApp" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.CustomSplashScreenTheme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_new</item>
+        <item name="windowSplashScreenAnimationDuration">600</item>
+        <item name="postSplashScreenTheme">@style/Theme.TrueAgencyApp</item>
+    </style>
 </resources>

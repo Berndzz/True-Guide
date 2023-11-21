@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.relay")
+    id("dagger.hilt.android.plugin")
+    id("kotlin-kapt")
 }
 
 android {
@@ -31,11 +33,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_18
+        targetCompatibility = JavaVersion.VERSION_18
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "18"
     }
     buildFeatures {
         compose = true
@@ -64,11 +66,31 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
+    // Splash API
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+    // windows-screen-size
     implementation("androidx.compose.material3:material3-window-size-class")
 
+    // navigation
     implementation("androidx.navigation:navigation-compose:2.7.5")
+
+    // view-model
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.extra["lifecycle_version"]}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${rootProject.extra["lifecycle_version"]}")
+
+    // pager and indicators - accompanist
+    implementation("com.google.accompanist:accompanist-pager:${rootProject.extra["accompanist_version"]}")
+    implementation("com.google.accompanist:accompanist-pager-indicators:${rootProject.extra["accompanist_version"]}")
+
+    // datastore-preferences
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    // Dagger - Hilt
+    implementation("com.google.dagger:hilt-android:2.48.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.48.1")
+    kapt("androidx.hilt:hilt-compiler:1.1.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

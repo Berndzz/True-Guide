@@ -10,6 +10,10 @@ fun validatePassword(password: String): Boolean {
     // Validasi password minimal 6 karakter
     return password.length >= 6
 }
+fun validateNewPassword(password: String): Boolean {
+    // Validasi password minimal 6 karakter
+    return password.length >= 6
+}
 
 fun validatePhoneNumber(phoneNumber: String): Boolean {
     // Validasi nomor telepon menggunakan regex
@@ -42,4 +46,6 @@ fun getEmailError(email: String): String =
 
 
 fun getPasswordError(password: String): String =
+    if (password.isEmpty()) "Required" else if (password.length < 6) "Password minimal 6 karakter" else ""
+fun getNewPasswordError(password: String): String =
     if (password.isEmpty()) "Required" else if (password.length < 6) "Password minimal 6 karakter" else ""

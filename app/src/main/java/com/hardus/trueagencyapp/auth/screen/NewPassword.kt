@@ -1,21 +1,18 @@
 package com.hardus.trueagencyapp.auth.screen
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
@@ -27,7 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,13 +35,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -58,11 +51,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hardus.trueagencyapp.R
 import com.hardus.trueagencyapp.auth.component.AppbarAddOne
-import com.hardus.trueagencyapp.auth.navigation.Route
-import com.hardus.trueagencyapp.ui.theme.md_theme_light_surfaceVariant
-import com.hardus.trueagencyapp.util.getEmailError
+import com.hardus.trueagencyapp.navigations.Route
+import com.hardus.trueagencyapp.util.getNewPasswordError
 import com.hardus.trueagencyapp.util.getPasswordError
-import com.hardus.trueagencyapp.util.validateEmail
+import com.hardus.trueagencyapp.util.validateNewPassword
 import com.hardus.trueagencyapp.util.validatePassword
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -79,15 +71,18 @@ fun NewPasswordScreen(navController: NavHostController) {
         }
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun NewPasswordFilledInput(navigateScreen: NavHostController) {
     var password by remember { mutableStateOf("") }
     var verifyPassword by remember { mutableStateOf("") }
-    val ( focusPassword,focusVerifyPassword) = remember { FocusRequester.createRefs() }
+    val (focusPassword, focusVerifyPassword) = remember { FocusRequester.createRefs() }
     val keyboardController = LocalSoftwareKeyboardController.current
     var isPasswordVisible by remember { mutableStateOf(false) }
     var isVerifyPasswordVisible by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -118,14 +113,14 @@ fun NewPasswordFilledInput(navigateScreen: NavHostController) {
                     }
                 )
                 Text(
-                    text = if (validateEmail(password)) "" else getEmailError(
+                    text = if (validatePassword(password)) "" else getPasswordError(
                         password
                     ), style = TextStyle(color = Color.Red, fontSize = 12.sp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(modifier = Modifier
                     .fillMaxWidth()
-                    .focusRequester(focusPassword),
+                    .focusRequester(focusVerifyPassword),
                     value = verifyPassword,
                     onValueChange = { verifyPassword = it },
                     label = { Text(text = stringResource(R.string.repeat_your_password)) },
@@ -136,7 +131,9 @@ fun NewPasswordFilledInput(navigateScreen: NavHostController) {
                     keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
                     visualTransformation = if (isVerifyPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
-                        IconButton(onClick = { isVerifyPasswordVisible = !isVerifyPasswordVisible }) {
+                        IconButton(onClick = {
+                            isVerifyPasswordVisible = !isVerifyPasswordVisible
+                        }) {
                             Icon(
                                 imageVector = if (isVerifyPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                                 contentDescription = stringResource(R.string.password_toggle)
@@ -144,15 +141,23 @@ fun NewPasswordFilledInput(navigateScreen: NavHostController) {
                         }
                     })
                 Text(
-                    text = if (validatePassword(password)) "" else getPasswordError(
-                        password
+                    text = if (validateNewPassword(verifyPassword)) "" else getNewPasswordError(
+                        verifyPassword
                     ), style = TextStyle(color = Color.Red, fontSize = 12.sp)
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-                   navigateScreen.navigate(Route.screenLogin)
+                    if (password == verifyPassword) navigateScreen.navigate(Route.screenLogin) {
+                        popUpTo(
+                            Route.screenLogin
+                        ) { inclusive = true }
+                    } else Toast.makeText(
+                        context,
+                        "Your password is not same",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 },
                 modifier = Modifier
                     .fillMaxWidth()

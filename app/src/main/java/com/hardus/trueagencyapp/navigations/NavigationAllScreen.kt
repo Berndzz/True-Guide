@@ -1,6 +1,7 @@
-package com.hardus.trueagencyapp.auth.navigation
+package com.hardus.trueagencyapp.navigations
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,11 +13,19 @@ import com.hardus.trueagencyapp.auth.screen.LoginScreen
 import com.hardus.trueagencyapp.auth.screen.NewPasswordScreen
 import com.hardus.trueagencyapp.auth.screen.OtpCodeScreen
 import com.hardus.trueagencyapp.auth.screen.RegisterScreen
+import com.hardus.trueagencyapp.main_content.home.HomeScreen
+import com.hardus.trueagencyapp.onboarding.screen.OnboardingScreenOne
 
 @Composable
-fun AuthNavigation() {
+fun NavigationAllScreen(
+    navController: NavHostController, startDestination: String
+) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Route.screenLogin) {
+    NavHost(navController = navController, startDestination = startDestination) {
+
+        composable(route = Route.screenOnBoarding) {
+            OnboardingScreenOne(navController = navController)
+        }
         composable(route = Route.screenLogin) {
             LoginScreen(navController)
         }
@@ -29,28 +38,33 @@ fun AuthNavigation() {
         composable(
             route = Route.screenOTPCode + "/{email}",
             arguments = listOf(
-                navArgument(name = "email"){
+                navArgument(name = "email") {
                     type = NavType.StringType
                 }
             )
         ) { backStackEntry ->
-            OtpCodeScreen(navController,backStackEntry.arguments?.getString("email"))
+            OtpCodeScreen(navController, backStackEntry.arguments?.getString("email"))
         }
         composable(route = Route.screenLoginViaPhone) {
             LoginPhoneNumberScreen(navController)
         }
-        composable (route = Route.screenNewPassword) {
+        composable(route = Route.screenNewPassword) {
             NewPasswordScreen(navController)
         }
+        composable(route = Route.screenHome) {
+            HomeScreen()
+        }
     }
+
 }
 
 object Route {
-    val value = ""
     const val screenLogin = "ScreenLogin"
     const val screenRegister = "ScreenRegister"
     const val screenForgotPassword = "ScreenForgotPassword"
     const val screenLoginViaPhone = "ScreenLoginViaPhone"
     const val screenOTPCode = "ScreenOTPCode"
     const val screenNewPassword = "ScreenNewPassword"
+    const val screenOnBoarding = "onBoardingScreen"
+    const val screenHome = "homeScreen"
 }

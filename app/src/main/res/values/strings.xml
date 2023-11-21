@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">TrueAgencyApp</string>
-    <string name="test">Login</string>
-    <string name="tesv">Register</string>
-    <string name="back">Back</string>
     <string name="top_banner">Ini top baner</string>
     <string name="login">Login</string>
     <string name="password_toggle">Password Toggle</string>
@@ -18,10 +15,7 @@
     <string name="i_have_an_account">I have an account?</string>
     <string name="register">Register</string>
     <string name="enter_your_username">Enter Your Username</string>
-    <string name="username">Username</string>
     <string name="forgot_password_description">Don’t worry! It happens. Please enter the your email to get recovery code..</string>
-    <string name="otp_code_description">An 5 digit code has been sent to ......</string>
-    <string name="new_password_description">Please use a strong password minimum of 8 characters combined with numbers.</string>
     <string name="submit">Submit</string>
     <string name="enter_your_number">Enter\nYour Number</string>
     <string name="enter_your_number_description">You could login via phone number</string>

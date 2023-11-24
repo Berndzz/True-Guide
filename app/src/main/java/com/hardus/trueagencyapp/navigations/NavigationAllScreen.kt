@@ -12,7 +12,8 @@ import com.hardus.trueagencyapp.auth.screen.LoginPhoneNumberScreen
 import com.hardus.trueagencyapp.auth.screen.LoginScreen
 import com.hardus.trueagencyapp.auth.screen.NewPasswordScreen
 import com.hardus.trueagencyapp.auth.screen.OtpCodeScreen
-import com.hardus.trueagencyapp.auth.screen.RegisterScreen
+import com.hardus.trueagencyapp.auth.screen.RegistrationScreen
+import com.hardus.trueagencyapp.auth.screen.TermAndConditionScreen
 import com.hardus.trueagencyapp.main_content.home.HomeScreen
 import com.hardus.trueagencyapp.onboarding.screen.OnboardingScreenOne
 
@@ -30,20 +31,26 @@ fun NavigationAllScreen(
             LoginScreen(navController)
         }
         composable(route = Route.screenRegister) {
-            RegisterScreen(navController)
+            RegistrationScreen(navController)
+        }
+        composable(route = Route.screenTermAndCondition) {
+            TermAndConditionScreen()
         }
         composable(route = Route.screenForgotPassword) {
             ForgotPasswordScreen(navController)
         }
-        composable(
-            route = Route.screenOTPCode + "/{email}",
-            arguments = listOf(
-                navArgument(name = "email") {
-                    type = NavType.StringType
-                }
-            )
-        ) { backStackEntry ->
-            OtpCodeScreen(navController, backStackEntry.arguments?.getString("email"))
+//        composable(
+//            route = Route.screenOTPCode + "/{email}",
+//            arguments = listOf(
+//                navArgument(name = "email") {
+//                    type = NavType.StringType
+//                }
+//            )
+//        ) { backStackEntry ->
+//            OtpCodeScreen(navController, backStackEntry.arguments?.getString("email"))
+//        }
+        composable(route = Route.screenOTPCode) {
+            OtpCodeScreen(navController)
         }
         composable(route = Route.screenLoginViaPhone) {
             LoginPhoneNumberScreen(navController)
@@ -61,6 +68,7 @@ fun NavigationAllScreen(
 object Route {
     const val screenLogin = "ScreenLogin"
     const val screenRegister = "ScreenRegister"
+    const val screenTermAndCondition = "ScreenTermAndCondition"
     const val screenForgotPassword = "ScreenForgotPassword"
     const val screenLoginViaPhone = "ScreenLoginViaPhone"
     const val screenOTPCode = "ScreenOTPCode"

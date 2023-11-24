@@ -11,15 +11,16 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.hardus.trueagencyapp.auth.screen.RegistrationScreen
 import com.hardus.trueagencyapp.navigations.NavigationAllScreen
 import com.hardus.trueagencyapp.onboarding.viewmodel.SplashViewModel
 import com.hardus.trueagencyapp.ui.theme.TrueAgencyAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @AndroidEntryPoint
-
 
 
 class MainActivity : ComponentActivity() {

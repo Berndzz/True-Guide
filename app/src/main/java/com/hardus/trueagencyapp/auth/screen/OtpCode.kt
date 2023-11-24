@@ -58,13 +58,12 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun OtpCodeScreen(navController: NavHostController, email: String?) {
+fun OtpCodeScreen(navController: NavHostController) {
     Scaffold {
         Column {
             AppbarAddOne(
                 name = stringResource(R.string.enter_otp_code), description = stringResource(
-                    R.string.an_4_digit_code_has_sent_to ,
-                    email ?: ""
+                    R.string.an_4_digit_code_has_sent_to
                 )
             )
             ContentView(
@@ -267,5 +266,5 @@ private val requestList = listOf(
 @Composable
 fun CheckOtpCodeScreenPhone() {
     val navController = rememberNavController()
-    OtpCodeScreen(navController = navController, "a@gmail.com")
+    OtpCodeScreen(navController = navController)
 }

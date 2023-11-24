@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "529146539456",
+    "project_id": "authapp-76613",
+    "storage_bucket": "authapp-76613.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529146539456:android:319c1993a21681dab42c25",
+        "android_client_info": {
+          "package_name": "com.hardus.trueagencyapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAn5ytCoaTaGXXBbAsMZ8Q6YgK5C0Hx9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

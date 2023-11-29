@@ -77,6 +77,8 @@ fun HeadingTextComponent(value: String) {
 fun MyTextField(
     labelValue: String,
     imageVector: ImageVector,
+    onTextSelected: (String) -> Unit,
+    errorStatus: Boolean = false,
     focusRequester: FocusRequester,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions
@@ -96,11 +98,33 @@ fun MyTextField(
         singleLine = true,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
-        onValueChange = { textValue = it },
+        onValueChange = {
+            textValue = it
+            onTextSelected(it)
+        },
         leadingIcon = {
             Icon(imageVector = imageVector, contentDescription = "")
-        })
-    Spacer(modifier = Modifier.height(25.dp))
+        },
+        isError = !errorStatus,
+        supportingText = {
+            if (!errorStatus) {
+                Text("Required")
+            }
+        }
+
+    )
+    Spacer(modifier = Modifier.height(5.dp))
+}
+
+@Composable
+fun TextError(labelError: String) {
+    Text(
+        text = labelError,
+        style = TextStyle(color = Color.Red, fontSize = 12.sp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 35.dp),
+    )
 }
 
 
@@ -109,6 +133,8 @@ fun MyTextField(
 fun PasswordTextFieldComponent(
     labelValue: String,
     imageVector: ImageVector,
+    onTextSelected: (String) -> Unit,
+    errorStatus: Boolean = false,
     focusRequester: FocusRequester,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions
@@ -129,7 +155,10 @@ fun PasswordTextFieldComponent(
         ),
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
-        onValueChange = { password = it },
+        onValueChange = {
+            password = it
+            onTextSelected(it)
+        },
         visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         leadingIcon = {
             Icon(imageVector = imageVector, contentDescription = "")
@@ -141,11 +170,21 @@ fun PasswordTextFieldComponent(
                     contentDescription = stringResource(R.string.password_toggle)
                 )
             }
+        },
+        isError = !errorStatus,
+        supportingText = {
+            if (!errorStatus) {
+                Text("Required")
+            }
         })
 }
 
 @Composable
-fun CheckboxComponents(value: String, onTextSelected: (String) -> Unit) {
+fun CheckboxComponents(
+    value: String,
+    onTextSelected: (String) -> Unit,
+    onCheckedChange: (Boolean) -> Unit
+) {
     var checkedState by remember {
         mutableStateOf(false)
     }
@@ -157,17 +196,18 @@ fun CheckboxComponents(value: String, onTextSelected: (String) -> Unit) {
     ) {
         Checkbox(checked = checkedState, onCheckedChange = {
             checkedState = !checkedState
+            onCheckedChange.invoke(it)
             Log.d("Checkbox Clicked", "$checkedState")
         })
-        ClickabelTextComponents(value = value, onTextSelected = onTextSelected)
+        ClickableTextComponents(value = value, onTextSelected = onTextSelected)
     }
 }
 
 @Composable
-fun ClickabelTextComponents(value: String, onTextSelected: (String) -> Unit) {
+fun ClickableTextComponents(value: String, onTextSelected: (String) -> Unit) {
     val initialText = "By continuing you accept our "
     val privacyPolicyText = "Privacy Policy"
-    val andText = "and"
+    val andText = " and "
     val termsAndConditionsText = "Term of Use"
 
     val annotatedString = buildAnnotatedString {
@@ -194,15 +234,20 @@ fun ClickabelTextComponents(value: String, onTextSelected: (String) -> Unit) {
 }
 
 @Composable
-fun ButtonComponent(value: String, onNavigate: () -> Unit) {
+fun ButtonComponent(
+    value: String, onNavigate: () -> Unit, isEnabled: Boolean = false
+) {
     Button(
-        onClick = onNavigate,
+        onClick = {
+            onNavigate.invoke()
+        },
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
             .padding(horizontal = 35.dp),
         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primaryContainer),
-        shape = RoundedCornerShape(6.dp)
+        shape = RoundedCornerShape(6.dp),
+        enabled = isEnabled
     ) {
         Text(text = value, fontSize = 18.sp)
     }

@@ -12,7 +12,20 @@
           "package_name": "com.hardus.trueagencyapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "529146539456-lcot203u69m66u4n1ltnthrtc8ajfim9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hardus.trueagencyapp",
+            "certificate_hash": "84d5b49b0d6afe44b664370b7000b14d85f24275"
+          }
+        },
+        {
+          "client_id": "529146539456-vq4rvbccli4s3v8fj1l397uvv6t5d7jt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCAn5ytCoaTaGXXBbAsMZ8Q6YgK5C0Hx9E"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "529146539456-vq4rvbccli4s3v8fj1l397uvv6t5d7jt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

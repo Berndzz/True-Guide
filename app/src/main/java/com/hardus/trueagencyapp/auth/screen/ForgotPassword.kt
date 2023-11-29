@@ -53,6 +53,8 @@ fun ForgotPasswordScreen(navController: NavHostController) {
             MyTextField(
                 labelValue = stringResource(id = R.string.email),
                 imageVector = Icons.Outlined.Email,
+                onTextSelected = {},
+                errorStatus = false,
                 focusEmail,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })

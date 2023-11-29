@@ -1,6 +1,7 @@
 package com.hardus.trueagencyapp.auth.screen
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,6 +35,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hardus.trueagencyapp.R
@@ -44,6 +47,8 @@ import com.hardus.trueagencyapp.auth.component.MyTextField
 import com.hardus.trueagencyapp.auth.component.PasswordTextFieldComponent
 import com.hardus.trueagencyapp.auth.component.TextButtonComponent
 import com.hardus.trueagencyapp.auth.component.TextButtonComponent2
+import com.hardus.trueagencyapp.auth.data.UIEvent
+import com.hardus.trueagencyapp.auth.viewmodel.LoginViewModel
 import com.hardus.trueagencyapp.navigations.Route
 
 @OptIn(
@@ -51,11 +56,12 @@ import com.hardus.trueagencyapp.navigations.Route
 )
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel = viewModel()) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val (focusEmail, focusPassword) = remember { FocusRequester.createRefs() }
     val scrollState = rememberScrollState()
-
+    val context = LocalContext.current
+    var  isValid = false
     Surface(
         color = Color.White, modifier = Modifier
             .fillMaxSize()
@@ -71,6 +77,10 @@ fun LoginScreen(navController: NavHostController) {
                 MyTextField(
                     labelValue = stringResource(id = R.string.email),
                     imageVector = Icons.Outlined.Email,
+                    onTextSelected = {
+                        loginViewModel.onEvent(UIEvent.UsernameChanged(it))
+                    },
+                    errorStatus = loginViewModel.registrationUIState.value.usernameError,
                     focusEmail,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     keyboardActions = KeyboardActions(onNext = { focusPassword.requestFocus() })
@@ -79,6 +89,10 @@ fun LoginScreen(navController: NavHostController) {
                 PasswordTextFieldComponent(
                     labelValue = stringResource(id = R.string.password),
                     imageVector = Icons.Outlined.Lock,
+                    onTextSelected = {
+                        loginViewModel.onEvent(UIEvent.PasswordChanged(it))
+                    },
+                    errorStatus = loginViewModel.registrationUIState.value.passwordError,
                     focusPassword,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
@@ -97,7 +111,17 @@ fun LoginScreen(navController: NavHostController) {
 
                 ButtonComponent(
                     value = stringResource(id = R.string.login),
-                    onNavigate = { navController.navigate(Route.screenHome) })
+                    onNavigate = {
+                        //isValid = loginViewModel.registrationUIState.value.usernameError && loginViewModel.registrationUIState.value.passwordError
+                        //if(isValid){
+                            navController.navigate(Route.screenHome)
+                            Toast.makeText(context, "Berhasil Login", Toast.LENGTH_LONG).show()
+                       // }else{
+                        //    Toast.makeText(context, "Gagal Login", Toast.LENGTH_LONG).show()
+                        //}
+                    },
+                    isEnabled = loginViewModel.registrationUIState.value.usernameError && loginViewModel.registrationUIState.value.passwordError ,
+                )
 
                 Spacer(modifier = Modifier.height(30.dp))
 
@@ -129,6 +153,7 @@ fun LoginScreen(navController: NavHostController) {
                         onNavigate = {}
                     )
                 }
+                Spacer(modifier = Modifier.padding(10.dp))
                 TextButtonComponent(
                     value1 = stringResource(id = R.string.don_t_have_an_account),
                     value2 = stringResource(

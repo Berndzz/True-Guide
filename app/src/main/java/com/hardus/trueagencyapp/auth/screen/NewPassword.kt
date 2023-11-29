@@ -58,6 +58,8 @@ fun NewPasswordScreen(navController: NavHostController) {
                 PasswordTextFieldComponent(
                     labelValue = stringResource(id = R.string.password),
                     imageVector = Icons.Outlined.Lock,
+                    onTextSelected = {},
+                    errorStatus = false,
                     focusPassword1,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
@@ -70,6 +72,8 @@ fun NewPasswordScreen(navController: NavHostController) {
                 PasswordTextFieldComponent(
                     labelValue = stringResource(id = R.string.repeat_your_password),
                     imageVector = Icons.Outlined.Lock,
+                    onTextSelected = {},
+                    errorStatus = false,
                     focusPassword2,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,

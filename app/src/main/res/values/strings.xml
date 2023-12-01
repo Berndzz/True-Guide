@@ -25,5 +25,6 @@
     <string name="term_and_condition">By continuing you accept our Privacy Policy and Term of Use</string>
     <string name="google">Google</string>
     <string name="facebook">Facebook</string>
+    <string name="log_out">Log out</string>
 
 </resources>

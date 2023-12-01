@@ -9,10 +9,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.hardus.trueagencyapp.auth.screen.RegistrationScreen
-import com.hardus.trueagencyapp.navigations.NavigationAllScreen
+import com.hardus.trueagencyapp.nested_navigation.NavigationAllScreen
 import com.hardus.trueagencyapp.onboarding.viewmodel.SplashViewModel
 import com.hardus.trueagencyapp.ui.theme.TrueAgencyAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +26,7 @@ import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {
 
+    private lateinit var navController: NavHostController
     @Inject
     lateinit var splashViewModel: SplashViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +41,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     val screen by splashViewModel.startDestination
-                    val navController = rememberNavController()
+                    navController = rememberNavController()
                     NavigationAllScreen(navController = navController, startDestination = screen)
                 }
             }

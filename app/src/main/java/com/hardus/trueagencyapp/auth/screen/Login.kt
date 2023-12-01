@@ -49,7 +49,9 @@ import com.hardus.trueagencyapp.auth.component.TextButtonComponent
 import com.hardus.trueagencyapp.auth.component.TextButtonComponent2
 import com.hardus.trueagencyapp.auth.data.UIEvent
 import com.hardus.trueagencyapp.auth.viewmodel.LoginViewModel
-import com.hardus.trueagencyapp.navigations.Route
+import com.hardus.trueagencyapp.nested_navigation.HOME_GRAPH_ROUTE
+import com.hardus.trueagencyapp.nested_navigation.Screen
+import com.hardus.trueagencyapp.nested_navigation.SystemBackButtonHandler
 
 @OptIn(
     ExperimentalComposeUiApi::class
@@ -61,7 +63,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
     val (focusEmail, focusPassword) = remember { FocusRequester.createRefs() }
     val scrollState = rememberScrollState()
     val context = LocalContext.current
-    var  isValid = false
+
     Surface(
         color = Color.White, modifier = Modifier
             .fillMaxSize()
@@ -105,22 +107,17 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                 TextButtonComponent2(
                     value = stringResource(id = R.string.forgot_password),
                     onNavigate = {
-                        navController.navigate(Route.screenForgotPassword)
+                        navController.navigate(Screen.ForgotPassword.route)
                     })
                 Spacer(modifier = Modifier.height(20.dp))
 
                 ButtonComponent(
                     value = stringResource(id = R.string.login),
                     onNavigate = {
-                        //isValid = loginViewModel.registrationUIState.value.usernameError && loginViewModel.registrationUIState.value.passwordError
-                        //if(isValid){
-                            navController.navigate(Route.screenHome)
-                            Toast.makeText(context, "Berhasil Login", Toast.LENGTH_LONG).show()
-                       // }else{
-                        //    Toast.makeText(context, "Gagal Login", Toast.LENGTH_LONG).show()
-                        //}
+                        navController.navigate(HOME_GRAPH_ROUTE)
+                        Toast.makeText(context, "Berhasil Login", Toast.LENGTH_LONG).show()
                     },
-                    isEnabled = loginViewModel.registrationUIState.value.usernameError && loginViewModel.registrationUIState.value.passwordError ,
+                    isEnabled = true,
                 )
 
                 Spacer(modifier = Modifier.height(30.dp))
@@ -160,7 +157,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         id = R.string.register
                     ),
                     onNavigate = {
-                        navController.navigate(Route.screenRegister)
+                        navController.navigate(Screen.Register.route)
                     }
                 )
             }

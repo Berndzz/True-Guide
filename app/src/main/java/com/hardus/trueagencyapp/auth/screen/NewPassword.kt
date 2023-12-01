@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -32,7 +31,7 @@ import com.hardus.trueagencyapp.R
 import com.hardus.trueagencyapp.auth.component.AppbarAddOne
 import com.hardus.trueagencyapp.auth.component.ButtonComponent
 import com.hardus.trueagencyapp.auth.component.PasswordTextFieldComponent
-import com.hardus.trueagencyapp.navigations.Route
+import com.hardus.trueagencyapp.nested_navigation.Screen
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -87,8 +86,8 @@ fun NewPasswordScreen(navController: NavHostController) {
                 ButtonComponent(
                     value = stringResource(id = R.string.submit),
                     onNavigate = {
-                        navController.navigate(Route.screenLogin) {
-                            popUpTo(Route.screenLogin) { inclusive = true }
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(Screen.Login.route) { inclusive = true }
                         }
                     }
                 )

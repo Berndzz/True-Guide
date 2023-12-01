@@ -1,4 +1,4 @@
-package com.hardus.trueagencyapp.main_content.home
+package com.hardus.trueagencyapp.main_content.setting
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,27 +8,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.hardus.trueagencyapp.R
-import com.hardus.trueagencyapp.auth.component.ButtonComponent
-import com.hardus.trueagencyapp.auth.viewmodel.LoginViewModel
 
 @Composable
-fun HomeScreen(loginViewModel: LoginViewModel = viewModel()) {
+fun ProfilScreen() {
     Column(
         modifier = Modifier.padding(25.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Home Screen", style = MaterialTheme.typography.displaySmall)
-        ButtonComponent(
-            value = stringResource(R.string.log_out),
-            onNavigate = {},
-            isEnabled = true
-        )
+        Text(text = "Profil Screen", style = MaterialTheme.typography.displaySmall)
     }
 }
 
@@ -36,6 +26,6 @@ fun HomeScreen(loginViewModel: LoginViewModel = viewModel()) {
 @Composable
 //CheckNewPasswordScreenPhone
 fun CheckHomeScreenPhone() {
-    HomeScreen()
+    ProfilScreen()
 }
 

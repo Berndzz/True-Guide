@@ -32,7 +32,7 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.hardus.trueagencyapp.R
-import com.hardus.trueagencyapp.navigations.Route
+import com.hardus.trueagencyapp.nested_navigation.AUTH_GRAPH_ROUTE
 import com.hardus.trueagencyapp.onboarding.viewmodel.OnBoardingViewModel
 import com.hardus.trueagencyapp.util.OnBoardingPage
 
@@ -72,7 +72,7 @@ fun OnboardingScreenOne(
         ) {
             onboardingViewModel.saveOnBoardingState(completed = true)
             navController.popBackStack()
-            navController.navigate(route = Route.screenLogin)
+            navController.navigate(route = AUTH_GRAPH_ROUTE)
         }
     }
 }

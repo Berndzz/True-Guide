@@ -29,7 +29,7 @@ import com.hardus.trueagencyapp.R
 import com.hardus.trueagencyapp.auth.component.AppbarAddOne
 import com.hardus.trueagencyapp.auth.component.ButtonComponent
 import com.hardus.trueagencyapp.auth.component.MyTextField
-import com.hardus.trueagencyapp.navigations.Route
+import com.hardus.trueagencyapp.nested_navigation.Screen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalComposeUiApi::class)
@@ -63,7 +63,7 @@ fun ForgotPasswordScreen(navController: NavHostController) {
             ButtonComponent(
                 value = stringResource(id = R.string.submit),
                 onNavigate = {
-                    navController.navigate(Route.screenOTPCode)
+                    navController.navigate(Screen.OtpCode.route)
                 }
             )
 

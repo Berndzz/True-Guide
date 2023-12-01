@@ -1,17 +1,30 @@
 package com.hardus.trueagencyapp.auth.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.hardus.trueagencyapp.auth.component.rules.Validator
 import com.hardus.trueagencyapp.auth.data.RegistrationUIState
 import com.hardus.trueagencyapp.auth.data.UIEvent
+import com.hardus.trueagencyapp.nested_navigation.AUTH_GRAPH_ROUTE
 
 class LoginViewModel : ViewModel() {
     private val TAG = LoginViewModel::class.simpleName
     var registrationUIState = mutableStateOf(RegistrationUIState())
     var allValidatePass = mutableStateOf(false)
+
+    private val _loadingData: MutableState<Boolean> = mutableStateOf(true)
+    val loadingData: State<Boolean> = _loadingData
+
+    private val _currentDestination: MutableState<String> =
+        mutableStateOf(AUTH_GRAPH_ROUTE)
+    val currentDestination: State<String> = _currentDestination
+
+    var registerProgress = mutableStateOf(false)
 
     fun onEvent(event: UIEvent) {
 
@@ -58,11 +71,25 @@ class LoginViewModel : ViewModel() {
         validateDataWithRules()
     }
 
+    fun logout() {
+        val firebaseAuth = FirebaseAuth.getInstance()
+        firebaseAuth.signOut()
+        val authStateListener = AuthStateListener {
+            if (it.currentUser == null) {
+                Log.d(TAG, "Inside regis outsuccess")
+            } else {
+                Log.d(TAG, "Inside logout is not complete")
+            }
+        }
+        firebaseAuth.addAuthStateListener(authStateListener)
+    }
+
     private fun register() {
         Log.d(TAG, "Inside_register()")
         printState()
         createUserFirebase(
-            email = registrationUIState.value.email, password = registrationUIState.value.password
+            email = registrationUIState.value.email,
+            password = registrationUIState.value.password,
         )
     }
 
@@ -108,14 +135,22 @@ class LoginViewModel : ViewModel() {
     }
 
     private fun createUserFirebase(email: String, password: String) {
+        registerProgress.value = true
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 Log.d(TAG, "Insider_onCompleteListener")
                 Log.d(TAG, "${it.isSuccessful}")
+
+                registerProgress.value = false
+
+                if (it.isSuccessful) {
+                    _loadingData.value = false
+                }
             }.addOnFailureListener {
                 Log.d(TAG, "Inside_onFailureListener")
                 Log.d(TAG, "Exception ${it.message}")
                 Log.d(TAG, "Exception ${it.localizedMessage}")
             }
     }
+
 }

@@ -1,4 +1,4 @@
-package com.hardus.trueagencyapp.auth.component.rules
+package com.hardus.trueagencyapp.component.rules
 
 object Validator {
     fun validateUsername(username: String): ValidateResult {

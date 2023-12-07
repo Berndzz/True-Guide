@@ -26,9 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hardus.trueagencyapp.R
-import com.hardus.trueagencyapp.auth.component.AppbarAddOne
-import com.hardus.trueagencyapp.auth.component.ButtonComponent
-import com.hardus.trueagencyapp.auth.component.MyTextField
+import com.hardus.trueagencyapp.component.AppbarAddOne
+import com.hardus.trueagencyapp.component.ButtonComponent
+import com.hardus.trueagencyapp.component.MyTextField
 import com.hardus.trueagencyapp.nested_navigation.Screen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

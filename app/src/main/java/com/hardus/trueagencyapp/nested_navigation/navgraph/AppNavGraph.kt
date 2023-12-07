@@ -10,7 +10,7 @@ import com.hardus.trueagencyapp.main_content.home.HomeScreen
 import com.hardus.trueagencyapp.main_content.setting.ProfilScreen
 import com.hardus.trueagencyapp.nested_navigation.DETAIL_ARGUMENT_KEY
 import com.hardus.trueagencyapp.nested_navigation.DETAIL_ARGUMENT_KEY2
-import com.hardus.trueagencyapp.nested_navigation.HOME_GRAPH_ROUTE
+import com.hardus.trueagencyapp.nested_navigation.APP_GRAPH_ROUTE
 import com.hardus.trueagencyapp.nested_navigation.Screen
 
 fun NavGraphBuilder.appNavGraph(
@@ -18,10 +18,10 @@ fun NavGraphBuilder.appNavGraph(
 ) {
     navigation(
         startDestination = Screen.Home.route,
-        route = HOME_GRAPH_ROUTE
+        route = APP_GRAPH_ROUTE
     ) {
         composable(route = Screen.Home.route) {
-            HomeScreen()
+            HomeScreen(navController = navController)
         }
         composable(
             route = Screen.Detail.route,

@@ -22,5 +22,4 @@ fun NavigationAllScreen(
         authNavGraph(navController = navController)
         appNavGraph(navController = navController)
     }
-
 }

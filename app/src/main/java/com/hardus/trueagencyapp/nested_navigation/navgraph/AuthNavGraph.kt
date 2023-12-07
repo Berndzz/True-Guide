@@ -23,19 +23,19 @@ fun NavGraphBuilder.authNavGraph(
         composable(route = Screen.Login.route) {
             LoginScreen(navController = navController)
         }
-        composable(route = Screen.Register.route){
+        composable(route = Screen.Register.route) {
             RegistrationScreen(navController = navController)
         }
-        composable(route = Screen.ForgotPassword.route){
+        composable(route = Screen.ForgotPassword.route) {
             ForgotPasswordScreen(navController = navController)
         }
-        composable(route = Screen.OtpCode.route){
+        composable(route = Screen.OtpCode.route) {
             OtpCodeScreen(navController = navController)
         }
-        composable(route = Screen.NewPassword.route){
+        composable(route = Screen.NewPassword.route) {
             NewPasswordScreen(navController = navController)
         }
-        composable(route = Screen.TermAndCondition.route){
+        composable(route = Screen.TermAndCondition.route) {
             TermAndConditionScreen()
         }
     }

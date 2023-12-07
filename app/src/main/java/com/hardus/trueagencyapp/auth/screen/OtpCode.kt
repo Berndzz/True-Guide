@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hardus.trueagencyapp.R
-import com.hardus.trueagencyapp.auth.component.AppbarAddOne
+import com.hardus.trueagencyapp.component.AppbarAddOne
 import com.hardus.trueagencyapp.nested_navigation.Screen
 import com.hardus.trueagencyapp.util.GlobalVariable.TEST_VERIFY_CODE
 import kotlinx.coroutines.delay

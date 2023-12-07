@@ -1,4 +1,4 @@
-package com.hardus.trueagencyapp.auth.data
+package com.hardus.trueagencyapp.auth.data.register
 
 data class RegistrationUIState(
     var username: String = "",

@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "529146539456",
-    "project_id": "authapp-76613",
-    "storage_bucket": "authapp-76613.appspot.com"
+    "project_number": "67197148001",
+    "project_id": "trueguide-846cb",
+    "storage_bucket": "trueguide-846cb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:529146539456:android:319c1993a21681dab42c25",
+        "mobilesdk_app_id": "1:67197148001:android:6a8779e8203434136f8320",
         "android_client_info": {
           "package_name": "com.hardus.trueagencyapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "529146539456-lcot203u69m66u4n1ltnthrtc8ajfim9.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.hardus.trueagencyapp",
-            "certificate_hash": "84d5b49b0d6afe44b664370b7000b14d85f24275"
-          }
-        },
-        {
-          "client_id": "529146539456-vq4rvbccli4s3v8fj1l397uvv6t5d7jt.apps.googleusercontent.com",
+          "client_id": "67197148001-262d56gsn4tgng8qbsv8gvroj8ivacua.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCAn5ytCoaTaGXXBbAsMZ8Q6YgK5C0Hx9E"
+          "current_key": "AIzaSyDa2lmjoxw5_JpmOcR_sdNkbcAfNuhFJrs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "529146539456-vq4rvbccli4s3v8fj1l397uvv6t5d7jt.apps.googleusercontent.com",
+              "client_id": "67197148001-262d56gsn4tgng8qbsv8gvroj8ivacua.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

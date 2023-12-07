@@ -1,4 +1,4 @@
-package com.hardus.trueagencyapp.auth.component
+package com.hardus.trueagencyapp.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

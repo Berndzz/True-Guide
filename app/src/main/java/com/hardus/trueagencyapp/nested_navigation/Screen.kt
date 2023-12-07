@@ -1,14 +1,11 @@
 package com.hardus.trueagencyapp.nested_navigation
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-
 const val DETAIL_ARGUMENT_KEY = "id"
 const val DETAIL_ARGUMENT_KEY2 = "name"
 
 const val ROOT_GRAPH_ROUTE = "root"
 const val AUTH_GRAPH_ROUTE = "auth"
-const val HOME_GRAPH_ROUTE = "home"
+const val APP_GRAPH_ROUTE = "home"
 const val ONBOARDING_GRAPH_ROUTE = "onboarding"
 
 sealed class Screen(val route: String) {

@@ -23,19 +23,17 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.hardus.trueagencyapp.R
 import com.hardus.trueagencyapp.component.AppbarAddOne
 import com.hardus.trueagencyapp.component.ButtonComponent
 import com.hardus.trueagencyapp.component.MyTextField
-import com.hardus.trueagencyapp.nested_navigation.Screen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ForgotPasswordScreen(navController: NavHostController) {
-
+fun ForgotPasswordScreen(
+    onOTPCode: () -> Unit,
+) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val (focusEmail) = remember { FocusRequester.createRefs() }
 
@@ -61,13 +59,11 @@ fun ForgotPasswordScreen(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(20.dp))
             ButtonComponent(
-                value = stringResource(id = R.string.submit),
-                onNavigate = {
-                    navController.navigate(Screen.OtpCode.route)
-                }
+                value = stringResource(id = R.string.submit), onNavigate = {
+                    onOTPCode()
+                },
+                isEnabled = true
             )
-
-
         }
     }
 }
@@ -75,14 +71,12 @@ fun ForgotPasswordScreen(navController: NavHostController) {
 @Preview(showBackground = true, showSystemUi = true, name = "Hardus")
 @Composable
 fun CheckForgotPasswordScreenPhone() {
-    val navController = rememberNavController()
-    ForgotPasswordScreen(navController = navController)
+    ForgotPasswordScreen(onOTPCode = {})
 }
 
 @Preview(device = Devices.TABLET)
 @Composable
 fun CheckForgotPasswordScreenTablet() {
-    val navController = rememberNavController()
-    ForgotPasswordScreen(navController = navController)
+    ForgotPasswordScreen(onOTPCode = {})
 }
 

@@ -1,4 +1,4 @@
-package com.hardus.trueagencyapp.main_content.setting
+package com.hardus.trueagencyapp.main_content.absent
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,22 +10,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun ProfilScreen() {
+fun AbsentScreen(navController: NavController) {
     Column(
         modifier = Modifier.padding(25.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Profil Screen", style = MaterialTheme.typography.displaySmall)
+        Text(text = "Absent Screen", style = MaterialTheme.typography.displaySmall)
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true, name = "Hardus")
+@Preview
 @Composable
-//CheckNewPasswordScreenPhone
-fun CheckHomeScreenPhone() {
-    ProfilScreen()
+fun CheckAbsentScreen() {
+    AbsentScreen(rememberNavController())
 }
-

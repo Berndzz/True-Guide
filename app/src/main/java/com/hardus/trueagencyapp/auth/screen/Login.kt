@@ -40,9 +40,10 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hardus.trueagencyapp.R
+import com.hardus.trueagencyapp.auth.data.login.LoginUIEvent
+import com.hardus.trueagencyapp.auth.viewmodel.AuthViewModel
 import com.hardus.trueagencyapp.component.AppbarAuthentication
 import com.hardus.trueagencyapp.component.ButtonComponent
 import com.hardus.trueagencyapp.component.ButtonComponentWithIcon
@@ -51,12 +52,8 @@ import com.hardus.trueagencyapp.component.MyTextField
 import com.hardus.trueagencyapp.component.PasswordTextFieldComponent
 import com.hardus.trueagencyapp.component.TextButtonComponent
 import com.hardus.trueagencyapp.component.TextButtonComponent2
-import com.hardus.trueagencyapp.auth.data.login.LoginUIEvent
-import com.hardus.trueagencyapp.auth.viewmodel.AuthViewModel
 import com.hardus.trueagencyapp.firebase.Resource
-import com.hardus.trueagencyapp.nested_navigation.APP_GRAPH_ROUTE
-import com.hardus.trueagencyapp.nested_navigation.AUTH_GRAPH_ROUTE
-import com.hardus.trueagencyapp.nested_navigation.Screen
+//loginViewModel: AuthViewModel? = hiltViewModel(),
 
 @OptIn(
     ExperimentalComposeUiApi::class
@@ -64,15 +61,17 @@ import com.hardus.trueagencyapp.nested_navigation.Screen
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LoginScreen(
-    loginViewModel: AuthViewModel? = hiltViewModel(),
-    navController: NavHostController
+    onLogin: () -> Unit,
+    onRegister: () -> Unit,
+    onForgotPassword: () -> Unit,
 ) {
+    val loginViewModel = hiltViewModel<AuthViewModel>()
     val keyboardController = LocalSoftwareKeyboardController.current
     val (focusEmail, focusPassword) = remember { FocusRequester.createRefs() }
     val scrollState = rememberScrollState()
     val context = LocalContext.current
 
-    val loginFlow = loginViewModel?.loginFlow?.collectAsState()
+    val loginFlow = loginViewModel.loginFlow.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Surface(
@@ -87,7 +86,7 @@ fun LoginScreen(
 
                 Column(modifier = Modifier.verticalScroll(scrollState)) {
 
-                    loginViewModel?.loginUIState?.value?.let {
+                    loginViewModel.loginUIState.value.let {
                         MyTextField(
                             labelValue = stringResource(id = R.string.email),
                             imageVector = Icons.Outlined.Email,
@@ -101,7 +100,7 @@ fun LoginScreen(
                         )
                     }
 
-                    loginViewModel?.loginUIState?.value?.let {
+                    loginViewModel.loginUIState.value.let {
                         PasswordTextFieldComponent(
                             labelValue = stringResource(id = R.string.password),
                             imageVector = Icons.Outlined.Lock,
@@ -119,22 +118,19 @@ fun LoginScreen(
                     }
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    TextButtonComponent2(
-                        value = stringResource(id = R.string.forgot_password),
+                    TextButtonComponent2(value = stringResource(id = R.string.forgot_password),
                         onNavigate = {
-                            navController.navigate(Screen.ForgotPassword.route)
+                            onForgotPassword()
                         })
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    loginViewModel?.allValidatePass?.let {
-                        ButtonComponent(
-                            value = stringResource(id = R.string.login),
-                            onNavigate = {
-                                loginViewModel.onEventLogin(LoginUIEvent.LoginButtonClicked)
-                            },
-                            isEnabled = it.value,
-                        )
-                    }
+                    ButtonComponent(
+                        value = stringResource(id = R.string.login),
+                        onNavigate = {
+                            loginViewModel.onEventLogin(LoginUIEvent.LoginButtonClicked)
+                        },
+                        isEnabled = loginViewModel.allValidatePass.value,
+                    )
                     Spacer(modifier = Modifier.height(30.dp))
 
                     DividerTextComponent()
@@ -149,21 +145,17 @@ fun LoginScreen(
                         horizontalArrangement = Arrangement.SpaceEvenly,
 
                         ) {
-                        ButtonComponentWithIcon(
-                            value = stringResource(id = R.string.google),
+                        ButtonComponentWithIcon(value = stringResource(id = R.string.google),
                             painterResource = painterResource(
                                 id = R.drawable.logo_google
                             ),
-                            onNavigate = {}
-                        )
+                            onNavigate = {})
                         Spacer(modifier = Modifier.padding(10.dp))
-                        ButtonComponentWithIcon(
-                            value = stringResource(id = R.string.facebook),
+                        ButtonComponentWithIcon(value = stringResource(id = R.string.facebook),
                             painterResource = painterResource(
                                 id = R.drawable.logo_facebook
                             ),
-                            onNavigate = {}
-                        )
+                            onNavigate = {})
                     }
                     Spacer(modifier = Modifier.padding(10.dp))
                     TextButtonComponent(
@@ -172,13 +164,13 @@ fun LoginScreen(
                             id = R.string.register
                         ),
                         onNavigate = {
-                            navController.navigate(Screen.Register.route)
+                            onRegister()
                         }
                     )
                 }
             }
         }
-        loginFlow?.value?.let {
+        loginFlow.value?.let {
             when (it) {
                 is Resource.Failure -> {
                     Toast.makeText(context, it.exception.message, Toast.LENGTH_SHORT).show()
@@ -190,9 +182,7 @@ fun LoginScreen(
 
                 is Resource.Success -> {
                     LaunchedEffect(Unit) {
-                        navController.navigate(route = APP_GRAPH_ROUTE) {
-                            popUpTo(AUTH_GRAPH_ROUTE) { inclusive = true }
-                        }
+                        onLogin()
                     }
                 }
             }
@@ -204,13 +194,12 @@ fun LoginScreen(
 @Preview(showBackground = true, showSystemUi = true, name = "Hardus")
 @Composable
 fun CheckLoginScreenPhone() {
-    val navController = rememberNavController()
-    LoginScreen(navController = navController)
+    rememberNavController()
+    LoginScreen(onLogin = {}, onRegister = {}, onForgotPassword = {})
 }
 
 @Preview(device = Devices.TABLET)
 @Composable
 fun CheckLoginScreenTablet() {
-    val navController = rememberNavController()
-    LoginScreen(navController = navController)
+    LoginScreen(onLogin = {}, onRegister = {}, onForgotPassword = {})
 }

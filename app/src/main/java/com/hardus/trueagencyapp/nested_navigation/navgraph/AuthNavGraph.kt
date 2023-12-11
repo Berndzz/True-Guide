@@ -1,5 +1,6 @@
 package com.hardus.trueagencyapp.nested_navigation.navgraph
 
+import android.util.Log
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -10,6 +11,7 @@ import com.hardus.trueagencyapp.auth.screen.NewPasswordScreen
 import com.hardus.trueagencyapp.auth.screen.OtpCodeScreen
 import com.hardus.trueagencyapp.auth.screen.RegistrationScreen
 import com.hardus.trueagencyapp.auth.screen.TermAndConditionScreen
+import com.hardus.trueagencyapp.nested_navigation.APP_GRAPH_ROUTE
 import com.hardus.trueagencyapp.nested_navigation.AUTH_GRAPH_ROUTE
 import com.hardus.trueagencyapp.nested_navigation.Screen
 
@@ -21,16 +23,65 @@ fun NavGraphBuilder.authNavGraph(
         route = AUTH_GRAPH_ROUTE
     ) {
         composable(route = Screen.Login.route) {
-            LoginScreen(navController = navController)
+            LoginScreen(
+                onLogin = {
+                    Log.d("Navigation LoginScreen", "APP_GRAPH_ROUTE")
+                    navController.popBackStack() // popbackStack berarti ketika klik back button di handphone akan langsung keluar aplikasi
+                    navController.navigate(route = APP_GRAPH_ROUTE) {
+                        popUpTo(AUTH_GRAPH_ROUTE) { inclusive = true }
+                    }
+                },
+                onRegister = {
+                    Log.d("Navigation LoginScreen", "onRegister")
+                    navController.popBackStack()
+                    navController.navigate(route = Screen.Register.route)
+                },
+                onForgotPassword = {
+                    navController.popBackStack()
+                    navController.navigate(route = Screen.ForgotPassword.route)
+                },
+            )
         }
         composable(route = Screen.Register.route) {
-            RegistrationScreen(navController = navController)
+            RegistrationScreen(
+                onLogin = {
+                    Log.d("Navigation RegisterScreen", "APP_GRAPH_ROUTE")
+                    navController.popBackStack()
+                    navController.navigate(route = APP_GRAPH_ROUTE) {
+                        popUpTo(APP_GRAPH_ROUTE) { inclusive = true }
+                    }
+                },
+                onTermAndCondition = {
+                  //  Log.d("Navigation RegisterScreen", "APP_GRAPH_ROUTE")
+                    navController.popBackStack()
+                    navController.navigate(Screen.TermAndCondition.route)
+                },
+                onBackToLoginScreen = {
+                   // Log.d("Navigation RegisterScreen", "APP_GRAPH_ROUTE")
+                    navController.popBackStack()
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                }
+            )
         }
         composable(route = Screen.ForgotPassword.route) {
-            ForgotPasswordScreen(navController = navController)
+            ForgotPasswordScreen(
+                onOTPCode = {
+                    //Log.d("Navigation RegisterScreen", "APP_GRAPH_ROUTE")
+                    navController.popBackStack()
+                    navController.navigate(route = Screen.OtpCode.route)
+                }
+            )
         }
         composable(route = Screen.OtpCode.route) {
-            OtpCodeScreen(navController = navController)
+            OtpCodeScreen(
+                onNewPassword = {
+                    //Log.d("Navigation RegisterScreen", "APP_GRAPH_ROUTE")
+                    navController.popBackStack()
+                    navController.navigate(route = Screen.NewPassword.route)
+                }
+            )
         }
         composable(route = Screen.NewPassword.route) {
             NewPasswordScreen(navController = navController)

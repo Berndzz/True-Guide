@@ -46,11 +46,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.hardus.trueagencyapp.R
 import com.hardus.trueagencyapp.component.AppbarAddOne
-import com.hardus.trueagencyapp.nested_navigation.Screen
 import com.hardus.trueagencyapp.util.GlobalVariable.TEST_VERIFY_CODE
 import kotlinx.coroutines.delay
 
@@ -58,7 +55,7 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun OtpCodeScreen(navController: NavHostController) {
+fun OtpCodeScreen(onNewPassword: () -> Unit) {
     Scaffold {
         Column {
             AppbarAddOne(
@@ -69,7 +66,7 @@ fun OtpCodeScreen(navController: NavHostController) {
             ContentView(
                 textList = textList,
                 requesterList = requestList,
-                navigateScreen = navController
+                onNewPassword = onNewPassword
             )
         }
     }
@@ -80,7 +77,7 @@ fun OtpCodeScreen(navController: NavHostController) {
 @Composable
 fun ContentView(
     textList: List<MutableState<TextFieldValue>>, requesterList: List<FocusRequester>,
-    navigateScreen: NavHostController
+    onNewPassword: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -128,7 +125,7 @@ fun ContentView(
                                 }
 
                                 if (it) {
-                                    navigateScreen.navigate(Screen.OtpCode.route)
+                                    onNewPassword()
                                 }
 
                             }
@@ -265,6 +262,5 @@ private val requestList = listOf(
 @Preview(showBackground = true, showSystemUi = true, name = "Hardus")
 @Composable
 fun CheckOtpCodeScreenPhone() {
-    val navController = rememberNavController()
-    OtpCodeScreen(navController = navController)
+    OtpCodeScreen(onNewPassword = {})
 }

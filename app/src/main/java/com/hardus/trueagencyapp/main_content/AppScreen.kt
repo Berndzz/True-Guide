@@ -42,23 +42,6 @@ fun AppScreen(
 ) {
     val bottomNavController = rememberNavController()
     Scaffold(
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.onPrimary,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ), title = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.vector),
-                            contentDescription = stringResource(R.string.logo_app)
-                        )
-                    }
-                }, scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-            )
-        },
         bottomBar = {
             BottomNavigationBar(bottomNavController = bottomNavController)
         },

@@ -87,6 +87,9 @@ dependencies {
     // datastore-preferences
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
+    // coil
+    implementation("io.coil-kt:coil-compose:1.3.2")
+
     // Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.48.1")
     implementation("com.google.firebase:firebase-database-ktx:20.3.0")

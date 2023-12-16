@@ -3,6 +3,8 @@ package com.hardus.trueagencyapp.util
 data class Post(
     val idTraining: String,
     val headerTitle: String,
+    val introParagraph: String,
+    val imagePost: String? = null,
     val subTrainingList: List<SubTraining>
 )
 

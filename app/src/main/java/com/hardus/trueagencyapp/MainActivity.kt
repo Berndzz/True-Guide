@@ -3,10 +3,11 @@ package com.hardus.trueagencyapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -27,8 +28,11 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     private lateinit var navController: NavHostController
+
     @Inject
     lateinit var splashViewModel: SplashViewModel
+
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen().setKeepOnScreenCondition {
@@ -37,6 +41,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TrueAgencyAppTheme {
                 // A surface container using the 'background' color from the theme
+                val widthSizeClass = calculateWindowSizeClass(this)
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
@@ -44,7 +49,11 @@ class MainActivity : ComponentActivity() {
                     navController = rememberNavController()
                     NavigationAllScreen(
                         navController = navController,
-                        startDestination = screen
+                        startDestination = screen,
+                        windowSize = widthSizeClass.widthSizeClass,
+                        onBackPressed = {
+                            finish()
+                        }
                     )
                 }
             }

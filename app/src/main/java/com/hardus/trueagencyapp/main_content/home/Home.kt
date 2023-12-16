@@ -26,6 +26,7 @@ import androidx.compose.material.icons.outlined.PeopleAlt
 import androidx.compose.material.icons.outlined.QrCodeScanner
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -136,8 +137,8 @@ fun PostText(subTraining: SubTraining) {
         Arrangement.Center,
         Alignment.CenterHorizontally
     ) {
-        Text(text = subTraining.bodyTitle)
-        Text(text = "(${subTraining.day})")
+        Text(text = subTraining.bodyTitle,color = Color.Black)
+        Text(text = "(${subTraining.day})",color = Color.Black)
         Spacer(Modifier.padding(3.dp))
         Divider(
             color = Color.White, thickness = 2.dp, modifier = Modifier.background(
@@ -173,6 +174,7 @@ fun PostCard(
         .width(155.dp)
         .height(144.dp),
         shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
         onClick = { openDialog = true }) {
         Column {
             PostText(subTraining = subTraining)

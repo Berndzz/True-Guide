@@ -8,3 +8,6 @@ enum class TrueAgencyContentType {
     LIST_ONLY, LIST_AND_DETAIL
 }
 
+enum class ProgramContentType {
+    ListOnly, ListAndDetail
+}

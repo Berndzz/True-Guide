@@ -4,6 +4,8 @@ fun generateFakeData(): List<Post> {
     val post1 = Post(
         idTraining = "1",
         headerTitle = "Training SM7",
+        introParagraph = "Lorem ipsum dolor sit amet consectetur. Cursus nisl odio leo dictum aliquam. Scelerisque non nam purus sed vulputate mi scelerisque suspendisse quis.",
+        imagePost = null,
         subTrainingList = listOf(
             SubTraining(
                 idSubTraining = "1",
@@ -29,9 +31,12 @@ fun generateFakeData(): List<Post> {
         )
     )
 
+
     val post2 = Post(
         idTraining = "2",
         headerTitle = "Second Training",
+        introParagraph = "Lorem ipsum dolor sit amet consectetur. Cursus nisl odio leo dictum aliquam. Scelerisque non nam purus sed vulputate mi scelerisque suspendisse quis.",
+        imagePost = "https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjR8fGNvbXBhbnl8ZW58MHwwfDB8fHww",
         subTrainingList = listOf(
             SubTraining(
                 idSubTraining = "4",
@@ -60,6 +65,8 @@ fun generateFakeData(): List<Post> {
     val post3 = Post(
         idTraining = "3",
         headerTitle = "Third Training",
+        introParagraph = "Lorem ipsum dolor sit amet consectetur. Cursus nisl odio leo dictum aliquam. Scelerisque non nam purus sed vulputate mi scelerisque suspendisse quis.",
+        imagePost = "https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjR8fGNvbXBhbnl8ZW58MHwwfDB8fHww",
         subTrainingList = listOf(
             SubTraining(
                 idSubTraining = "7",
@@ -88,6 +95,8 @@ fun generateFakeData(): List<Post> {
     val post4 = Post(
         idTraining = "4",
         headerTitle = "Fourth Training",
+        introParagraph = "Lorem ipsum dolor sit amet consectetur. Cursus nisl odio leo dictum aliquam. Scelerisque non nam purus sed vulputate mi scelerisque suspendisse quis.",
+        imagePost = "https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjR8fGNvbXBhbnl8ZW58MHwwfDB8fHww",
         subTrainingList = listOf(
             SubTraining(
                 idSubTraining = "10",
@@ -113,33 +122,7 @@ fun generateFakeData(): List<Post> {
         )
     )
 
-    val post5 = Post(
-        idTraining = "5",
-        headerTitle = "Fifth Training",
-        subTrainingList = listOf(
-            SubTraining(
-                idSubTraining = "13",
-                bodyTitle = "Sub Training 13",
-                day = "Monday",
-                image = null,
-                paragraph = "Lorem ipsum 13"
-            ),
-            SubTraining(
-                idSubTraining = "14",
-                bodyTitle = "Sub Training 14",
-                day = "Wednesday",
-                image = null,
-                paragraph = "Lorem ipsum 14"
-            ),
-            SubTraining(
-                idSubTraining = "15",
-                bodyTitle = "Sub Training 15",
-                day = "Friday",
-                image = null,
-                paragraph = "Lorem ipsum 15"
-            )
-        )
-    )
 
-    return listOf(post1, post2, post3, post4, post5)
+    return listOf(post1, post2)
+    //return Post()
 }

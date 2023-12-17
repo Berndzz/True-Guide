@@ -50,6 +50,12 @@ val Typography = Typography(
         fontFamily = FontFamily(Font(R.font.poppins)),
         fontWeight = FontWeight(400),
         color = Color(0xFF4F4F4F),
+    ),
+    titleLarge = TextStyle(
+        fontSize = 15.sp,
+        fontFamily = FontFamily(Font(R.font.poppins)),
+        fontWeight = FontWeight.Bold,
+        letterSpacing = 0.5.sp
     )
 
 )

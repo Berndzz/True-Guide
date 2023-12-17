@@ -345,3 +345,22 @@ fun TextButtonComponent2(value: String, onNavigate: () -> Unit) {
         }
     }
 }
+
+@Composable
+fun ButtonSubmit(
+    labelButton: String,
+    click: () -> Unit
+) {
+    Button(
+        onClick = {
+            click.invoke()
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 35.dp),
+        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
+        shape = RoundedCornerShape(6.dp),
+    ) {
+        Text(text = labelButton, fontSize = 18.sp)
+    }
+}

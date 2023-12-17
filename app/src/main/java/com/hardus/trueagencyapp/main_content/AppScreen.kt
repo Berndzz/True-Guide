@@ -1,5 +1,6 @@
 package com.hardus.trueagencyapp.main_content
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -38,6 +40,7 @@ fun AppScreen(
     onBackPressed: () -> Unit,
 ) {
     val bottomNavController = rememberNavController()
+    val context = LocalContext.current
     Scaffold(
         bottomBar = {
             BottomNavigationBar(bottomNavController = bottomNavController)
@@ -65,7 +68,52 @@ fun AppScreen(
                         AbsentScreen(navController = navController)
                     }
                     composable(Screen.Setting.route) {
-                        SettingScreen(navController = navController)
+                        SettingScreen(
+                            navController = navController,
+                            windowSize = windowSize,
+                            onBackPressed = onBackPressed,
+                            onChangeLanguage = {
+                                Toast.makeText(
+                                    context,
+                                    "Ini Ganti Bahasa",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            },
+                            onNotification = {
+                                Toast.makeText(
+                                    context,
+                                    "Ini Pengaturan Notifikasi",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            },
+                            onReport = {
+                                Toast.makeText(
+                                    context,
+                                    "Ini Laporan Keluhan",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            },
+                            onTermApps = {
+                                Toast.makeText(
+                                    context,
+                                    "Ini Syarat Ketentuan",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            },
+                            onPrivacy = {
+                                Toast.makeText(
+                                    context,
+                                    "Ini Kebijakan Privasi",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            },
+                            onAboutApp = {
+                                Toast.makeText(
+                                    context,
+                                    "Ini Tentang Aplikasi",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            })
                     }
                 }
             }

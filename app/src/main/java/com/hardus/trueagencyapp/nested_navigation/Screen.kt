@@ -57,6 +57,22 @@ sealed class Screen(
         )
 
 
+    //App - Home
+    object FormUsers : Screen(route = "formUsers_screen")
+    object NoteSc : Screen(route = "note_screen")
+    object AddEditNoteScreen: Screen(route = "add_edit_note_screen")
+    object QrCode : Screen(route = "qrcode_screen")
+    object Members : Screen(route = "members_screen")
+
+    // App - Setting
+    object ChangeLanguage : Screen(route = "changeLanguage_screen")
+    object Notification : Screen(route = "notification_screen")
+    object Report : Screen(route = "report_screen")
+    object Terms : Screen(route = "terms_screen")
+    object Privacy : Screen(route = "privacy_screen")
+    object About : Screen(route = "about_screen")
+
+
     // auth root
     object Login : Screen("login_screen")
     object Register : Screen("register_screen")

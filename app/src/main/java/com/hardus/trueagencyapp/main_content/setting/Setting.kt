@@ -216,6 +216,7 @@ fun Logout(viewModel: AuthViewModel, navController: NavController) {
 @Composable
 //CheckNewPasswordScreenPhone
 fun CheckHomeScreenPhone() {
+    val viewModel = hiltViewModel<AuthViewModel>()
     SettingScreen(
         navController = rememberNavController(),
         windowSize = WindowWidthSizeClass.Compact,
@@ -224,8 +225,8 @@ fun CheckHomeScreenPhone() {
         onNotification = { /*TODO*/ },
         onReport = { /*TODO*/ },
         onTermApps = { /*TODO*/ },
-        onPrivacy = { /*TODO*/ }) {
-
-    }
+        onPrivacy = { /*TODO*/ },
+        onAboutApp = {/*TODO*/ }
+    )
 }
 

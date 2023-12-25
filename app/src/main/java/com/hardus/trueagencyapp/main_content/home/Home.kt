@@ -3,6 +3,7 @@ package com.hardus.trueagencyapp.main_content.home
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -56,8 +57,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.hardus.trueagencyapp.R
@@ -69,7 +69,11 @@ import com.hardus.trueagencyapp.util.generateFakeData
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navController: NavHostController
+    navController: NavController,
+    onUserForm: () -> Unit,
+    onNote: () -> Unit,
+    onScan: () -> Unit,
+    onMember: () -> Unit,
 ) {
     val viewModel = hiltViewModel<AuthViewModel>()
     val fakePosts = generateFakeData()
@@ -95,12 +99,13 @@ fun HomeScreen(
                         LeaderStatus(
                             name = viewModel.currentUser?.displayName ?: "",
                             status = "Leader",
-                            hierarchy = "AAD"
+                            hierarchy = "AAD",
+                            onUserForm = onUserForm
                         )
                     }
                     Spacer(modifier = Modifier.padding(10.dp))
                     Surface {
-                        Menu()
+                        Menu(onNote = onNote, onScan = onScan, onMember = onMember)
                     }
                     Spacer(modifier = Modifier.padding(10.dp))
                     Text(
@@ -137,8 +142,8 @@ fun PostText(subTraining: SubTraining) {
         Arrangement.Center,
         Alignment.CenterHorizontally
     ) {
-        Text(text = subTraining.bodyTitle,color = Color.Black)
-        Text(text = "(${subTraining.day})",color = Color.Black)
+        Text(text = subTraining.bodyTitle, color = Color.Black)
+        Text(text = "(${subTraining.day})", color = Color.Black)
         Spacer(Modifier.padding(3.dp))
         Divider(
             color = Color.White, thickness = 2.dp, modifier = Modifier.background(
@@ -233,7 +238,7 @@ fun TrainingScreen(post: Post) {
 }
 
 @Composable
-fun Menu() {
+fun Menu(onNote: () -> Unit, onScan: () -> Unit, onMember: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -255,7 +260,10 @@ fun Menu() {
                 contentDescription = "note",
                 modifier = Modifier
                     .size(30.dp)
-                    .background(Color.Transparent),
+                    .background(Color.Transparent)
+                    .clickable {
+                        onNote()
+                    },
                 tint = Color.White,
             )
         }
@@ -271,8 +279,12 @@ fun Menu() {
         ) {
             Icon(
                 imageVector = Icons.Outlined.QrCodeScanner,
-                contentDescription = "note",
-                modifier = Modifier.size(30.dp),
+                contentDescription = "qr code",
+                modifier = Modifier
+                    .size(30.dp)
+                    .clickable {
+                        onScan()
+                    },
                 tint = Color.White
             )
         }
@@ -288,8 +300,10 @@ fun Menu() {
         ) {
             Icon(
                 imageVector = Icons.Outlined.PeopleAlt,
-                contentDescription = "note",
-                modifier = Modifier.size(30.dp),
+                contentDescription = "members",
+                modifier = Modifier
+                    .size(30.dp)
+                    .clickable { onMember() },
                 tint = Color.White
             )
         }
@@ -316,9 +330,9 @@ fun TopAppBarHome() {
     )
 }
 
-@OptIn(ExperimentalCoilApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
 @Composable
-fun LeaderStatus(name: String, status: String, hierarchy: String) {
+fun LeaderStatus(name: String, status: String, hierarchy: String, onUserForm: () -> Unit) {
     val urlImage =
         "https://images.unsplash.com/photo-1554151228-14d9def656e4?q=80&w=986&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     val painter = rememberImagePainter(data = urlImage)
@@ -326,7 +340,8 @@ fun LeaderStatus(name: String, status: String, hierarchy: String) {
         Card(
             modifier = Modifier.size(45.dp),
             shape = CircleShape,
-            border = BorderStroke(2.dp, color = MaterialTheme.colorScheme.primary)
+            border = BorderStroke(2.dp, color = MaterialTheme.colorScheme.primary),
+            onClick = onUserForm
         ) {
             Image(
                 painter = painter, contentDescription = "Leader Image"
@@ -346,13 +361,13 @@ fun LeaderStatus(name: String, status: String, hierarchy: String) {
 @Preview(showBackground = true)
 @Composable
 fun CheckImageLoader() {
-    LeaderStatus(name = "Anna", status = "Leader", hierarchy = "AAD")
+    LeaderStatus(name = "Anna", status = "Leader", hierarchy = "AAD", onUserForm = {})
 }
 
 @Preview(showBackground = true)
 @Composable
 fun CheckMenu() {
-    Menu()
+    Menu(onNote = {}, onScan = {}, onMember = {})
 }
 
 @Preview(showBackground = true)
@@ -366,13 +381,13 @@ fun TrainingScreenPreview() {
 @Composable
 //CheckNewPasswordScreenPhone
 fun CheckHomeScreenPhone() {
-    HomeScreen(rememberNavController())
+    //HomeScreen(rememberNavController())
 }
 
 @Preview(showBackground = true, showSystemUi = true, name = "Hardus", device = Devices.TABLET)
 @Composable
 //CheckNewPasswordScreenPhone
 fun CheckHomeScreenPhoneTablet() {
-    HomeScreen(rememberNavController())
+    //HomeScreen(rememberNavController())
 }
 

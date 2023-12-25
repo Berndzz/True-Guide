@@ -1,6 +1,5 @@
 package com.hardus.trueagencyapp.main_content
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -26,6 +25,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.hardus.auth.screen.view.setting.task.AboutScreen
+import com.hardus.auth.screen.view.setting.task.ChangeLanguageScreen
+import com.hardus.auth.screen.view.setting.task.NotificationScreen
+import com.hardus.auth.screen.view.setting.task.PrivacyScreen
+import com.hardus.auth.screen.view.setting.task.ReportScreen
+import com.hardus.auth.screen.view.setting.task.TermsScreen
 import com.hardus.trueagencyapp.main_content.absent.AbsentScreen
 import com.hardus.trueagencyapp.main_content.home.HomeScreen
 import com.hardus.trueagencyapp.main_content.program.ProgramScreen
@@ -55,7 +60,12 @@ fun AppScreen(
                     startDestination = Screen.Home.route
                 ) {
                     composable(Screen.Home.route) {
-                        HomeScreen(navController = navController)
+                        HomeScreen(
+                            navController = navController,
+                            onUserForm = { navController.navigate(Screen.FormUsers.route) },
+                            onNote = { navController.navigate(Screen.NoteSc.route) },
+                            onScan = { navController.navigate(Screen.QrCode.route) },
+                            onMember = { navController.navigate(Screen.Members.route) })
                     }
                     composable(Screen.Program.route) {
                         ProgramScreen(
@@ -72,48 +82,55 @@ fun AppScreen(
                             navController = navController,
                             windowSize = windowSize,
                             onBackPressed = onBackPressed,
-                            onChangeLanguage = {
-                                Toast.makeText(
-                                    context,
-                                    "Ini Ganti Bahasa",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            },
-                            onNotification = {
-                                Toast.makeText(
-                                    context,
-                                    "Ini Pengaturan Notifikasi",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            },
-                            onReport = {
-                                Toast.makeText(
-                                    context,
-                                    "Ini Laporan Keluhan",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            },
-                            onTermApps = {
-                                Toast.makeText(
-                                    context,
-                                    "Ini Syarat Ketentuan",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            },
-                            onPrivacy = {
-                                Toast.makeText(
-                                    context,
-                                    "Ini Kebijakan Privasi",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            },
-                            onAboutApp = {
-                                Toast.makeText(
-                                    context,
-                                    "Ini Tentang Aplikasi",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            })
+                            onChangeLanguage = { bottomNavController.navigate(Screen.ChangeLanguage.route) },
+                            onNotification = { bottomNavController.navigate(Screen.Notification.route) },
+                            onReport = { bottomNavController.navigate(Screen.Report.route) },
+                            onTermApps = { bottomNavController.navigate(Screen.Terms.route) },
+                            onPrivacy = { bottomNavController.navigate(Screen.Privacy.route) },
+                            onAboutApp = { bottomNavController.navigate(Screen.About.route) },
+                        )
+                    }
+                    composable(Screen.ChangeLanguage.route) {
+                        // Content untuk Ganti Bahasa screen
+                        ChangeLanguageScreen(onNavigate = {
+                            bottomNavController.popBackStack()
+                            bottomNavController.navigate(Screen.Setting.route)
+                        })
+                    }
+                    composable(Screen.Notification.route) {
+                        // Content untuk Ganti Bahasa screen
+                        NotificationScreen(onNavigate = {
+                            bottomNavController.popBackStack()
+                            bottomNavController.navigate(Screen.Setting.route)
+                        })
+                    }
+                    composable(Screen.Report.route) {
+                        // Content untuk Report screen
+                        ReportScreen(onNavigate = {
+                            bottomNavController.popBackStack()
+                            bottomNavController.navigate(Screen.Setting.route)
+                        })
+                    }
+                    composable(Screen.Terms.route) {
+                        // Content untuk Terms screen
+                        TermsScreen(onNavigate = {
+                            bottomNavController.popBackStack()
+                            bottomNavController.navigate(Screen.Setting.route)
+                        })
+                    }
+                    composable(Screen.Privacy.route) {
+                        // Content untuk Privacy screen
+                        PrivacyScreen(onNavigate = {
+                            bottomNavController.popBackStack()
+                            bottomNavController.navigate(Screen.Setting.route)
+                        })
+                    }
+                    composable(Screen.About.route) {
+                        // Content untuk About screen
+                        AboutScreen(onNavigate = {
+                            bottomNavController.popBackStack()
+                            bottomNavController.navigate(Screen.Setting.route)
+                        })
                     }
                 }
             }

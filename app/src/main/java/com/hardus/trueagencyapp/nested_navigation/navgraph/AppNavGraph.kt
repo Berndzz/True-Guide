@@ -12,8 +12,9 @@ import com.hardus.trueagencyapp.main_content.home.feature_members.MembersScreen
 import com.hardus.trueagencyapp.main_content.home.feature_note.domain.model.NoteCategory
 import com.hardus.trueagencyapp.main_content.home.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import com.hardus.trueagencyapp.main_content.home.feature_note.presentation.notes.NoteScreen
-import com.hardus.trueagencyapp.main_content.home.feature_qr.QrScanningScreen
-import com.hardus.trueagencyapp.main_content.home.feature_userForm.UserFormScreen
+import com.hardus.trueagencyapp.main_content.home.feature_qrcode.presentation.QrScanningScreen
+import com.hardus.trueagencyapp.main_content.home.feature_userForm.presentation.FormRoute
+import com.hardus.trueagencyapp.main_content.home.feature_userForm.presentation.UserFormScreen
 import com.hardus.trueagencyapp.nested_navigation.APP_GRAPH_ROUTE
 import com.hardus.trueagencyapp.nested_navigation.Screen
 
@@ -30,10 +31,16 @@ fun NavGraphBuilder.appNavGraph(
             AppScreen(navController = navController, windowSize, onBackPressed)
         }
         composable(route = Screen.FormUsers.route) {
-            UserFormScreen(onNavigate = {
-                navController.popBackStack()
-                navController.navigate(route = Screen.Home.route)
-            })
+            UserFormScreen(
+                onNavigate = {
+                    navController.popBackStack()
+                    navController.navigate(route = Screen.Home.route)
+                },
+                onFormPage = {
+                    navController.popBackStack()
+                    navController.navigate(route = Screen.FormFragment.route)
+                }
+            )
         }
         composable(route = Screen.NoteSc.route) {
             NoteScreen(
@@ -87,6 +94,14 @@ fun NavGraphBuilder.appNavGraph(
                     navController.popBackStack()
                     navController.navigate(route = Screen.NoteSc.route)
                 }
+            )
+        }
+        composable(route = Screen.FormFragment.route) {
+            FormRoute(
+                onFormComplete = {
+                    navController.navigate(route = Screen.FormUsers.route)
+                },
+                onNavUp = navController::navigateUp
             )
         }
     }

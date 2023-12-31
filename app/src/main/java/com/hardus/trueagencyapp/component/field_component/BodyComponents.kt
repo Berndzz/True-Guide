@@ -1,4 +1,4 @@
-package com.hardus.trueagencyapp.component
+package com.hardus.trueagencyapp.component.field_component
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -18,18 +18,18 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,6 +49,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -72,35 +73,39 @@ fun HeadingTextComponent(value: String) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTextField(
+    text: String,
     labelValue: String,
     imageVector: ImageVector,
     onTextSelected: (String) -> Unit,
     errorStatus: Boolean = false,
     focusRequester: FocusRequester,
     keyboardOptions: KeyboardOptions,
-    keyboardActions: KeyboardActions
+    keyboardActions: KeyboardActions,
+    modifier: Modifier = Modifier,
+    placeholder: String? = null
 ) {
-    var textValue by remember { mutableStateOf("") }
-    OutlinedTextField(modifier = Modifier
-        .fillMaxWidth()
-        .focusRequester(focusRequester)
-        .padding(horizontal = 35.dp),
+    var textValue by rememberSaveable { mutableStateOf("") }
+    OutlinedTextField(modifier = modifier.focusRequester(focusRequester),
         label = { Text(text = labelValue) },
-        value = textValue,
-        colors = TextFieldDefaults.outlinedTextFieldColors(
+        value = text,
+        colors = OutlinedTextFieldDefaults.colors(
+            cursorColor = colorResource(id = R.color.black),
             focusedBorderColor = colorResource(id = R.color.black),
             focusedLabelColor = colorResource(id = R.color.black),
-            cursorColor = colorResource(id = R.color.black),
         ),
+
         singleLine = true,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         onValueChange = {
-            textValue = it
             onTextSelected(it)
+        },
+        placeholder = {
+            if (placeholder != null) {
+                Text(text = placeholder)
+            }
         },
         leadingIcon = {
             Icon(imageVector = imageVector, contentDescription = "")
@@ -127,36 +132,56 @@ fun TextError(labelError: String) {
     )
 }
 
+@Composable
+fun MottoTextArea(
+    motto: String,
+    onMottoChanged: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OutlinedTextField(
+        value = motto,
+        onValueChange = onMottoChanged,
+        label = { Text("Motto Hidup") },
+        modifier = modifier
+            .fillMaxWidth()
+            .height(150.dp), // Atur tinggi sesuai kebutuhan
+        textStyle = TextStyle(fontSize = 16.sp, textAlign = TextAlign.Start),
+        maxLines = 10, // Atur jumlah maksimal baris atau biarkan tidak terbatas
+        colors = OutlinedTextFieldDefaults.colors(
+            cursorColor = colorResource(id = R.color.black),
+            focusedBorderColor = colorResource(id = R.color.black),
+            focusedLabelColor = colorResource(id = R.color.black),
+        ),
+    )
+}
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun PasswordTextFieldComponent(
+    text: String,
     labelValue: String,
     imageVector: ImageVector,
     onTextSelected: (String) -> Unit,
     errorStatus: Boolean = false,
     focusRequester: FocusRequester,
     keyboardOptions: KeyboardOptions,
-    keyboardActions: KeyboardActions
+    keyboardActions: KeyboardActions,
+    modifier: Modifier = Modifier
 ) {
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
 
-    OutlinedTextField(modifier = Modifier
-        .fillMaxWidth()
-        .focusRequester(focusRequester)
-        .padding(horizontal = 35.dp),
+    OutlinedTextField(modifier = modifier.focusRequester(focusRequester),
         label = { Text(text = labelValue) },
-        value = password,
-        colors = TextFieldDefaults.outlinedTextFieldColors(
+        value = text,
+        colors = OutlinedTextFieldDefaults.colors(
+            cursorColor = colorResource(id = R.color.black),
             focusedBorderColor = colorResource(id = R.color.black),
             focusedLabelColor = colorResource(id = R.color.black),
-            cursorColor = colorResource(id = R.color.black),
         ),
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         onValueChange = {
-            password = it
             onTextSelected(it)
         },
         visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -183,22 +208,23 @@ fun PasswordTextFieldComponent(
 fun CheckboxComponents(
     value: String,
     onTextSelected: (String) -> Unit,
+    checkedState: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
-    var checkedState by remember {
-        mutableStateOf(false)
-    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 25.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Checkbox(checked = checkedState, onCheckedChange = {
-            checkedState = !checkedState
-            onCheckedChange.invoke(it)
-            Log.d("Checkbox Clicked", "$checkedState")
-        })
+        Checkbox(
+            checked = checkedState,
+            onCheckedChange = { isChecked ->
+                onCheckedChange(isChecked)
+                Log.d("Checkbox Clicked", "$isChecked")
+            }
+        )
         ClickableTextComponents(value = value, onTextSelected = onTextSelected)
     }
 }

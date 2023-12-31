@@ -47,8 +47,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hardus.trueagencyapp.R
 import com.hardus.trueagencyapp.auth.viewmodel.AuthViewModel
-import com.hardus.trueagencyapp.component.ButtonComponent
-import com.hardus.trueagencyapp.component.SettingComponents
+import com.hardus.trueagencyapp.component.field_component.ButtonComponent
+import com.hardus.trueagencyapp.component.setting_component.SettingComponents
 import com.hardus.trueagencyapp.nested_navigation.AUTH_GRAPH_ROUTE
 import com.hardus.trueagencyapp.util.ProgramContentType
 

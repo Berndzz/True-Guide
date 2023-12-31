@@ -52,7 +52,6 @@ import com.hardus.trueagencyapp.main_content.home.feature_note.presentation.add_
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditNoteScreen(
     navController: NavController,
@@ -65,8 +64,6 @@ fun AddEditNoteScreen(
     val contentState = viewModel.noteContent.value
 
     val categories = listOf("Prospect", "Recruit")
-    val currentCategory = viewModel.noteCategory.value
-    // var selectedCategory by remember { mutableStateOf(currentCategory) }
 
     var selectedCategory by remember { mutableStateOf(noteCategory) }
 
@@ -116,7 +113,7 @@ fun AddEditNoteScreen(
                     onClick = {
                         viewModel.onEvent(AddEditNoteEvent.SaveNote)
                     },
-                    containerColor = MaterialTheme.colorScheme.primary,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = Color.White
                 ) {
                     Icon(imageVector = Icons.Default.Save, contentDescription = "Save note")

@@ -63,6 +63,7 @@ sealed class Screen(
     object AddEditNoteScreen: Screen(route = "add_edit_note_screen")
     object QrCode : Screen(route = "qrcode_screen")
     object Members : Screen(route = "members_screen")
+    object FormFragment: Screen(route = "formFragment_screen")
 
     // App - Setting
     object ChangeLanguage : Screen(route = "changeLanguage_screen")

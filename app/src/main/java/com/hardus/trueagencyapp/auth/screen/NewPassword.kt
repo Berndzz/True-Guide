@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -25,12 +27,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hardus.trueagencyapp.R
+import com.hardus.trueagencyapp.auth.viewmodel.AuthViewModel
 import com.hardus.trueagencyapp.component.AppbarAddOne
-import com.hardus.trueagencyapp.component.ButtonComponent
-import com.hardus.trueagencyapp.component.PasswordTextFieldComponent
+import com.hardus.trueagencyapp.component.field_component.ButtonComponent
+import com.hardus.trueagencyapp.component.field_component.PasswordTextFieldComponent
 import com.hardus.trueagencyapp.nested_navigation.Screen
 
 
@@ -41,6 +45,7 @@ fun NewPasswordScreen(navController: NavHostController) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val (focusPassword1, focusPassword2) = remember { FocusRequester.createRefs() }
     val scrollState = rememberScrollState()
+    val newPasswordViewModel: AuthViewModel = hiltViewModel()
 
     Surface(
         color = Color.White, modifier = Modifier
@@ -55,6 +60,7 @@ fun NewPasswordScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(32.dp))
             Column(modifier = Modifier.verticalScroll(scrollState)) {
                 PasswordTextFieldComponent(
+                    text = newPasswordViewModel.passwordUsersResponse,
                     labelValue = stringResource(id = R.string.password),
                     imageVector = Icons.Outlined.Lock,
                     onTextSelected = {},
@@ -64,11 +70,15 @@ fun NewPasswordScreen(navController: NavHostController) {
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Next,
                     ),
-                    keyboardActions = KeyboardActions(onDone = { focusPassword2.requestFocus() })
+                    keyboardActions = KeyboardActions(onDone = { focusPassword2.requestFocus() }),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 35.dp),
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
                 PasswordTextFieldComponent(
+                    text = newPasswordViewModel.repeatPasswordUsersResponse,
                     labelValue = stringResource(id = R.string.repeat_your_password),
                     imageVector = Icons.Outlined.Lock,
                     onTextSelected = {},
@@ -78,7 +88,10 @@ fun NewPasswordScreen(navController: NavHostController) {
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done,
                     ),
-                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
+                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 35.dp),
                 )
 
                 Spacer(modifier = Modifier.height(35.dp))

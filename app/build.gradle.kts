@@ -61,6 +61,7 @@ dependencies {
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation ("androidx.appcompat:appcompat:1.6.1")
 
     // room
     implementation("androidx.room:room-runtime:$room_version")
@@ -80,6 +81,9 @@ dependencies {
 
     // Splash API
     implementation("androidx.core:core-splashscreen:1.0.1")
+
+    //lottie
+    implementation("com.airbnb.android:lottie-compose:4.0.0")
 
     // windows-screen-size
     implementation("androidx.compose.material3:material3-window-size-class")
@@ -108,6 +112,8 @@ dependencies {
     kapt("androidx.hilt:hilt-compiler:1.1.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
+    //QR CODE by google
+    implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
 
     // firebase
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
@@ -118,7 +124,6 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")

@@ -21,9 +21,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun SearchBara(modifier: Modifier = Modifier, onSearch: (String) -> Unit) {
+fun NoteSearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit) {
     var text by remember { mutableStateOf("") }
 
     TextField(

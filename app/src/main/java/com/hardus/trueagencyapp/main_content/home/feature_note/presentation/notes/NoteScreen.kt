@@ -42,9 +42,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.hardus.auth.components.anim_component.EmptyAnim
 import com.hardus.trueagencyapp.main_content.home.feature_note.presentation.notes.components.NoteItem
+import com.hardus.trueagencyapp.main_content.home.feature_note.presentation.notes.components.NoteSearchBar
 import com.hardus.trueagencyapp.main_content.home.feature_note.presentation.notes.components.OrderSection
-import com.hardus.trueagencyapp.main_content.home.feature_note.presentation.notes.components.SearchBara
 import com.hardus.trueagencyapp.nested_navigation.Screen
 import kotlinx.coroutines.launch
 
@@ -102,14 +103,19 @@ fun NoteScreen(
                 onClick = {
                     navController.navigate(Screen.AddEditNoteScreen.route)
                 },
-                containerColor = MaterialTheme.colorScheme.primary,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = Color.White
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add note")
             }
         },
         snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
+            SnackbarHost(hostState = snackbarHostState) {
+                Snackbar(
+                    snackbarData = it,
+                    containerColor = MaterialTheme.colorScheme.onBackground
+                )
+            }
         },
         content = { paddingValue ->
             Column(
@@ -117,7 +123,7 @@ fun NoteScreen(
                     .fillMaxSize()
                     .padding(paddingValue)
             ) {
-                SearchBara(
+                NoteSearchBar(
                     onSearch = { searchQuery ->
                         viewModel.onSearchQueryChange(searchQuery)
                     }
@@ -139,40 +145,42 @@ fun NoteScreen(
                     )
                 }
                 Spacer(modifier = Modifier.height(20.dp))
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(start = 10.dp, end = 10.dp)
-                ) {
-                    items(state.notes) { note ->
-                        NoteItem(note = note,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    navController.navigate(
-                                        Screen.AddEditNoteScreen.route +
-                                                "?noteId=${note.id}&noteColor=${note.color}&noteCategory=${note.category}"
-                                    )
-                                },
-                            onDeleteClick = {
-                                viewModel.onEvent(NotesEvent.DeleteNote(note))
-                                scope.launch {
-                                    val result = snackbarHostState.showSnackbar(
-                                        message = "Note Deleted",
-                                        actionLabel = "Undo",
-                                        duration = SnackbarDuration.Short
-                                    )
-                                    if (result == SnackbarResult.ActionPerformed) {
-                                        viewModel.onEvent(NotesEvent.RestoreNote)
+                if (state.notes.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(start = 10.dp, end = 10.dp)
+                    ) {
+                        items(state.notes) { note ->
+                            NoteItem(note = note,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        navController.navigate(
+                                            Screen.AddEditNoteScreen.route +
+                                                    "?noteId=${note.id}&noteColor=${note.color}&noteCategory=${note.category}"
+                                        )
+                                    },
+                                onDeleteClick = {
+                                    viewModel.onEvent(NotesEvent.DeleteNote(note))
+                                    scope.launch {
+                                        val result = snackbarHostState.showSnackbar(
+                                            message = "Note Deleted",
+                                            actionLabel = "Undo",
+                                            duration = SnackbarDuration.Short
+                                        )
+                                        if (result == SnackbarResult.ActionPerformed) {
+                                            viewModel.onEvent(NotesEvent.RestoreNote)
+                                        }
                                     }
                                 }
-                            }
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
                     }
+                } else {
+                    EmptyAnim()
                 }
             }
-
-        }
-    )
+        })
 }

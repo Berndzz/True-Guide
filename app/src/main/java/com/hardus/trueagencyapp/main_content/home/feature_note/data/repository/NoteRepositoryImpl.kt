@@ -1,7 +1,8 @@
-package com.hardus.trueagencyapp.main_content.home.feature_note.domain.repository
+package com.hardus.trueagencyapp.main_content.home.feature_note.data.repository
 
 import com.hardus.trueagencyapp.main_content.home.feature_note.data.data_source.NoteDao
 import com.hardus.trueagencyapp.main_content.home.feature_note.domain.model.Note
+import com.hardus.trueagencyapp.main_content.home.feature_note.domain.repository.NoteRepository
 import kotlinx.coroutines.flow.Flow
 
 class NoteRepositoryImpl(

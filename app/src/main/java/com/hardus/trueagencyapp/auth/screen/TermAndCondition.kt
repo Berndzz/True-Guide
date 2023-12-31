@@ -11,7 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hardus.trueagencyapp.R
-import com.hardus.trueagencyapp.component.HeadingTextComponent
+import com.hardus.trueagencyapp.component.field_component.HeadingTextComponent
 
 @Composable
 fun TermAndConditionScreen() {

@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -40,11 +42,11 @@ import com.hardus.trueagencyapp.R
 import com.hardus.trueagencyapp.auth.data.register.RegisterUIEvent
 import com.hardus.trueagencyapp.auth.viewmodel.AuthViewModel
 import com.hardus.trueagencyapp.component.AppbarAuthentication
-import com.hardus.trueagencyapp.component.ButtonComponent
-import com.hardus.trueagencyapp.component.CheckboxComponents
-import com.hardus.trueagencyapp.component.MyTextField
-import com.hardus.trueagencyapp.component.PasswordTextFieldComponent
-import com.hardus.trueagencyapp.component.TextButtonComponent
+import com.hardus.trueagencyapp.component.field_component.ButtonComponent
+import com.hardus.trueagencyapp.component.field_component.CheckboxComponents
+import com.hardus.trueagencyapp.component.field_component.MyTextField
+import com.hardus.trueagencyapp.component.field_component.PasswordTextFieldComponent
+import com.hardus.trueagencyapp.component.field_component.TextButtonComponent
 import com.hardus.trueagencyapp.firebase.Resource
 
 
@@ -63,6 +65,10 @@ fun RegistrationScreen(
 
     val registerFlow = registerViewModel.registerFlow.collectAsState()
 
+    LaunchedEffect(Unit) {
+        registerViewModel.setRegistrationMode(true)
+    }
+
     Box(
         modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
     ) {
@@ -78,42 +84,47 @@ fun RegistrationScreen(
                 Column(modifier = Modifier.verticalScroll(scrollState)) {
                     registerViewModel.registrationUIState.value.let {
                         MyTextField(
+                            text = registerViewModel.usernameUserResponse,
                             labelValue = stringResource(id = R.string.username),
                             imageVector = Icons.Outlined.Person,
                             onTextSelected = {
-                                registerViewModel.onEventRegister(RegisterUIEvent.UsernameChanged(it))
+                                registerViewModel.onUsernameUserChange(it)
                             },
                             errorStatus = it.usernameError,
                             focusUsername,
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                            keyboardActions = KeyboardActions(onNext = { focusEmail.requestFocus() })
+                            keyboardActions = KeyboardActions(onNext = { focusEmail.requestFocus() }),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 35.dp),
                         )
                     }
 
                     registerViewModel.registrationUIState.value.let {
                         MyTextField(
+                            text = registerViewModel.emailUserResponse,
                             labelValue = stringResource(id = R.string.email),
                             imageVector = Icons.Outlined.Email,
                             onTextSelected = {
-                                registerViewModel.onEventRegister(RegisterUIEvent.EmailChanged(it))
+                                registerViewModel.onEmailUserChange(it)
                             },
                             errorStatus = it.emailError,
                             focusEmail,
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                            keyboardActions = KeyboardActions(onNext = { focusPhoneNumber.requestFocus() })
+                            keyboardActions = KeyboardActions(onNext = { focusPhoneNumber.requestFocus() }),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 35.dp),
                         )
                     }
 
                     registerViewModel.registrationUIState.value.let {
                         MyTextField(
+                            text = registerViewModel.phoneNumberUserResponse,
                             labelValue = stringResource(id = R.string.phone_number),
                             imageVector = Icons.Outlined.Phone,
                             onTextSelected = {
-                                registerViewModel.onEventRegister(
-                                    RegisterUIEvent.PhoneNumberChanged(
-                                        it
-                                    )
-                                )
+                                registerViewModel.onPhoneNumberChange(it)
                             },
                             errorStatus = it.phoneNumberError,
                             focusPhoneNumber,
@@ -121,16 +132,20 @@ fun RegistrationScreen(
                                 keyboardType = KeyboardType.Phone,
                                 imeAction = ImeAction.Next,
                             ),
-                            keyboardActions = KeyboardActions(onNext = { focusPassword.requestFocus() })
+                            keyboardActions = KeyboardActions(onNext = { focusPassword.requestFocus() }),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 35.dp),
                         )
                     }
 
                     registerViewModel.registrationUIState.value.let {
                         PasswordTextFieldComponent(
+                            text = registerViewModel.passwordUsersResponse,
                             labelValue = stringResource(id = R.string.password),
                             imageVector = Icons.Outlined.Lock,
                             onTextSelected = {
-                                registerViewModel.onEventRegister(RegisterUIEvent.PasswordChanged(it))
+                                registerViewModel.onPasswordUserChange(it)
                             },
                             errorStatus = it.passwordError,
                             focusPassword,
@@ -138,7 +153,10 @@ fun RegistrationScreen(
                                 keyboardType = KeyboardType.Password,
                                 imeAction = ImeAction.Done,
                             ),
-                            keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
+                            keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 35.dp),
                         )
                     }
 
@@ -147,20 +165,21 @@ fun RegistrationScreen(
                         onTextSelected = {
                             onTermAndCondition()
                         },
+                        checkedState = registerViewModel.privacyPolicyResponse,
                         onCheckedChange = {
-                            registerViewModel.onEventRegister(
-                                RegisterUIEvent.PrivacyPolicyCheckBoxClicked(
-                                    it
-                                )
-                            )
+                            registerViewModel.onPrivacyPolicyChange(it)
                         })
 
                     Spacer(modifier = Modifier.height(20.dp))
 
                     ButtonComponent(
-                        value = stringResource(id = R.string.register), onNavigate = {
+                        value = stringResource(
+                            id = R.string.register
+                        ),
+                        onNavigate = {
                             registerViewModel.onEventRegister(RegisterUIEvent.RegisterButtonClicked)
-                        }, isEnabled = registerViewModel.allValidatePass.value
+                        },
+                        isEnabled = registerViewModel.allValidatePass.value
                     )
                     Spacer(modifier = Modifier.height(10.dp))
 

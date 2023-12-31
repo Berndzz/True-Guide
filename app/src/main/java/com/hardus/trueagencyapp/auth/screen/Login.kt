@@ -45,14 +45,15 @@ import com.hardus.trueagencyapp.R
 import com.hardus.trueagencyapp.auth.data.login.LoginUIEvent
 import com.hardus.trueagencyapp.auth.viewmodel.AuthViewModel
 import com.hardus.trueagencyapp.component.AppbarAuthentication
-import com.hardus.trueagencyapp.component.ButtonComponent
-import com.hardus.trueagencyapp.component.ButtonComponentWithIcon
-import com.hardus.trueagencyapp.component.DividerTextComponent
-import com.hardus.trueagencyapp.component.MyTextField
-import com.hardus.trueagencyapp.component.PasswordTextFieldComponent
-import com.hardus.trueagencyapp.component.TextButtonComponent
-import com.hardus.trueagencyapp.component.TextButtonComponent2
+import com.hardus.trueagencyapp.component.field_component.ButtonComponent
+import com.hardus.trueagencyapp.component.field_component.ButtonComponentWithIcon
+import com.hardus.trueagencyapp.component.field_component.DividerTextComponent
+import com.hardus.trueagencyapp.component.field_component.MyTextField
+import com.hardus.trueagencyapp.component.field_component.PasswordTextFieldComponent
+import com.hardus.trueagencyapp.component.field_component.TextButtonComponent
+import com.hardus.trueagencyapp.component.field_component.TextButtonComponent2
 import com.hardus.trueagencyapp.firebase.Resource
+
 //loginViewModel: AuthViewModel? = hiltViewModel(),
 
 @OptIn(
@@ -73,6 +74,10 @@ fun LoginScreen(
 
     val loginFlow = loginViewModel.loginFlow.collectAsState()
 
+    LaunchedEffect(Unit) {
+        loginViewModel.setRegistrationMode(false)
+    }
+
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Surface(
             color = Color.White, modifier = Modifier
@@ -88,24 +93,31 @@ fun LoginScreen(
 
                     loginViewModel.loginUIState.value.let {
                         MyTextField(
+                            text = loginViewModel.emailUserResponse,
                             labelValue = stringResource(id = R.string.email),
                             imageVector = Icons.Outlined.Email,
                             onTextSelected = {
-                                loginViewModel.onEventLogin(LoginUIEvent.EmailChanged(it))
+                                //loginViewModel.onEventLogin(LoginUIEvent.EmailChanged(it))
+                                loginViewModel.onEmailUserChange(it)
                             },
                             errorStatus = it.emailError,
                             focusEmail,
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                            keyboardActions = KeyboardActions(onNext = { focusPassword.requestFocus() })
+                            keyboardActions = KeyboardActions(onNext = { focusPassword.requestFocus() }),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 35.dp),
                         )
                     }
 
                     loginViewModel.loginUIState.value.let {
                         PasswordTextFieldComponent(
+                            text = loginViewModel.passwordUsersResponse,
                             labelValue = stringResource(id = R.string.password),
                             imageVector = Icons.Outlined.Lock,
                             onTextSelected = {
-                                loginViewModel.onEventLogin(LoginUIEvent.PasswordChanged(it))
+                                //loginViewModel.onEventLogin(LoginUIEvent.PasswordChanged(it))
+                                loginViewModel.onPasswordUserChange(it)
                             },
                             errorStatus = it.passwordError,
                             focusPassword,
@@ -113,7 +125,10 @@ fun LoginScreen(
                                 keyboardType = KeyboardType.Password,
                                 imeAction = ImeAction.Done,
                             ),
-                            keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
+                            keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 35.dp),
                         )
                     }
                     Spacer(modifier = Modifier.height(20.dp))

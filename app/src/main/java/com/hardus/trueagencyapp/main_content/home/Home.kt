@@ -244,7 +244,7 @@ fun Menu(onNote: () -> Unit, onScan: () -> Unit, onMember: () -> Unit) {
             .fillMaxWidth()
             .height(70.dp)
             .background(
-                color = MaterialTheme.colorScheme.inverseOnSurface,
+                color = MaterialTheme.colorScheme.inverseSurface,
                 shape = MaterialTheme.shapes.medium
             ),
         verticalAlignment = Alignment.CenterVertically,
@@ -264,11 +264,11 @@ fun Menu(onNote: () -> Unit, onScan: () -> Unit, onMember: () -> Unit) {
                     .clickable {
                         onNote()
                     },
-                tint = Color.White,
+                tint = MaterialTheme.colorScheme.onSecondary,
             )
         }
         Divider(
-            color = Color.White, modifier = Modifier
+            color = MaterialTheme.colorScheme.onSecondary, modifier = Modifier
                 .width(3.dp)
                 .fillMaxHeight()
         )
@@ -285,11 +285,11 @@ fun Menu(onNote: () -> Unit, onScan: () -> Unit, onMember: () -> Unit) {
                     .clickable {
                         onScan()
                     },
-                tint = Color.White
+                tint = MaterialTheme.colorScheme.onSecondary
             )
         }
         Divider(
-            color = Color.White, modifier = Modifier
+            color = MaterialTheme.colorScheme.onSecondary, modifier = Modifier
                 .width(3.dp)
                 .fillMaxHeight()
         )
@@ -304,7 +304,7 @@ fun Menu(onNote: () -> Unit, onScan: () -> Unit, onMember: () -> Unit) {
                 modifier = Modifier
                     .size(30.dp)
                     .clickable { onMember() },
-                tint = Color.White
+                tint = MaterialTheme.colorScheme.onSecondary
             )
         }
     }

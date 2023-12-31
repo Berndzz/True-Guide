@@ -37,7 +37,7 @@ import com.hardus.trueagencyapp.main_content.program.ProgramScreen
 import com.hardus.trueagencyapp.main_content.setting.SettingScreen
 import com.hardus.trueagencyapp.nested_navigation.Screen
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun AppScreen(
     navController: NavHostController,
@@ -45,7 +45,6 @@ fun AppScreen(
     onBackPressed: () -> Unit,
 ) {
     val bottomNavController = rememberNavController()
-    val context = LocalContext.current
     Scaffold(
         bottomBar = {
             BottomNavigationBar(bottomNavController = bottomNavController)

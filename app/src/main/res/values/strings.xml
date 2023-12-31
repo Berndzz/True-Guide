@@ -20,6 +20,11 @@
     <string name="enter_otp_code">Enter\nOTP Code !!</string>
     <string name="an_4_digit_code_has_sent_to">An 4 Digit code has sent to %1$s</string>
     <string name="username">Username</string>
+    <string name="fullname">Full name</string>
+    <string name="agent_code">Agent Code</string>
+    <string name="address">Address</string>
+    <string name="vision">Visi</string>
+    <string name="title_leader">Title Leader</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="term_and_condition">By continuing you accept our Privacy Policy and Term of Use</string>
@@ -33,5 +38,6 @@
         <item quantity="one">%1$d Kegiatan</item>
         <item quantity="other">%1$d Kegiatan</item>
     </plurals>
-
+    <string name="question_count">\u00A0of %d</string>
+    <string name="close">Close</string>
 </resources>

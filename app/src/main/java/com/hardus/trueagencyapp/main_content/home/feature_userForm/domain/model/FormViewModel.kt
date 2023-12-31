@@ -181,7 +181,6 @@ class FormViewModel() : ViewModel() {
                 _visiResponse.value.isNotEmpty() && _lifeMottoResponse.value.isNotEmpty()
             }
 
-            else -> false
         }
     }
 

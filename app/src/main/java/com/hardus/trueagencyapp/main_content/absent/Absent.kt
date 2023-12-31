@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -47,11 +48,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hardus.trueagencyapp.ui.theme.TrueAgencyAppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AbsentScreen(
-    navController: NavController
-) {
+fun AbsentScreen() {
     val viewModel: AbsentViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
 
@@ -79,7 +77,9 @@ fun AbsentScreen(
 @Composable
 fun TopAppBarAbsent() {
     TopAppBar(
-        colors = TopAppBarDefaults.smallTopAppBarColors(MaterialTheme.colorScheme.primary),
+        colors = topAppBarColors(
+        MaterialTheme.colorScheme.primary
+        ),
         title = {
             Text(
                 text = "Absent", color = Color.White, fontWeight = FontWeight.Bold
@@ -304,5 +304,5 @@ fun CheckCardAbsentScreen() {
 @Preview
 @Composable
 fun CheckAbsentScreen() {
-    AbsentScreen(rememberNavController())
+    AbsentScreen()
 }

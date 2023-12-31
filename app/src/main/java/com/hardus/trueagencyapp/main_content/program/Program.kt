@@ -38,7 +38,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -64,8 +64,6 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.hardus.trueagencyapp.R
@@ -78,7 +76,6 @@ import com.hardus.trueagencyapp.util.SubTraining
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProgramScreen(
-    navController: NavController,
     windowSize: WindowWidthSizeClass,
     onBackPressed: () -> Unit,
 ) {
@@ -168,7 +165,9 @@ fun TopAppBarProgram(
     }
 
     TopAppBar(modifier = modifier,
-        colors = TopAppBarDefaults.smallTopAppBarColors(MaterialTheme.colorScheme.primary),
+        colors = topAppBarColors(
+            MaterialTheme.colorScheme.primary
+        ),
         title = {
             Text(
                 text = displayedTitle, color = Color.White, fontWeight = FontWeight.Bold
@@ -529,7 +528,6 @@ private fun ProgramListAndDetail(
 fun CheckProgramScreen() {
     TrueAgencyAppTheme {
         ProgramScreen(
-            rememberNavController(),
             windowSize = WindowWidthSizeClass.Compact,
             onBackPressed = {}
         )

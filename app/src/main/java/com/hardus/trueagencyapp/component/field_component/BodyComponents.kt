@@ -86,7 +86,6 @@ fun MyTextField(
     modifier: Modifier = Modifier,
     placeholder: String? = null
 ) {
-    var textValue by rememberSaveable { mutableStateOf("") }
     OutlinedTextField(modifier = modifier.focusRequester(focusRequester),
         label = { Text(text = labelValue) },
         value = text,
@@ -168,7 +167,6 @@ fun PasswordTextFieldComponent(
     keyboardActions: KeyboardActions,
     modifier: Modifier = Modifier
 ) {
-    var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
 
     OutlinedTextField(modifier = modifier.focusRequester(focusRequester),

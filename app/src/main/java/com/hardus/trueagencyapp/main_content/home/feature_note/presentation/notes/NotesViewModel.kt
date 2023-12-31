@@ -101,7 +101,6 @@ class NotesViewModel @Inject constructor(
             val sortedNotes = when (noteOrder.orderType) {
                 is OrderType.Ascending -> filteredBySearchQuery.sortedBy { it.timestamp }
                 is OrderType.Descending -> filteredBySearchQuery.sortedByDescending { it.timestamp }
-                else -> filteredBySearchQuery
             }
 
             _state.value = state.value.copy(

@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.animation.with
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -49,7 +50,7 @@ fun FormRoute(
         AnimatedContent(
             targetState = personalDataScreenData,
             transitionSpec = {
-                slideInHorizontally() with slideOutHorizontally()
+                slideInHorizontally() togetherWith slideOutHorizontally()
             },
             label = "formScreenDataAnimation"
         ) { targetState ->

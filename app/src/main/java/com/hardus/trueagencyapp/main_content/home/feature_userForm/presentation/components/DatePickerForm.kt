@@ -84,7 +84,6 @@ fun CustomDatePicker(
 ) {
     val months =
         listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-    val years = (1900..LocalDate.now().year).toList().map(Int::toString)
 
     var expanded by remember { mutableStateOf(false) }
     val (selectedMonth, setSelectedMonth) = remember { mutableStateOf(months[selectedDate.monthValue - 1]) }

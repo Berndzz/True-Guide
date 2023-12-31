@@ -26,6 +26,7 @@ import androidx.compose.material.icons.outlined.NoteAlt
 import androidx.compose.material.icons.outlined.PeopleAlt
 import androidx.compose.material.icons.outlined.QrCodeScanner
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults.containerColor
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -38,6 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,7 +59,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.hardus.trueagencyapp.R
@@ -69,7 +70,6 @@ import com.hardus.trueagencyapp.util.generateFakeData
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navController: NavController,
     onUserForm: () -> Unit,
     onNote: () -> Unit,
     onScan: () -> Unit,
@@ -314,9 +314,9 @@ fun Menu(onNote: () -> Unit, onScan: () -> Unit, onMember: () -> Unit) {
 @Composable
 fun TopAppBarHome() {
     TopAppBar(
-        colors = TopAppBarDefaults.smallTopAppBarColors(
+        colors = topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
-            titleContentColor = MaterialTheme.colorScheme.onSecondary,
+            titleContentColor = MaterialTheme.colorScheme.onSecondary
         ), title = {
             Row(
                 modifier = Modifier.fillMaxWidth(),

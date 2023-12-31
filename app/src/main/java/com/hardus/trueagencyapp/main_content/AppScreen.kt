@@ -60,7 +60,6 @@ fun AppScreen(
                 ) {
                     composable(Screen.Home.route) {
                         HomeScreen(
-                            navController = navController,
                             onUserForm = { navController.navigate(Screen.FormUsers.route) },
                             onNote = { navController.navigate(Screen.NoteSc.route) },
                             onScan = { navController.navigate(Screen.QrCode.route) },
@@ -68,13 +67,12 @@ fun AppScreen(
                     }
                     composable(Screen.Program.route) {
                         ProgramScreen(
-                            navController = navController,
                             windowSize = windowSize,
                             onBackPressed = onBackPressed
                         )
                     }
                     composable(Screen.Absent.route) {
-                        AbsentScreen(navController = navController)
+                        AbsentScreen()
                     }
                     composable(Screen.Setting.route) {
                         SettingScreen(

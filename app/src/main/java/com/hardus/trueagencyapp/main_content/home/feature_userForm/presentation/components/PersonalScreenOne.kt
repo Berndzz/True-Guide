@@ -86,10 +86,6 @@ fun PersonalScreenOne(viewModel: FormViewModel, modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Tanggal Lahir - Implementasi DatePicker di sini
-
-            Spacer(modifier = Modifier.height(8.dp))
-
             DatePickerForm(
                 label = "Tanggal Lahir",
                 date = viewModel.dateOfBirth,

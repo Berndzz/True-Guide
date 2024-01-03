@@ -61,6 +61,7 @@ android {
 
 dependencies {
 
+    implementation("com.google.android.material:material:1.11.0")
     val room_version = "2.6.1"
 
     implementation("androidx.core:core-ktx:1.9.0")
@@ -82,6 +83,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation ("androidx.compose.material3:material3:1.2.0-alpha02")
 
     // Splash API
     implementation("androidx.core:core-splashscreen:1.0.1")
@@ -124,6 +126,10 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-auth:22.3.0")
     implementation("com.google.firebase:firebase-firestore-ktx")
+    //implementation("com.google.firebase:firebase-firestore:24.10.0")
+
+    //swap refresh
+    implementation ("com.google.accompanist:accompanist-swiperefresh:0.24.13-rc")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

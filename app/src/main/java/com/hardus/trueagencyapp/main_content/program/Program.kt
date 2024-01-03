@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,6 +42,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,31 +65,42 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.hardus.trueagencyapp.R
+import com.hardus.trueagencyapp.main_content.home.data.Aktivitas
+import com.hardus.trueagencyapp.main_content.home.data.Program
+import com.hardus.trueagencyapp.main_content.home.data.ProgramWithActivities
+import com.hardus.trueagencyapp.main_content.home.presentation.util.formatToString
 import com.hardus.trueagencyapp.ui.theme.TrueAgencyAppTheme
-import com.hardus.trueagencyapp.util.LocalProgramDataProvider
-import com.hardus.trueagencyapp.util.Post
 import com.hardus.trueagencyapp.util.ProgramContentType
-import com.hardus.trueagencyapp.util.SubTraining
+import kotlinx.coroutines.delay
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProgramScreen(
-    windowSize: WindowWidthSizeClass,
-    onBackPressed: () -> Unit,
+    windowSize: WindowWidthSizeClass, onBackPressed: () -> Unit, viewModel: ProgramViewModel
 ) {
-    val viewModel: ProgramViewModel = viewModel()
+
     val uiState by viewModel.uiState.collectAsState()
+    val isLoading = viewModel.isLoading.value
+    var refreshing by remember { mutableStateOf(false) }
+    LaunchedEffect(refreshing) {
+        if (refreshing) {
+            delay(3000)
+            refreshing = false
+        }
+    }
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
+
     val contentType = when (windowSize) {
-        WindowWidthSizeClass.Compact,
-        WindowWidthSizeClass.Medium -> ProgramContentType.ListOnly
+        WindowWidthSizeClass.Compact, WindowWidthSizeClass.Medium -> ProgramContentType.ListOnly
 
         WindowWidthSizeClass.Expanded -> ProgramContentType.ListAndDetail
         else -> ProgramContentType.ListOnly
     }
+
     Scaffold(topBar = {
         TopAppBarProgram(
             onBackButtonClick = { viewModel.navigateToListPage() },
@@ -96,50 +109,66 @@ fun ProgramScreen(
             viewModel = viewModel
         )
     }, content = { paddingValue ->
-        if (contentType == ProgramContentType.ListAndDetail) {
-            ProgramListAndDetail(
-                posts = uiState.programList,
-                selectedPost = uiState.currentProgram,
-                onClick = {
-                    viewModel.updateCurrentProgram(it)
-                },
-                onBackPressed = onBackPressed,
-                contentPadding = paddingValue,
-                modifier = Modifier.fillMaxWidth()
-            )
+        if (isLoading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
         } else {
-            if (uiState.isShowingListPage) {
-                ProgramList(
-                    posts = uiState.programList,
-                    onClick = {
-                        viewModel.updateCurrentProgram(it)
-                        viewModel.navigateToDetailPage()
-                    },
-                    contentPadding = paddingValue,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            top = dimensionResource(id = R.dimen.padding_medium),
-                            start = dimensionResource(id = R.dimen.padding_medium),
-                            end = dimensionResource(id = R.dimen.padding_medium)
-                        )
-                )
-            } else {
-                if (uiState.isShowingListPage) {
-                    ProgramList(
+            SwipeRefresh(state = swipeRefreshState, onRefresh = {
+                //viewModel.refreshPrograms()
+                refreshing = true
+            }) {
+                if (contentType == ProgramContentType.ListAndDetail) {
+                    ProgramListAndDetail(
                         posts = uiState.programList,
+                        selectedPost = uiState.currentProgram!!,
                         onClick = {
                             viewModel.updateCurrentProgram(it)
-                            viewModel.navigateToDetailPage()
-                        }, contentPadding = paddingValue,
-                        modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_medium))
+                        },
+                        onBackPressed = onBackPressed,
+                        contentPadding = paddingValue,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 } else {
-                    ProgramDetail(
-                        selectedPost = uiState.currentProgram,
-                        onBackPressed = { viewModel.navigateToListPage() },
-                        contentPadding = paddingValue
-                    )
+                    if (uiState.isShowingListPage) {
+                        ProgramList(
+                            posts = uiState.programList,
+                            onClick = {
+                                viewModel.updateCurrentProgram(it)
+                                viewModel.navigateToDetailPage()
+                            },
+                            contentPadding = paddingValue,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    top = dimensionResource(id = R.dimen.padding_medium),
+                                    start = dimensionResource(id = R.dimen.padding_medium),
+                                    end = dimensionResource(id = R.dimen.padding_medium)
+                                )
+                        )
+                    } else {
+                        if (uiState.isShowingListPage) {
+                            ProgramList(
+                                posts = uiState.programList,
+                                onClick = {
+                                    viewModel.updateCurrentProgram(it)
+                                    viewModel.navigateToDetailPage()
+                                },
+                                contentPadding = paddingValue,
+                                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_medium))
+                            )
+                        } else {
+                            uiState.currentProgram?.let { currentProgram ->
+                                ProgramDetail(
+                                    selectedPost = currentProgram,
+                                    onBackPressed = { viewModel.navigateToListPage() },
+                                    contentPadding = paddingValue
+                                )
+                            } ?: run {
+                                Text("No program selected")
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -161,36 +190,39 @@ fun TopAppBarProgram(
     val displayedTitle = if (!isShowingDetailPage) {
         stringResource(id = R.string.list_fragment_label)
     } else {
-        uiState.currentProgram.headerTitle
+        uiState.currentProgram?.program?.judul_program
     }
 
-    TopAppBar(modifier = modifier,
-        colors = topAppBarColors(
-            MaterialTheme.colorScheme.primary
-        ),
-        title = {
-            Text(
-                text = displayedTitle, color = Color.White, fontWeight = FontWeight.Bold
-            )
-        },
-        navigationIcon = if (!isShowingListPage) {
-            {
-                IconButton(onClick = onBackButtonClick) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack, contentDescription = "Back",
-                        tint = Color.White
-                    )
-                }
+    TopAppBar(modifier = modifier, colors = topAppBarColors(
+        MaterialTheme.colorScheme.primary
+    ), title = {
+        Text(
+            text = displayedTitle
+                ?: stringResource(id = R.string.default_title), // Default title jika null
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
+        )
+    }, navigationIcon = if (!isShowingListPage) {
+        {
+            IconButton(onClick = onBackButtonClick) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = Color.White
+                )
             }
-        } else {
-            { Box {} }
-        })
+        }
+    } else {
+        { Box {} }
+    })
 }
 
 @Composable
 fun ProgramList(
-    posts: List<Post>,
-    onClick: (Post) -> Unit,
+    posts: List<ProgramWithActivities>,
+    onClick: (ProgramWithActivities) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
@@ -199,7 +231,7 @@ fun ProgramList(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium)),
         modifier = modifier
     ) {
-        items(posts, key = { post -> post.idTraining }) { post ->
+        items(posts, key = { post -> post.program.id_program }) { post ->
             CardScreen(post = post, onItemClick = onClick)
         }
     }
@@ -207,37 +239,34 @@ fun ProgramList(
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun ProgramImage(post: Post, modifier: Modifier = Modifier) {
-    val urlImage = post.imagePost ?: ""
+fun ProgramImage(post: Program, modifier: Modifier = Modifier) {
+    val urlImage = post.photo_program
     val painter = if (urlImage.isNotEmpty()) {
         rememberImagePainter(data = urlImage)
     } else {
         painterResource(id = R.drawable.placeholder)
     }
     Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
+        modifier = modifier, contentAlignment = Alignment.Center
     ) {
         Image(
             painter = painter,
-            contentDescription = post.headerTitle,
+            contentDescription = post.judul_program,
             alignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
                 .size(600.dp, 600.dp)
                 .background(
                     Brush.verticalGradient(
-                        listOf(Color.Transparent, MaterialTheme.colorScheme.scrim),
-                        0f,
-                        600f
+                        listOf(Color.Transparent, MaterialTheme.colorScheme.scrim), 0f, 600f
                     )
                 ),
             contentScale = ContentScale.FillHeight,
         )
         Text(
-            text = post.headerTitle,
+            text = post.judul_program,
             style = MaterialTheme.typography.displaySmall,
-            textAlign = TextAlign.Justify,
+            textAlign = TextAlign.Center,
             color = Color.White,
             fontWeight = FontWeight.Bold
         )
@@ -247,23 +276,23 @@ fun ProgramImage(post: Post, modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardScreen(
-    post: Post,
-    onItemClick: (Post) -> Unit,
+    post: ProgramWithActivities,
+    onItemClick: (ProgramWithActivities) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val program = post.program
     Card(elevation = CardDefaults.cardElevation(4.dp),
         modifier = modifier,
         colors = CardDefaults.cardColors(Color.White),
         shape = MaterialTheme.shapes.small,
-        onClick = { onItemClick(post) })
-    {
+        onClick = { onItemClick(post) }) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .size(128.dp)
         ) {
             ProgramImage(
-                post = post, modifier = Modifier.size(128.dp)
+                post = program, modifier = Modifier.size(128.dp)
             )
             Column(
                 modifier = Modifier
@@ -274,7 +303,7 @@ fun CardScreen(
                     .weight(1f)
             ) {
                 Text(
-                    text = post.introParagraph,
+                    text = program.deskripsi_program,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.secondary,
                     overflow = TextOverflow.Ellipsis,
@@ -283,7 +312,7 @@ fun CardScreen(
                 Spacer(Modifier.weight(1f))
                 //Text(text = "${post.subTrainingList.length()} Kegiatan ")
                 Text(
-                    text = "${post.subTrainingList.size} Kegiatan",
+                    text = "${post.activities.size} Kegiatan",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -294,7 +323,7 @@ fun CardScreen(
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun ProgramDetail(
-    selectedPost: Post,
+    selectedPost: ProgramWithActivities,
     onBackPressed: () -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
@@ -302,7 +331,8 @@ fun ProgramDetail(
     BackHandler {
         onBackPressed()
     }
-    val urlImage = selectedPost.imagePost ?: ""
+    val program = selectedPost.program
+    val urlImage = program.photo_program
     val painter = if (urlImage.isNotEmpty()) {
         rememberImagePainter(data = urlImage)
     } else {
@@ -317,8 +347,7 @@ fun ProgramDetail(
             .padding(top = contentPadding.calculateTopPadding())
     ) {
         Column(
-            modifier = Modifier
-                .padding(
+            modifier = Modifier.padding(
                     bottom = contentPadding.calculateTopPadding(),
                     start = contentPadding.calculateStartPadding(layoutDirection),
                     end = contentPadding.calculateEndPadding(layoutDirection)
@@ -347,9 +376,7 @@ fun ProgramDetail(
                         .align(Alignment.BottomStart)
                         .background(
                             Brush.verticalGradient(
-                                listOf(Color.Transparent, MaterialTheme.colorScheme.scrim),
-                                0f,
-                                400f
+                                listOf(Color.Transparent, MaterialTheme.colorScheme.scrim), 0f, 400f
                             )
                         )
                         .clip(MaterialTheme.shapes.medium)
@@ -357,8 +384,8 @@ fun ProgramDetail(
                     Text(
                         text = pluralStringResource(
                             R.plurals.activity_count_caption,
-                            selectedPost.subTrainingList.size,
-                            selectedPost.subTrainingList.size
+                            selectedPost.activities.size,
+                            selectedPost.activities.size
                         ),
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.bodySmall,
@@ -368,7 +395,7 @@ fun ProgramDetail(
                 }
             }
             Text(
-                text = selectedPost.introParagraph,
+                text = program.deskripsi_program,
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Justify,
                 modifier = Modifier.padding(
@@ -377,14 +404,22 @@ fun ProgramDetail(
                 )
             )
             Spacer(modifier = Modifier.padding(10.dp))
-            val nonEmptyPosts = selectedPost.subTrainingList.isNotEmpty()
             ActivityScreen(post = selectedPost)
+            Text(
+                text = program.deskripsi_program,
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Justify,
+                modifier = Modifier.padding(
+                    vertical = dimensionResource(R.dimen.padding_medium),
+                    horizontal = dimensionResource(R.dimen.padding_medium)
+                )
+            )
         }
     }
 }
 
 @Composable
-fun ActivityScreen(post: Post) {
+fun ActivityScreen(post: ProgramWithActivities) {
     Column {
         Row(
             modifier = Modifier
@@ -392,8 +427,8 @@ fun ActivityScreen(post: Post) {
                 .height(IntrinsicSize.Max)
                 .padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            if (post.subTrainingList.isNotEmpty()) {
-                post.subTrainingList.forEach { subTraining ->
+            if (post.activities.isNotEmpty()) {
+                post.activities.forEach { subTraining ->
                     ActivityCard(subTraining = subTraining)
                 }
             } else {
@@ -407,7 +442,7 @@ fun ActivityScreen(post: Post) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityCard(
-    subTraining: SubTraining
+    subTraining: Aktivitas
 ) {
     var openDialog by remember { mutableStateOf(false) }
     Card(modifier = Modifier
@@ -422,18 +457,16 @@ fun ActivityCard(
         }
     }
     if (openDialog) {
-        AlertDialog(
-            modifier = Modifier.height(500.dp),
+        AlertDialog(modifier = Modifier.height(500.dp),
             onDismissRequest = { openDialog = false },
             title = {
                 Text(
-                    text = subTraining.bodyTitle,
-                    style = MaterialTheme.typography.titleLarge
+                    text = subTraining.judul_aktivitas, style = MaterialTheme.typography.titleLarge
                 )
             },
             text = {
                 Text(
-                    text = subTraining.paragraph,
+                    text = subTraining.deskripsi_aktivitas,
                     style = MaterialTheme.typography.bodyLarge
                 )
             },
@@ -442,36 +475,31 @@ fun ActivityCard(
                     onClick = {
                         openDialog = false
                     },
-                    modifier = Modifier
-                        .padding(15.dp),
+                    modifier = Modifier.padding(15.dp),
                 ) {
                     Text("Close")
                 }
-            }
-        )
+            })
     }
 }
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun ActivityImage(subTraining: SubTraining, modifier: Modifier = Modifier) {
-    val urlImage = subTraining.image ?: ""
+fun ActivityImage(subTraining: Aktivitas, modifier: Modifier = Modifier) {
+    val urlImage = subTraining.gambar_aktivitas ?: ""
     val painter = if (urlImage.isNotEmpty()) {
         rememberImagePainter(data = urlImage)
     } else {
         painterResource(id = R.drawable.placeholder)
     }
     Image(
-        painter = painter,
-        contentDescription = subTraining.bodyTitle, // decorative
-        modifier = modifier
-            .fillMaxSize(),
-        contentScale = ContentScale.FillWidth
+        painter = painter, contentDescription = subTraining.judul_aktivitas, // decorative
+        modifier = modifier.fillMaxSize(), contentScale = ContentScale.FillWidth
     )
 }
 
 @Composable
-fun ActivityText(subTraining: SubTraining) {
+fun ActivityText(subTraining: Aktivitas) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -479,8 +507,13 @@ fun ActivityText(subTraining: SubTraining) {
         Arrangement.Center,
         Alignment.CenterHorizontally
     ) {
-        Text(text = subTraining.bodyTitle, color = Color.Black)
-        Text(text = "(${subTraining.day})", color = Color.Black)
+        Text(
+            text = subTraining.judul_aktivitas,
+            color = Color.Black,
+            maxLines = 1, //change with colorSchame
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(text = "(${subTraining.hari_aktivitas.formatToString()})", maxLines = 1)
         Spacer(Modifier.padding(3.dp))
         Divider(
             color = Color.White, thickness = 2.dp, modifier = Modifier.background(
@@ -493,9 +526,9 @@ fun ActivityText(subTraining: SubTraining) {
 
 @Composable
 private fun ProgramListAndDetail(
-    posts: List<Post>,
-    selectedPost: Post,
-    onClick: (Post) -> Unit,
+    posts: List<ProgramWithActivities>, // Perbarui tipe data ini
+    selectedPost: ProgramWithActivities, // Perbarui tipe data ini
+    onClick: (ProgramWithActivities) -> Unit,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
@@ -527,10 +560,10 @@ private fun ProgramListAndDetail(
 @Composable
 fun CheckProgramScreen() {
     TrueAgencyAppTheme {
-        ProgramScreen(
-            windowSize = WindowWidthSizeClass.Compact,
-            onBackPressed = {}
-        )
+//        ProgramScreen(
+//            windowSize = WindowWidthSizeClass.Compact,
+//            onBackPressed = {}
+//        )
     }
 }
 
@@ -539,10 +572,10 @@ fun CheckProgramScreen() {
 fun CheckProgramList() {
     TrueAgencyAppTheme {
         Surface {
-            ProgramList(
-                posts = LocalProgramDataProvider.generateFakeDataProgram(),
-                onClick = {}
-            )
+//            ProgramList(
+//                posts = LocalProgramDataProvider.generateFakeDataProgram(),
+//                onClick = {}
+//            )
         }
     }
 }
@@ -551,13 +584,13 @@ fun CheckProgramList() {
 @Composable
 fun CheckProgramDetail() {
     TrueAgencyAppTheme {
-        ProgramDetail(
-            selectedPost = LocalProgramDataProvider.generateFakeDataProgram().getOrElse(0) {
-                LocalProgramDataProvider.defaultProgram
-            },
-            onBackPressed = {},
-            contentPadding = PaddingValues(0.dp)
-        )
+//        ProgramDetail(
+//            selectedPost = LocalProgramDataProvider.generateFakeDataProgram().getOrElse(0) {
+//                LocalProgramDataProvider.defaultProgram
+//            },
+//            onBackPressed = {},
+//            contentPadding = PaddingValues(0.dp)
+//        )
     }
 }
 
@@ -566,13 +599,13 @@ fun CheckProgramDetail() {
 fun CheckProgramListAndDetail() {
     TrueAgencyAppTheme {
         Surface {
-            ProgramListAndDetail(
-                posts = LocalProgramDataProvider.generateFakeDataProgram(),
-                selectedPost = LocalProgramDataProvider.generateFakeDataProgram().getOrElse(0) {
-                    LocalProgramDataProvider.defaultProgram
-                },
-                onClick = {},
-                onBackPressed = { })
+//            ProgramListAndDetail(
+//                posts = LocalProgramDataProvider.generateFakeDataProgram(),
+//                selectedPost = LocalProgramDataProvider.generateFakeDataProgram().getOrElse(0) {
+//                    LocalProgramDataProvider.defaultProgram
+//                },
+//                onClick = {},
+//                onBackPressed = { })
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.hardus.trueagencyapp.main_content.home
+package com.hardus.trueagencyapp.main_content.home.presentation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -18,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -26,9 +26,9 @@ import androidx.compose.material.icons.outlined.NoteAlt
 import androidx.compose.material.icons.outlined.PeopleAlt
 import androidx.compose.material.icons.outlined.QrCodeScanner
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AlertDialogDefaults.containerColor
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -54,6 +54,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,21 +64,24 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.hardus.trueagencyapp.R
 import com.hardus.trueagencyapp.auth.viewmodel.AuthViewModel
-import com.hardus.trueagencyapp.util.Post
-import com.hardus.trueagencyapp.util.SubTraining
+import com.hardus.trueagencyapp.main_content.home.data.Aktivitas
+import com.hardus.trueagencyapp.main_content.home.data.ProgramWithActivities
+import com.hardus.trueagencyapp.main_content.home.domain.model.HomeViewModel
+import com.hardus.trueagencyapp.main_content.home.presentation.util.formatToString
 import com.hardus.trueagencyapp.util.generateFakeData
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun HomeScreen(
+    viewModel: HomeViewModel,
     onUserForm: () -> Unit,
     onNote: () -> Unit,
     onScan: () -> Unit,
     onMember: () -> Unit,
 ) {
-    val viewModel = hiltViewModel<AuthViewModel>()
-    val fakePosts = generateFakeData()
-    val nonEmptyPosts = fakePosts.filter { it.subTrainingList.isNotEmpty() }
+    val authViewModel = hiltViewModel<AuthViewModel>()
+    val programs = viewModel.activityProgram
+    val isLoading = viewModel.isLoading.value
 
     Scaffold(topBar = {
         TopAppBarHome()
@@ -97,7 +101,7 @@ fun HomeScreen(
                 ) {
                     Surface {
                         LeaderStatus(
-                            name = viewModel.currentUser?.displayName ?: "",
+                            name = authViewModel.currentUser?.displayName ?: "",
                             status = "Leader",
                             hierarchy = "AAD",
                             onUserForm = onUserForm
@@ -118,15 +122,18 @@ fun HomeScreen(
                     )
                     Spacer(modifier = Modifier.padding(10.dp))
                 }
-            }
-            if (nonEmptyPosts.isNotEmpty()) {
-                items(nonEmptyPosts) { post ->
-                    TrainingScreen(post = post)
-                }
-            } else {
-                // Handle case when all subTrainingLists are empty
-                item {
-                    Text("No training data available", color = Color.Gray)
+                if (isLoading) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                } else {
+                    if (programs.isNotEmpty()) {
+                        programs.forEach { programWithActivities ->
+                            TrainingScreen(programWithActivities = programWithActivities)
+                        }
+                    } else {
+                        CircularProgressIndicator()
+                    }
                 }
             }
         }
@@ -134,7 +141,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun PostText(subTraining: SubTraining) {
+fun PostText(aktivitas: Aktivitas) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -142,8 +149,13 @@ fun PostText(subTraining: SubTraining) {
         Arrangement.Center,
         Alignment.CenterHorizontally
     ) {
-        Text(text = subTraining.bodyTitle, color = Color.Black)
-        Text(text = "(${subTraining.day})", color = Color.Black)
+        Text(
+            text = aktivitas.judul_aktivitas,
+            color = Color.Black,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(text = "(${aktivitas.hari_aktivitas.formatToString()})", maxLines = 1)
         Spacer(Modifier.padding(3.dp))
         Divider(
             color = Color.White, thickness = 2.dp, modifier = Modifier.background(
@@ -156,15 +168,15 @@ fun PostText(subTraining: SubTraining) {
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun PostImage(subTraining: SubTraining, modifier: Modifier = Modifier) {
-    val urlImage = subTraining.image ?: ""
+fun PostImage(aktivitas: Aktivitas, modifier: Modifier = Modifier) {
+    val urlImage = aktivitas.gambar_aktivitas
     val painter = if (urlImage.isNotEmpty()) {
         rememberImagePainter(data = urlImage)
     } else {
         painterResource(id = R.drawable.placeholder)
     }
     Image(
-        painter = painter, contentDescription = subTraining.bodyTitle, // decorative
+        painter = painter, contentDescription = aktivitas.judul_aktivitas, // decorative
         modifier = modifier.fillMaxSize(), contentScale = ContentScale.FillWidth
     )
 }
@@ -172,7 +184,7 @@ fun PostImage(subTraining: SubTraining, modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostCard(
-    subTraining: SubTraining
+    aktivitas: Aktivitas
 ) {
     var openDialog by remember { mutableStateOf(false) }
     Card(modifier = Modifier
@@ -182,8 +194,8 @@ fun PostCard(
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
         onClick = { openDialog = true }) {
         Column {
-            PostText(subTraining = subTraining)
-            PostImage(subTraining = subTraining)
+            PostText(aktivitas = aktivitas)
+            PostImage(aktivitas = aktivitas)
         }
     }
     if (openDialog) {
@@ -191,12 +203,12 @@ fun PostCard(
             onDismissRequest = { openDialog = false },
             title = {
                 Text(
-                    text = subTraining.bodyTitle, style = MaterialTheme.typography.titleLarge
+                    text = aktivitas.judul_aktivitas, style = MaterialTheme.typography.titleLarge
                 )
             },
             text = {
                 Text(
-                    text = subTraining.paragraph, style = MaterialTheme.typography.bodyLarge
+                    text = aktivitas.deskripsi_aktivitas, style = MaterialTheme.typography.bodyLarge
                 )
             },
             confirmButton = {
@@ -213,10 +225,10 @@ fun PostCard(
 }
 
 @Composable
-fun TrainingScreen(post: Post) {
+fun TrainingScreen(programWithActivities: ProgramWithActivities) {
     Column(modifier = Modifier.padding(10.dp)) {
         Text(
-            text = post.headerTitle, fontWeight = FontWeight.Bold
+            text = programWithActivities.program.judul_program, fontWeight = FontWeight.Bold
         )
         Spacer(Modifier.padding(bottom = 5.dp))
         Row(
@@ -225,13 +237,13 @@ fun TrainingScreen(post: Post) {
                 .height(IntrinsicSize.Max)
                 .padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            if (post.subTrainingList.isNotEmpty()) {
-                post.subTrainingList.forEach { subTraining ->
-                    PostCard(subTraining = subTraining)
+            if (programWithActivities.activities.isNotEmpty()) {
+                programWithActivities.activities.forEach { aktivitas ->
+                    PostCard(aktivitas = aktivitas)
                 }
             } else {
                 // Handle case when data is empty
-                Text("No training data available", color = Color.Gray)
+                Text("No activity data available", color = Color.Gray)
             }
         }
     }
@@ -374,7 +386,7 @@ fun CheckMenu() {
 @Composable
 fun TrainingScreenPreview() {
     val fakePost = generateFakeData().firstOrNull() ?: return
-    TrainingScreen(post = fakePost)
+    //TrainingScreen(post = fakePost)
 }
 
 @Preview(showBackground = true, showSystemUi = true, name = "Hardus")

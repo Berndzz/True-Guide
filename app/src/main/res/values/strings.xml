@@ -40,4 +40,5 @@
     </plurals>
     <string name="question_count">\u00A0of %d</string>
     <string name="close">Close</string>
+    <string name="default_title">No Data</string>
 </resources>

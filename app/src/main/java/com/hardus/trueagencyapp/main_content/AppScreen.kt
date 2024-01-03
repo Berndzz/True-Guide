@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -20,7 +19,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,8 +31,10 @@ import com.hardus.auth.screen.view.setting.task.PrivacyScreen
 import com.hardus.auth.screen.view.setting.task.ReportScreen
 import com.hardus.auth.screen.view.setting.task.TermsScreen
 import com.hardus.trueagencyapp.main_content.absent.AbsentScreen
-import com.hardus.trueagencyapp.main_content.home.HomeScreen
+import com.hardus.trueagencyapp.main_content.home.domain.model.HomeViewModel
+import com.hardus.trueagencyapp.main_content.home.presentation.HomeScreen
 import com.hardus.trueagencyapp.main_content.program.ProgramScreen
+import com.hardus.trueagencyapp.main_content.program.ProgramViewModel
 import com.hardus.trueagencyapp.main_content.setting.SettingScreen
 import com.hardus.trueagencyapp.nested_navigation.Screen
 
@@ -44,6 +45,8 @@ fun AppScreen(
     windowSize: WindowWidthSizeClass,
     onBackPressed: () -> Unit,
 ) {
+    val programViewModel: ProgramViewModel = viewModel()
+    val homeViewModel: HomeViewModel = viewModel()
     val bottomNavController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -60,6 +63,7 @@ fun AppScreen(
                 ) {
                     composable(Screen.Home.route) {
                         HomeScreen(
+                            viewModel = homeViewModel,
                             onUserForm = { navController.navigate(Screen.FormUsers.route) },
                             onNote = { navController.navigate(Screen.NoteSc.route) },
                             onScan = { navController.navigate(Screen.QrCode.route) },
@@ -68,7 +72,8 @@ fun AppScreen(
                     composable(Screen.Program.route) {
                         ProgramScreen(
                             windowSize = windowSize,
-                            onBackPressed = onBackPressed
+                            onBackPressed = onBackPressed,
+                            viewModel = programViewModel
                         )
                     }
                     composable(Screen.Absent.route) {

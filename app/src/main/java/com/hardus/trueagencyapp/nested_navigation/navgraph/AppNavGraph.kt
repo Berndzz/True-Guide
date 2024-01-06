@@ -1,6 +1,7 @@
 package com.hardus.trueagencyapp.nested_navigation.navgraph
 
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -13,6 +14,7 @@ import com.hardus.trueagencyapp.main_content.home.feature_note.domain.model.Note
 import com.hardus.trueagencyapp.main_content.home.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import com.hardus.trueagencyapp.main_content.home.feature_note.presentation.notes.NoteScreen
 import com.hardus.trueagencyapp.main_content.home.feature_qrcode.presentation.QrScanningScreen
+import com.hardus.trueagencyapp.main_content.home.feature_userForm.domain.model.FormViewModel
 import com.hardus.trueagencyapp.main_content.home.feature_userForm.presentation.FormRoute
 import com.hardus.trueagencyapp.main_content.home.feature_userForm.presentation.UserFormScreen
 import com.hardus.trueagencyapp.nested_navigation.APP_GRAPH_ROUTE
@@ -31,7 +33,9 @@ fun NavGraphBuilder.appNavGraph(
             AppScreen(navController = navController, windowSize, onBackPressed)
         }
         composable(route = Screen.FormUsers.route) {
+            val formViewModel: FormViewModel = viewModel()
             UserFormScreen(
+                viewModel = formViewModel,
                 onNavigate = {
                     navController.popBackStack()
                     navController.navigate(route = Screen.Home.route)

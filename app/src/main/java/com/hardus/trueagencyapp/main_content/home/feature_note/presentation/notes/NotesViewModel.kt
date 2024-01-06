@@ -99,8 +99,8 @@ class NotesViewModel @Inject constructor(
 
             // Akhirnya, urutkan catatan yang telah difilter
             val sortedNotes = when (noteOrder.orderType) {
-                is OrderType.Ascending -> filteredBySearchQuery.sortedBy { it.timestamp }
-                is OrderType.Descending -> filteredBySearchQuery.sortedByDescending { it.timestamp }
+                is OrderType.Ascending -> filteredBySearchQuery.sortedBy { it.title }
+                is OrderType.Descending -> filteredBySearchQuery.sortedByDescending { it.title }
             }
 
             _state.value = state.value.copy(

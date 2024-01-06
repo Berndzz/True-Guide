@@ -1,10 +1,16 @@
 package com.hardus.trueagencyapp.main_content.home.feature_userForm.domain.model
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.hardus.trueagencyapp.main_content.home.feature_userForm.data.DirectionPage
 import com.hardus.trueagencyapp.main_content.home.feature_userForm.data.FormQuestion
 import com.hardus.trueagencyapp.main_content.home.feature_userForm.data.PersonalData
+import com.hardus.trueagencyapp.main_content.home.feature_userForm.data.UserOption
+import com.hardus.trueagencyapp.main_content.home.presentation.util.toTimestamp
+import com.hardus.trueagencyapp.util.FirestoreAuth
+import com.hardus.trueagencyapp.util.FirestoreService
 import java.time.LocalDate
 
 class FormViewModel() : ViewModel() {
@@ -14,6 +20,17 @@ class FormViewModel() : ViewModel() {
     )
 
     private var formIndex = 0
+
+    private val _userOptionsMapping = mutableMapOf<String, String>()
+    private val _selectedUserId = mutableStateOf<String?>(null)
+
+    private val _personalData = mutableStateOf<PersonalData?>(null)
+    val personalData: State<PersonalData?> = _personalData
+
+    init {
+        // Inisialisasi data ketika ViewModel dibuat
+        loadPersonalDataForCurrentUser()
+    }
 
     // Page One
     private val _fullNameResponse = mutableStateOf("")
@@ -79,13 +96,13 @@ class FormViewModel() : ViewModel() {
     val aasiExamDateResponse: LocalDate
         get() = _aasiExamDateResponse.value
 
+    private val _unitOptions = mutableStateListOf<String>()
+    val unitOptions: List<String>
+        get() = _unitOptions
+
     private val _selectedUnit = mutableStateOf<String?>(null)
     val selectedUnit: String?
         get() = _selectedUnit.value
-
-    private val _unitOptions = mutableStateListOf("Nama 1", "Nama 2", "Nama 3", "Nama 4")
-    val unitOptions: List<String>
-        get() = _unitOptions
 
     fun onAgentCodeChanged(newCode: String) {
         _agentCodeResponse.value = newCode
@@ -102,8 +119,11 @@ class FormViewModel() : ViewModel() {
         _isNextEnabled.value = getIsNextEnabled()
     }
 
-    fun onUnitSelected(unit: String) {
-        _selectedUnit.value = unit
+    fun onUnitSelected(displayName: String) {
+        val userId = _userOptionsMapping[displayName]
+        // Simpan userId yang terkait dengan displayName ke dalam _selectedUserId
+        _selectedUnit.value = displayName
+        _selectedUserId.value = userId
         _isNextEnabled.value = getIsNextEnabled()
     }
 
@@ -130,7 +150,7 @@ class FormViewModel() : ViewModel() {
     // ----- Form status exposed as State -----
 
     private val _personalDataScreenData = mutableStateOf(createPersonalDataScreenData())
-    val personalDataScreenData: PersonalData?
+    val directionPage: DirectionPage?
         get() = _personalDataScreenData.value
 
     private val _isNextEnabled = mutableStateOf(false)
@@ -158,7 +178,13 @@ class FormViewModel() : ViewModel() {
     }
 
     fun onDonePressed(onFormComplete: () -> Unit) {
-        onFormComplete()
+        savePersonalDataToFirestore { success ->
+            if (success) {
+                onFormComplete() // Panggilan ini akan menavigasi pengguna keluar dari form atau menampilkan pesan sukses
+            } else {
+                // Tangani kasus ketika penyimpanan gagal, misalnya dengan menampilkan pesan error
+            }
+        }
     }
 
     private fun formPagePersonalData(newFormIndex: Int) {
@@ -185,14 +211,87 @@ class FormViewModel() : ViewModel() {
     }
 
 
-    private fun createPersonalDataScreenData(): PersonalData {
-        return PersonalData(
+    private fun createPersonalDataScreenData(): DirectionPage {
+        return DirectionPage(
             formIndex = formIndex,
             formCount = formOrder.size,
             shouldShowPreviousButton = formIndex > 0,
             shouldShowDoneButton = formIndex == formOrder.size - 1,
             formQuestion = formOrder[formIndex],
         )
+    }
+
+    private fun loadPersonalDataForCurrentUser() {
+        val userId = FirestoreAuth.db.currentUser?.uid // ID dari pengguna yang sedang login
+        val firestore = FirestoreService.db
+
+        // Menggunakan userId untuk mengambil data spesifik pengguna
+        firestore.collection("usersData")
+            .document(userId!!)
+            .get()
+            .addOnSuccessListener { documentSnapshot ->
+                _personalData.value =
+                    documentSnapshot.toObject(PersonalData::class.java) // Convert Firestore document to PersonalData object
+            }
+            .addOnFailureListener {
+                // Tangani error
+            }
+    }
+
+    fun savePersonalDataToFirestore(onComplete: (Boolean) -> Unit) {
+        val userId = FirestoreAuth.db.currentUser?.uid
+        val userIda = _selectedUserId.value
+        if (userId == null) {
+            onComplete(false)
+            return
+        }
+
+        val personalData = PersonalData(
+            userId = userIda,
+            fullName = _fullNameResponse.value,
+            address = _addressResponse.value,
+            dateOfBirth = _dateOfBirth.value.toTimestamp(), // Konversi LocalDate ke Date atau Timestamp
+            leaderStatus = if (_isLeader.value) "Leader" else "Business Partner",
+            leaderTitle = _leaderTitle.value,
+            isBusinessPartner = _isBusinessPartner.value ?: false,
+            agentCode = _agentCodeResponse.value,
+            ajjExamDate = _ajjExamDateResponse.value.toTimestamp(), // Gunakan konversi yang sesuai untuk LocalDate ke Date
+            aasiExamDate = _aasiExamDateResponse.value.toTimestamp(), // Gunakan konversi yang sesuai untuk LocalDate ke Date
+            selectedUnit = _selectedUnit.value.orEmpty(),
+            vision = _visiResponse.value,
+            lifeMoto = _lifeMottoResponse.value
+        )
+
+        val firestore = FirestoreService.db
+        firestore.collection("usersData")
+            .document(userId)
+            .set(personalData)
+            .addOnSuccessListener { onComplete(true) }
+            .addOnFailureListener { onComplete(false) }
+    }
+
+    fun fetchUnitOptions() {
+        val firestore = FirestoreService.db
+        firestore.collection("profil")
+            .get()
+            .addOnSuccessListener { documents ->
+                val userOptions = documents.mapNotNull { doc ->
+                    val userId = doc.id
+                    val userD = doc.getString("id_user") ?: return@mapNotNull null
+                    val displayName = doc.getString("name_user") ?: return@mapNotNull null
+                    UserOption(userId = userId, userD = userD, displayName = displayName)
+                }
+                userOptions.forEach { userOption ->
+                    _userOptionsMapping[userOption.displayName] = userOption.userId
+                }
+                // Update the state here with the new list
+                _unitOptions.clear()
+                _unitOptions.addAll(userOptions.map { it.displayName })
+                // You might need to store the mapping of names to IDs as well
+            }
+            .addOnFailureListener {
+                // Handle the error here
+            }
     }
 }
 

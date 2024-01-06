@@ -28,7 +28,7 @@ fun FormRoute(
     val viewModel: FormViewModel = viewModel()
 
     // Mendapatkan data screen saat ini dari ViewModel
-    val personalDataScreenData = viewModel.personalDataScreenData ?: return
+    val personalDataScreenData = viewModel.directionPage ?: return
 
     // Menangani back press
     BackHandler {
@@ -36,7 +36,7 @@ fun FormRoute(
             onNavUp()
         }
     }
-    FormPersonalDataScreen(personalData = personalDataScreenData,
+    FormPersonalDataScreen(directionPage = personalDataScreenData,
         isNextEnabled = viewModel.isNextEnabled,
         onClosePressed = {
             onNavUp()

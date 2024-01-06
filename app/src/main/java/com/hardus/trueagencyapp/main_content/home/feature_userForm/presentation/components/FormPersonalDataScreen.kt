@@ -37,14 +37,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hardus.trueagencyapp.R
-import com.hardus.trueagencyapp.main_content.home.feature_userForm.data.PersonalData
+import com.hardus.trueagencyapp.main_content.home.feature_userForm.data.DirectionPage
 import com.hardus.trueagencyapp.ui.theme.stronglyDeemphasizedAlpha
 import com.hardus.trueagencyapp.util.supportWideScreen
 
 
 @Composable
 fun FormPersonalDataScreen(
-    personalData: PersonalData,
+    directionPage: DirectionPage,
     isNextEnabled: Boolean,
     onClosePressed: () -> Unit,
     onPreviousPressed: () -> Unit,
@@ -56,16 +56,16 @@ fun FormPersonalDataScreen(
         Scaffold(
             topBar = {
                 FormTopAppBar(
-                    questionIndex = personalData.formIndex,
-                    totalQuestionsCount = personalData.formCount,
+                    questionIndex = directionPage.formIndex,
+                    totalQuestionsCount = directionPage.formCount,
                     onClosePressed = onClosePressed,
                 )
             },
             content = content,
             bottomBar = {
                 BottomFormPersonalData(
-                    shouldShowPreviousButton = personalData.shouldShowPreviousButton,
-                    shouldShowDoneButton = personalData.shouldShowDoneButton,
+                    shouldShowPreviousButton = directionPage.shouldShowPreviousButton,
+                    shouldShowDoneButton = directionPage.shouldShowDoneButton,
                     isNextButtonEnabled = isNextEnabled,
                     onPreviousPressed = onPreviousPressed,
                     onNextPressed = onNextPressed,

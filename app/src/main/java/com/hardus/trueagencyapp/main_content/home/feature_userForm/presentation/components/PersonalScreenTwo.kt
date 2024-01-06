@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -29,6 +30,10 @@ import com.hardus.trueagencyapp.ui.theme.TrueAgencyAppTheme
 fun PersonalScreenTwo(viewModel: FormViewModel, modifier: Modifier = Modifier) {
 
     val (focusAgentCode) = remember { FocusRequester.createRefs() }
+
+    LaunchedEffect(key1 = true) {
+        viewModel.fetchUnitOptions()
+    }
 
     LazyColumn(
         modifier = modifier.padding(20.dp),
@@ -52,7 +57,7 @@ fun PersonalScreenTwo(viewModel: FormViewModel, modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(8.dp))
 
             DatePickerForm(
-                label = "AJJ Exam Date",
+                label = "AAJI Exam Date",
                 date = viewModel.ajjExamDateResponse,
                 onDateChanged = viewModel::onAjjExamDateChanged,
                 modifier = Modifier

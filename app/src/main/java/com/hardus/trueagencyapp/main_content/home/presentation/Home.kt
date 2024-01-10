@@ -67,6 +67,7 @@ import com.hardus.trueagencyapp.auth.viewmodel.AuthViewModel
 import com.hardus.trueagencyapp.main_content.home.data.Aktivitas
 import com.hardus.trueagencyapp.main_content.home.data.ProgramWithActivities
 import com.hardus.trueagencyapp.main_content.home.domain.model.HomeViewModel
+import com.hardus.trueagencyapp.main_content.home.feature_userForm.domain.model.FormViewModel
 import com.hardus.trueagencyapp.main_content.home.presentation.util.formatToString
 import com.hardus.trueagencyapp.util.generateFakeData
 
@@ -74,6 +75,7 @@ import com.hardus.trueagencyapp.util.generateFakeData
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
+    formViewModel: FormViewModel,
     onUserForm: () -> Unit,
     onNote: () -> Unit,
     onScan: () -> Unit,
@@ -81,6 +83,7 @@ fun HomeScreen(
 ) {
     val authViewModel = hiltViewModel<AuthViewModel>()
     val programs = viewModel.activityProgram
+    val personalData by formViewModel.personalData
     val isLoading = viewModel.isLoading.value
 
     Scaffold(topBar = {
@@ -102,8 +105,8 @@ fun HomeScreen(
                     Surface {
                         LeaderStatus(
                             name = authViewModel.currentUser?.displayName ?: "",
-                            status = "Leader",
-                            hierarchy = "AAD",
+                            status = personalData?.leaderStatus ?: "-",
+                            hierarchy = personalData?.leaderTitle ?: "-",
                             onUserForm = onUserForm
                         )
                     }

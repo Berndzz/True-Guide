@@ -52,7 +52,7 @@ import com.hardus.trueagencyapp.util.GlobalVariable.TEST_VERIFY_CODE
 import kotlinx.coroutines.delay
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun OtpCodeScreen(onNewPassword: () -> Unit) {

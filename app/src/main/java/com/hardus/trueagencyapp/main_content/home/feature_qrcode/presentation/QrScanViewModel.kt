@@ -3,6 +3,7 @@ package com.hardus.auth.screen.view.home.feature_qrcode.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hardus.trueagencyapp.main_content.home.feature_qrcode.domain.repo.QrcodeRepo
+import com.hardus.trueagencyapp.util.FirestoreAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,11 +19,19 @@ class QrScanViewModel @Inject constructor(
 
     fun startScanning() {
         viewModelScope.launch {
-            repo.startScanning().collect {
-                if (!it.isNullOrBlank()) {
+            repo.startScanning().collect { detail ->
+                if (!detail.isNullOrBlank()) {
                     _state.value = state.value.copy(
-                        detail = it
+                        detail = detail
                     )
+                }
+                detail?.let {
+                    // Dapatkan ID pengguna dari FirebaseAuth
+                    val userId = FirestoreAuth.db.currentUser?.uid
+                    userId?.let { uid ->
+                        // Simpan ke Firestore
+                        repo.saveToFirestore(detail, uid)
+                    }
                 }
             }
         }

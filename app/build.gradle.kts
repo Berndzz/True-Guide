@@ -126,7 +126,6 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-auth:22.3.0")
     implementation("com.google.firebase:firebase-firestore-ktx")
-    //implementation("com.google.firebase:firebase-firestore:24.10.0")
 
     //swap refresh
     implementation ("com.google.accompanist:accompanist-swiperefresh:0.24.13-rc")

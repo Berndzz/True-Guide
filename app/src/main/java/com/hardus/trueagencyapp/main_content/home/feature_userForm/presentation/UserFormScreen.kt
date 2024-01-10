@@ -1,7 +1,13 @@
 package com.hardus.trueagencyapp.main_content.home.feature_userForm.presentation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
@@ -15,7 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,43 +74,64 @@ fun UserFormScreen(viewModel: FormViewModel, onNavigate: () -> Unit, onFormPage:
             )
         },
         content = { paddingValue ->
-            Column(modifier = Modifier.padding(paddingValue)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValue)
+                    .padding(10.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 if (personalData != null) {
-                    Column(modifier = Modifier.padding(10.dp)) {
-                        Text("Nama Lengkap: ${personalData?.fullName ?: stringResource(R.string.tidak_tersedia)}  ")
-                        Text("Alamat: ${personalData?.address ?: stringResource(R.string.tidak_tersedia)}")
-                        Text(
-                            "Tanggal Lahir: ${
-                                personalData?.dateOfBirth?.toDateA()
-                                    ?.formatToStrinAg() ?: stringResource(R.string.tidak_tersedia)
-                            }"
-                        )
-                        Text(
-                            "Partner Business / Leader: ${
-                                personalData?.leaderStatus ?: stringResource(
-                                    R.string.tidak_tersedia
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(color = MaterialTheme.colorScheme.onSecondary)
+                    ) {
+                        LazyColumn(modifier = Modifier.padding(10.dp)) {
+                            item {
+                                Text("Nama Lengkap: ${personalData?.fullName ?: stringResource(R.string.tidak_tersedia)}  ")
+                                Text("Alamat: ${personalData?.address ?: stringResource(R.string.tidak_tersedia)}")
+                                Text(
+                                    "Tanggal Lahir: ${
+                                        personalData?.dateOfBirth?.toDateA()
+                                            ?.formatToStrinAg() ?: stringResource(R.string.tidak_tersedia)
+                                    }"
                                 )
-                            }"
-                        )
-                        if (personalData?.leaderTitle!!.isNotEmpty()) {
-                            Text("Status Leader: ${personalData?.leaderTitle ?: stringResource(R.string.tidak_tersedia)}")
+                                Text(
+                                    "Partner Business / Leader: ${
+                                        personalData?.leaderStatus ?: stringResource(
+                                            R.string.tidak_tersedia
+                                        )
+                                    }"
+                                )
+                                if (personalData?.leaderTitle!!.isNotEmpty()) {
+                                    Text(
+                                        "Status Leader: ${
+                                            personalData?.leaderTitle ?: stringResource(
+                                                R.string.tidak_tersedia
+                                            )
+                                        }"
+                                    )
+                                }
+                                Text("Kode Agent: ${personalData?.agentCode ?: stringResource(R.string.tidak_tersedia)}")
+                                Text(
+                                    "Tanggal Ujian AAJI: ${
+                                        personalData?.ajjExamDate?.toDateA()
+                                            ?.formatToStrinAg() ?: stringResource(R.string.tidak_tersedia)
+                                    }"
+                                )
+                                Text(
+                                    "Tanggal Ujian AASI: ${
+                                        personalData?.aasiExamDate?.toDateA()
+                                            ?.formatToStrinAg() ?: stringResource(R.string.tidak_tersedia)
+                                    }"
+                                )
+                                Text("Unit: ${personalData?.selectedUnit ?: stringResource(R.string.tidak_tersedia)}")
+                                Text("Visi: ${personalData?.vision ?: stringResource(R.string.tidak_tersedia)}")
+                                Text("Moto Hidup: ${personalData?.lifeMoto ?: stringResource(R.string.tidak_tersedia)}")
+                            }
                         }
-                        Text("Kode Agent: ${personalData?.agentCode ?: stringResource(R.string.tidak_tersedia)}")
-                        Text(
-                            "Tanggal Ujian AAJI: ${
-                                personalData?.ajjExamDate?.toDateA()
-                                    ?.formatToStrinAg() ?: stringResource(R.string.tidak_tersedia)
-                            }"
-                        )
-                        Text(
-                            "Tanggal Ujian AASI: ${
-                                personalData?.aasiExamDate?.toDateA()
-                                    ?.formatToStrinAg() ?: stringResource(R.string.tidak_tersedia)
-                            }"
-                        )
-                        Text("Unit: ${personalData?.selectedUnit ?: stringResource(R.string.tidak_tersedia)}")
-                        Text("Visi: ${personalData?.vision ?: stringResource(R.string.tidak_tersedia)}")
-                        Text("Moto Hidup: ${personalData?.lifeMoto ?: stringResource(R.string.tidak_tersedia)}")
                     }
                 } else {
                     EmptyAnim()

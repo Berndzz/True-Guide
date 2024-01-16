@@ -9,7 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.hardus.trueagencyapp.main_content.AppScreen
-import com.hardus.trueagencyapp.main_content.home.feature_members.MembersScreen
+import com.hardus.trueagencyapp.main_content.home.feature_members.presentation.MembersScreen
+import com.hardus.trueagencyapp.main_content.home.feature_members.presentation.MembersViewModel
 import com.hardus.trueagencyapp.main_content.home.feature_note.domain.model.NoteCategory
 import com.hardus.trueagencyapp.main_content.home.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import com.hardus.trueagencyapp.main_content.home.feature_note.presentation.notes.NoteScreen
@@ -62,10 +63,16 @@ fun NavGraphBuilder.appNavGraph(
             })
         }
         composable(route = Screen.Members.route) {
-            MembersScreen(onNavigate = {
-                navController.popBackStack()
-                navController.navigate(route = Screen.Home.route)
-            })
+            val membersViewModel: MembersViewModel = viewModel()
+            MembersScreen(
+                onNavigate = {
+                    navController.popBackStack()
+                    navController.navigate(route = Screen.Home.route)
+                },
+                windowSize = windowSize,
+                onBackPressed = onBackPressed,
+                viewModel = membersViewModel
+            )
         }
         composable(
             route = Screen.AddEditNoteScreen.route + "?noteId={noteId}&noteColor={noteColor}&noteCategory={noteCategory}",
@@ -83,7 +90,7 @@ fun NavGraphBuilder.appNavGraph(
                     defaultValue = -1
                 },
                 navArgument("noteCategory") {
-                    type = androidx.navigation.NavType.StringType
+                    type = NavType.StringType
                     defaultValue = NoteCategory.Category.name // Atau default value lain yang sesuai
                 }
             )

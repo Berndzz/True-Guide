@@ -22,8 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.hardus.auth.screen.view.home.feature_qrcode.presentation.QrScanViewModel
-
+// NANTI DI HAPUS AJA SCREEN INI
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QrScanningScreen(onNavigate: () -> Unit) {

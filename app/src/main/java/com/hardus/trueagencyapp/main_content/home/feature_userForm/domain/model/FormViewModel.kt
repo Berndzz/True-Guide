@@ -13,7 +13,7 @@ import com.hardus.trueagencyapp.util.FirestoreAuth
 import com.hardus.trueagencyapp.util.FirestoreService
 import java.time.LocalDate
 
-class FormViewModel() : ViewModel() {
+class FormViewModel : ViewModel() {
 
     private val formOrder: List<FormQuestion> = listOf(
         FormQuestion.PAGE_ONE, FormQuestion.PAGE_TWO, FormQuestion.PAGE_THREE
@@ -150,7 +150,7 @@ class FormViewModel() : ViewModel() {
     // ----- Form status exposed as State -----
 
     private val _personalDataScreenData = mutableStateOf(createPersonalDataScreenData())
-    val directionPage: DirectionPage?
+    val directionPage: DirectionPage
         get() = _personalDataScreenData.value
 
     private val _isNextEnabled = mutableStateOf(false)
@@ -234,11 +234,12 @@ class FormViewModel() : ViewModel() {
                     documentSnapshot.toObject(PersonalData::class.java) // Convert Firestore document to PersonalData object
             }
             .addOnFailureListener {
-                // Tangani error
+                it.printStackTrace()
             }
     }
 
-    fun savePersonalDataToFirestore(onComplete: (Boolean) -> Unit) {
+    private fun savePersonalDataToFirestore(onComplete: (Boolean) -> Unit) {
+        val firestore = FirestoreService.db
         val userId = FirestoreAuth.db.currentUser?.uid
         val userIda = _selectedUserId.value
         if (userId == null) {
@@ -262,12 +263,23 @@ class FormViewModel() : ViewModel() {
             lifeMoto = _lifeMottoResponse.value
         )
 
-        val firestore = FirestoreService.db
-        firestore.collection("usersData")
-            .document(userId)
-            .set(personalData)
-            .addOnSuccessListener { onComplete(true) }
-            .addOnFailureListener { onComplete(false) }
+        firestore.collection("usersData").document(userId).set(personalData).addOnSuccessListener {
+            // Cek dan tambahkan ke unit yang dipilih jika ada
+            val unitName = personalData.selectedUnit
+            if (unitName.isNotEmpty()) {
+                // Gunakan add() untuk membuat dokumen baru dengan ID unik di sub-collection 'members'
+                firestore.collection("organization").document(unitName).collection("members")
+                    .add(personalData).addOnSuccessListener {
+                        onComplete(true) // Sukses menambahkan data pengguna ke unit yang dipilih
+                    }.addOnFailureListener {
+                        onComplete(false) // Gagal menambahkan data pengguna ke unit yang dipilih
+                    }
+            } else {
+                onComplete(true) // Jika tidak ada unit yang dipilih, selesaikan proses tanpa menambahkan ke 'organization'
+            }
+        }.addOnFailureListener {
+            onComplete(false) // Gagal menyimpan data pengguna ke 'usersData'
+        }
     }
 
     fun fetchUnitOptions() {
@@ -290,7 +302,7 @@ class FormViewModel() : ViewModel() {
                 // You might need to store the mapping of names to IDs as well
             }
             .addOnFailureListener {
-                // Handle the error here
+                it.printStackTrace()
             }
     }
 }

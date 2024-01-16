@@ -37,7 +37,3 @@ data class UserOption(
     val displayName: String
 )
 
-data class FormUIState(
-    var fullName: String = "",
-    var address: String = "",
-)

@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.firestore.Query
 import com.hardus.trueagencyapp.main_content.absent.data.AbsentBreed
 import com.hardus.trueagencyapp.main_content.absent.data.SubAbsent
 import com.hardus.trueagencyapp.util.FirestoreAuth
@@ -35,6 +36,10 @@ class AbsentViewModel : ViewModel() {
     val isLoading: StateFlow<Boolean> = _isLoading
 
     init {
+        val initialBreed = _uiState.value.absentBreeds.firstOrNull { it.name == "Q1" }
+        if (initialBreed != null) {
+            _uiState.value = _uiState.value.copy(selectedBreed = initialBreed)
+        }
         loadAbsentData()  // Memanggil fungsi untuk memuat data dari Firestore saat ViewModel diinisialisasi
     }
 
@@ -42,12 +47,14 @@ class AbsentViewModel : ViewModel() {
         _uiState.update { it.copy(selectedBreed = breed) }
     }
 
-    fun loadAbsentData() {
+    private fun loadAbsentData() {
         val userId = FirestoreAuth.db.currentUser?.uid
         _isLoading.value = true
         userId?.let { uid ->
             FirestoreService.db.collection("scans").document(uid)
-                .collection("idScan").get()
+                .collection("idScan")
+                .orderBy("tanggalAcara", Query.Direction.DESCENDING)
+                .get()
                 .addOnSuccessListener { documents ->
                     val breedsUpdate = _uiState.value.absentBreeds.toMutableList()
                     for (document in documents) {

@@ -1,7 +1,8 @@
-package com.hardus.auth.screen.view.home.feature_qrcode.presentation
+package com.hardus.trueagencyapp.main_content.home.feature_qrcode.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hardus.auth.screen.view.home.feature_qrcode.presentation.QrScreenState
 import com.hardus.trueagencyapp.main_content.home.feature_qrcode.domain.repo.QrcodeRepo
 import com.hardus.trueagencyapp.util.FirestoreAuth
 import dagger.hilt.android.lifecycle.HiltViewModel

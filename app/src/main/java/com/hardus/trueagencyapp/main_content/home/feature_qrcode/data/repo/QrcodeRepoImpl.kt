@@ -7,10 +7,14 @@ import com.hardus.trueagencyapp.main_content.home.feature_qrcode.domain.repo.Qrc
 import com.hardus.trueagencyapp.main_content.home.presentation.util.isWithinAbsenceWindow
 import com.hardus.trueagencyapp.main_content.home.presentation.util.toJsonString
 import com.hardus.trueagencyapp.util.FirestoreService
+import com.hardus.trueagencyapp.util.await
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -36,12 +40,12 @@ class QrcodeRepoImpl @Inject constructor(
     }
 
     override fun saveToFirestore(detail: String, userId: String) {
-        userId.let { uid ->
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 val detailObj = JSONObject(detail)
                 if (detailObj.has("error")) {
                     Log.e(TAG, "Error in scanned data: ${detailObj.getString("error")}")
-                    return
+                    return@launch
                 }
                 val namaAcara = detailObj.optString("namaAcara", "Nama acara tidak dikenal")
                 val program = detailObj.optString("program", "Program tidak dikenal")
@@ -54,6 +58,7 @@ class QrcodeRepoImpl @Inject constructor(
                     detailObj.getString("tanggalAcara") + " " + detailObj.getString("jamMulai")
                 val eventEndDateStr =
                     detailObj.getString("tanggalAcara") + " " + detailObj.getString("jamSelesai")
+                val userUnit = getUserUnit(userId) ?: "Unit tidak dikenal"
 
                 val eventStartTime = dateFormat.parse(eventStartDateStr)
                 val eventEndTime = dateFormat.parse(eventEndDateStr)
@@ -73,11 +78,12 @@ class QrcodeRepoImpl @Inject constructor(
                     "tabName" to tabName,
                     "tanggalAcara" to currentDate.toJsonString(),
                     "lokasi" to lokasi,
-                    "kehadiran" to kehadiran
+                    "kehadiran" to kehadiran,
+                    "unit" to userUnit
                 )
 
                 val scansCollection =
-                    FirestoreService.db.collection("scans").document(uid).collection("idScan")
+                    FirestoreService.db.collection("scans").document(userId).collection("idScan")
                 scansCollection.add(scanData)
                     .addOnSuccessListener { documentReference ->
                         Log.d(
@@ -106,6 +112,28 @@ class QrcodeRepoImpl @Inject constructor(
             else -> {
                 "Couldn't determine"
             }
+        }
+    }
+
+    suspend fun getUserUnit(userId: String): String? {
+        return try {
+            // Gunakan Coroutine untuk menjalankan operasi Firestore secara asinkron
+            val documentSnapshot = withContext(Dispatchers.IO) {
+                FirestoreService.db.collection("usersData")
+                    .document(userId)
+                    .get()
+                    .await() // Menggunakan 'await' dari kotlinx.coroutines untuk menunggu hasil
+            }
+
+            // Cek apakah dokumen berhasil didapatkan dan ekstrak unit
+            if (documentSnapshot.exists()) {
+                documentSnapshot.getString("selectedUnit")
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            // Log error atau handle exception
+            null
         }
     }
 

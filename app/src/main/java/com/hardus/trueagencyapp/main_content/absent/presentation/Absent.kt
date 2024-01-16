@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -44,32 +45,41 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hardus.trueagencyapp.main_content.absent.data.AbsentBreed
-import com.hardus.trueagencyapp.main_content.absent.presentation.components.AbsentTabs
 import com.hardus.trueagencyapp.main_content.absent.data.SubAbsent
+import com.hardus.trueagencyapp.main_content.absent.presentation.components.AbsentTabs
 import com.hardus.trueagencyapp.ui.theme.TrueAgencyAppTheme
 
 @Composable
 fun AbsentScreen() {
     val viewModel: AbsentViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
-    LaunchedEffect(viewModel) {
-        uiState.absentBreeds.firstOrNull()?.let { viewModel.setSelectedBreed(it) }
+    LaunchedEffect(isLoading) {
+        if (!isLoading) {
+            viewModel.setSelectedBreed(uiState.absentBreeds.first { it.name == "Q1" })
+        }
     }
 
     Scaffold(topBar = {
         TopAppBarAbsent()
     }, content = { paddingValue ->
-        AbsentContent(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValue),
-            onBreedSelected = { selectedBreed ->
-                viewModel.setSelectedBreed(selectedBreed)
-            },
-            selectedBreed = uiState.selectedBreed,
-            absentBreeds = uiState.absentBreeds
-        )
+        if (isLoading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        } else {
+            AbsentContent(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValue),
+                onBreedSelected = { selectedBreed ->
+                    viewModel.setSelectedBreed(selectedBreed)
+                },
+                selectedBreed = uiState.selectedBreed,
+                absentBreeds = uiState.absentBreeds
+            )
+        }
     })
 }
 
@@ -78,7 +88,7 @@ fun AbsentScreen() {
 fun TopAppBarAbsent() {
     TopAppBar(
         colors = topAppBarColors(
-        MaterialTheme.colorScheme.primary
+            MaterialTheme.colorScheme.primary
         ),
         title = {
             Text(

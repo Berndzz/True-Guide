@@ -15,7 +15,6 @@ fun NavigationAllScreen(
     windowSize: WindowWidthSizeClass,
     onBackPressed: () -> Unit,
 ) {
-    //val navController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = startDestination,

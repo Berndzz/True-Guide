@@ -25,7 +25,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.hardus.auth.screen.view.home.feature_qrcode.presentation.QrScanViewModel
+import com.hardus.trueagencyapp.main_content.home.feature_qrcode.presentation.QrScanViewModel
 import com.hardus.auth.screen.view.setting.task.AboutScreen
 import com.hardus.auth.screen.view.setting.task.ChangeLanguageScreen
 import com.hardus.auth.screen.view.setting.task.NotificationScreen

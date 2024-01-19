@@ -1,5 +1,7 @@
 package com.hardus.trueagencyapp.main_content.home.feature_members.presentation
 
+import android.content.ContentValues
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,24 +9,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForwardIos
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,26 +38,28 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.hardus.trueagencyapp.R
 import com.hardus.trueagencyapp.main_content.home.feature_userForm.data.PersonalData
 import com.hardus.trueagencyapp.main_content.home.feature_userForm.presentation.formatToStrinAg
 import com.hardus.trueagencyapp.main_content.home.feature_userForm.presentation.toDateA
+import com.hardus.trueagencyapp.nested_navigation.Screen
 import com.hardus.trueagencyapp.util.MemberContentType
 import kotlinx.coroutines.delay
 
 
 @Composable
 fun MembersScreen(
+    navController: NavController,
     onNavigate: () -> Unit,
     windowSize: WindowWidthSizeClass,
     onBackPressed: () -> Unit,
@@ -76,7 +78,7 @@ fun MembersScreen(
     }
 
     LaunchedEffect(userName) {
-        userName?.let { viewModel.loadMembersForUnit(userName) }
+        userName?.let { viewModel.loadMembersForUnit(it) }
     }
 
     LaunchedEffect(uiState.memberList, isLoading) {
@@ -108,6 +110,7 @@ fun MembersScreen(
             if (contentType == MemberContentType.ListAndDetail) {
                 uiState.currentMember?.let {
                     MemberListAndDetail(
+                        navController = navController,
                         members = uiState.memberList,
                         selectedMember = it,
                         onMemberClick = {
@@ -149,9 +152,9 @@ fun MembersScreen(
                     } else {
                         uiState.currentMember?.let { currentMember ->
                             MemberDetail(
+                                navController = navController,
                                 selectedMember = currentMember,
                                 onBackPressed = { viewModel.navigateToListPage() },
-                                contentPadding = paddingValue
                             )
                         } ?: run {
                             Text("No Member Selected")
@@ -168,6 +171,7 @@ fun MembersScreen(
 
 @Composable
 private fun MemberListAndDetail(
+    navController: NavController,
     members: List<PersonalData>,
     selectedMember: PersonalData,
     onMemberClick: (PersonalData) -> Unit,
@@ -189,8 +193,8 @@ private fun MemberListAndDetail(
         )
         MemberDetail(
             selectedMember = selectedMember,
+            navController = navController,
             onBackPressed = onBackPressed,
-            contentPadding = contentPadding,
             modifier = Modifier.weight(3f)
         )
     }
@@ -198,80 +202,82 @@ private fun MemberListAndDetail(
 
 @Composable
 private fun MemberDetail(
+    navController: NavController,
     selectedMember: PersonalData,
     onBackPressed: () -> Unit,
-    contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
     BackHandler {
         onBackPressed()
     }
-    val scrollState = rememberScrollState()
-    val layoutDirection = LocalLayoutDirection.current
-    Box(
-        modifier = modifier
-            .verticalScroll(state = scrollState)
-            .padding(top = contentPadding.calculateTopPadding())
-    ) {
-        Column(
-            modifier = Modifier.padding(
-                bottom = contentPadding.calculateTopPadding(),
-                start = contentPadding.calculateStartPadding(layoutDirection),
-                end = contentPadding.calculateEndPadding(layoutDirection)
-            )
-        ) {
-            Box(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .clip(MaterialTheme.shapes.medium)
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate(
+                        Screen.EachMemberAbsentScreen.route + "?memberIdAsal=${selectedMember.userIdAsal}&memberFullname=${selectedMember.fullName}"
+                    )
+                    Log.d(ContentValues.TAG, "${selectedMember.userIdAsal}")
+                    Log.d(ContentValues.TAG, "${selectedMember.fullName}")
+                },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.background
             ) {
-                Column {
-                    Text(
-                        text = "Nama Lengkap: ${
-                            selectedMember.fullName
-                        }", fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.padding(20.dp))
-                    Text("Kode Agent: ${selectedMember.agentCode}")
-                    Text(
-                        "Tanggal Ujian AAJI: ${
-                            selectedMember.ajjExamDate?.toDateA()
-                                ?.formatToStrinAg() ?: stringResource(R.string.tidak_tersedia)
-                        }"
-                    )
-                    Text(
-                        "Tanggal Ujian AASI: ${
-                            selectedMember.aasiExamDate?.toDateA()
-                                ?.formatToStrinAg() ?: stringResource(R.string.tidak_tersedia)
-                        }"
-                    )
-                    Text("Unit: ${selectedMember.selectedUnit}")
-                    Spacer(modifier = Modifier.padding(20.dp))
-                    Text("Alamat: ${selectedMember.address}")
-                    Text(
-                        "Tanggal Lahir: ${
-                            selectedMember.dateOfBirth?.toDateA()
-                                ?.formatToStrinAg() ?: stringResource(R.string.tidak_tersedia)
-                        }"
-                    )
-                    Text(
-                        "Partner Business / Leader: ${
-                            selectedMember.leaderStatus
-                        }"
-                    )
-                    if (selectedMember.leaderTitle.isNotEmpty()) {
-                        Text(
-                            "Status Leader: ${
-                                selectedMember.leaderTitle
-                            }"
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.padding(20.dp))
-                    Text("Visi: ${selectedMember.vision}")
-                    Text("Moto Hidup: ${selectedMember.lifeMoto}")
-                }
+                Icon(imageVector = Icons.Default.List, contentDescription = "Check Absent Member")
             }
+        }
+    ) { paddingValue ->
+        Column(
+            modifier = modifier
+                .padding(paddingValue)
+                .padding(20.dp)
+        ) {
+            Text(
+                text = "Nama Lengkap: ${
+                    selectedMember.fullName
+                }", fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.padding(20.dp))
+            Text("Kode Agent: ${selectedMember.agentCode}")
+            Text("User Id Asal: ${selectedMember.userIdAsal}")
+            Text(
+                "Tanggal Ujian AAJI: ${
+                    selectedMember.ajjExamDate?.toDateA()
+                        ?.formatToStrinAg() ?: stringResource(R.string.tidak_tersedia)
+                }"
+            )
+            Text(
+                "Tanggal Ujian AASI: ${
+                    selectedMember.aasiExamDate?.toDateA()
+                        ?.formatToStrinAg() ?: stringResource(R.string.tidak_tersedia)
+                }"
+            )
+            Text("Unit: ${selectedMember.selectedUnit}")
+            Spacer(modifier = Modifier.padding(20.dp))
+            Text("Alamat: ${selectedMember.address}")
+            Text("Nomor Telepon: ${selectedMember.phoneNumber}")
+            Text(
+                "Tanggal Lahir: ${
+                    selectedMember.dateOfBirth?.toDateA()
+                        ?.formatToStrinAg() ?: stringResource(R.string.tidak_tersedia)
+                }"
+            )
+            Text(
+                "Partner Business / Leader: ${
+                    selectedMember.leaderStatus
+                }"
+            )
+            if (selectedMember.leaderTitle.isNotEmpty()) {
+                Text(
+                    "Status Leader: ${
+                        selectedMember.leaderTitle
+                    }"
+                )
+            }
+
+            Spacer(modifier = Modifier.padding(20.dp))
+            Text("Visi: ${selectedMember.vision}")
+            Text("Moto Hidup: ${selectedMember.lifeMoto}")
         }
     }
 }
@@ -391,6 +397,7 @@ private fun TopAppBarMembers(
 fun CheckMemberScreen() {
     val viewModel = MembersViewModel()
     MembersScreen(
+        navController = rememberNavController(),
         onNavigate = {},
         windowSize = WindowWidthSizeClass.Compact,
         onBackPressed = { /*TODO*/ },

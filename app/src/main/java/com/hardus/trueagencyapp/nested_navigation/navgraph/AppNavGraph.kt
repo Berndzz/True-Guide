@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.hardus.trueagencyapp.main_content.AppScreen
+import com.hardus.trueagencyapp.main_content.home.feature_members.presentation.AbsentMemberEachScreen
 import com.hardus.trueagencyapp.main_content.home.feature_members.presentation.MembersScreen
 import com.hardus.trueagencyapp.main_content.home.feature_members.presentation.MembersViewModel
 import com.hardus.trueagencyapp.main_content.home.feature_note.domain.model.NoteCategory
@@ -65,6 +66,7 @@ fun NavGraphBuilder.appNavGraph(
         composable(route = Screen.Members.route) {
             val membersViewModel: MembersViewModel = viewModel()
             MembersScreen(
+                navController = navController,
                 onNavigate = {
                     navController.popBackStack()
                     navController.navigate(route = Screen.Home.route)
@@ -72,6 +74,27 @@ fun NavGraphBuilder.appNavGraph(
                 windowSize = windowSize,
                 onBackPressed = onBackPressed,
                 viewModel = membersViewModel
+            )
+        }
+        composable(route = Screen.EachMemberAbsentScreen.route + "?memberIdAsal={memberIdAsal}&memberFullname={memberFullname}",
+            arguments = listOf(
+                navArgument(name = "memberIdAsal") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                },
+                navArgument(name = "memberFullname") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            )) { backStackEntry ->
+            val membersViewModel: MembersViewModel = viewModel()
+            AbsentMemberEachScreen(
+                navBackStackEntry = backStackEntry,
+                viewModel = membersViewModel,
+                onNavigate = {
+                    navController.popBackStack()
+                    navController.navigate(route = Screen.Members.route)
+                },
             )
         }
         composable(

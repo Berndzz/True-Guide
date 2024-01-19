@@ -17,8 +17,10 @@ data class DirectionPage(
 
 data class PersonalData(
     val userId: String? = "", // ID pengguna, diperoleh dari Firebase Authentication
+    val userIdAsal: String? = "",
     val fullName: String = "",
     val address: String = "",
+    val phoneNumber: String = "",
     val dateOfBirth: Timestamp? = null, // Gunakan `null` sebagai default untuk `@ServerTimestamp` agar Firestore menetapkannya
     val leaderStatus: String = "", // "Leader" atau "Business Partner"
     val leaderTitle: String = "-", // Judul jika pengguna adalah leader

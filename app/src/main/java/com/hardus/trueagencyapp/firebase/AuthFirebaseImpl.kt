@@ -36,7 +36,6 @@ class AuthFirebaseImpl @Inject constructor(
             result?.user?.updateProfile(
                 UserProfileChangeRequest.Builder().setDisplayName(name).build()
             )?.await()
-            //savePhoneNumberToDatabase(result?.user?.uid, phoneNumber)
             saveUserToFirestore(user.uid, name, phoneNumber)
             Resource.Success(result.user!!)
         } catch (e: Exception) {

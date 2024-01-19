@@ -92,6 +92,7 @@ fun UserFormScreen(viewModel: FormViewModel, onNavigate: () -> Unit, onFormPage:
                             item {
                                 Text("Nama Lengkap: ${personalData?.fullName ?: stringResource(R.string.tidak_tersedia)}  ")
                                 Text("Alamat: ${personalData?.address ?: stringResource(R.string.tidak_tersedia)}")
+                                Text("Nomor Telepon: ${personalData?.phoneNumber ?: stringResource(R.string.tidak_tersedia)}")
                                 Text(
                                     "Tanggal Lahir: ${
                                         personalData?.dateOfBirth?.toDateA()

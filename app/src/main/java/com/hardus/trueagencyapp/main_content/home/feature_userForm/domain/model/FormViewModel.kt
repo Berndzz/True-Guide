@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.SetOptions
 import com.hardus.trueagencyapp.main_content.home.feature_userForm.data.DirectionPage
 import com.hardus.trueagencyapp.main_content.home.feature_userForm.data.FormQuestion
 import com.hardus.trueagencyapp.main_content.home.feature_userForm.data.PersonalData
@@ -246,39 +247,77 @@ class FormViewModel : ViewModel() {
             onComplete(false)
             return
         }
+        val profileDocRef = firestore.collection("profil").document(userId)
 
-        val personalData = PersonalData(
-            userId = userIda,
-            fullName = _fullNameResponse.value,
-            address = _addressResponse.value,
-            dateOfBirth = _dateOfBirth.value.toTimestamp(), // Konversi LocalDate ke Date atau Timestamp
-            leaderStatus = if (_isLeader.value) "Leader" else "Business Partner",
-            leaderTitle = _leaderTitle.value,
-            isBusinessPartner = _isBusinessPartner.value ?: false,
-            agentCode = _agentCodeResponse.value,
-            ajjExamDate = _ajjExamDateResponse.value.toTimestamp(), // Gunakan konversi yang sesuai untuk LocalDate ke Date
-            aasiExamDate = _aasiExamDateResponse.value.toTimestamp(), // Gunakan konversi yang sesuai untuk LocalDate ke Date
-            selectedUnit = _selectedUnit.value.orEmpty(),
-            vision = _visiResponse.value,
-            lifeMoto = _lifeMottoResponse.value
-        )
+        profileDocRef.get().addOnSuccessListener { documentSnapshot ->
+            if (documentSnapshot.exists()) {
+                // Mengambil nomor telepon dari dokumen
+                val phoneNumber = documentSnapshot.getString("phone_user")
 
-        firestore.collection("usersData").document(userId).set(personalData).addOnSuccessListener {
-            // Cek dan tambahkan ke unit yang dipilih jika ada
-            val unitName = personalData.selectedUnit
-            if (unitName.isNotEmpty()) {
-                // Gunakan add() untuk membuat dokumen baru dengan ID unik di sub-collection 'members'
-                firestore.collection("organization").document(unitName).collection("members")
-                    .add(personalData).addOnSuccessListener {
-                        onComplete(true) // Sukses menambahkan data pengguna ke unit yang dipilih
-                    }.addOnFailureListener {
-                        onComplete(false) // Gagal menambahkan data pengguna ke unit yang dipilih
-                    }
-            } else {
-                onComplete(true) // Jika tidak ada unit yang dipilih, selesaikan proses tanpa menambahkan ke 'organization'
+                // Lanjutkan dengan pembuatan objek PersonalData
+                val personalData = phoneNumber?.let {
+                    PersonalData(
+                        userId = userIda,
+                        userIdAsal = userId,
+                        fullName = _fullNameResponse.value,
+                        address = _addressResponse.value,
+                        dateOfBirth = _dateOfBirth.value.toTimestamp(),
+                        leaderStatus = if (_isLeader.value) "Leader" else "Business Partner",
+                        leaderTitle = _leaderTitle.value,
+                        phoneNumber = it, // Menambahkan nomor telepon yang diambil dari Firebase
+                        isBusinessPartner = _isBusinessPartner.value ?: false,
+                        agentCode = _agentCodeResponse.value,
+                        ajjExamDate = _ajjExamDateResponse.value.toTimestamp(),
+                        aasiExamDate = _aasiExamDateResponse.value.toTimestamp(),
+                        selectedUnit = _selectedUnit.value.orEmpty(),
+                        vision = _visiResponse.value,
+                        lifeMoto = _lifeMottoResponse.value
+                    )
+                }
+
+                // Mengatur data pengguna ke koleksi 'usersData' dengan dokumen ID pengguna
+                personalData?.let {
+                    firestore.collection("usersData").document(userId).set(it)
+                        .addOnSuccessListener {
+                            val unitName = personalData.selectedUnit
+                            if (unitName.isNotEmpty()) {
+                                // Referensi ke dokumen dalam sub-koleksi 'members' dari unit yang dipilih
+                                val memberDocRef =
+                                    firestore.collection("organization").document(unitName)
+                                        .collection("members").document(userId)
+
+                                memberDocRef.get().addOnSuccessListener { documentSnapshot ->
+                                    if (documentSnapshot.exists()) {
+                                        // Jika dokumen sudah ada, perbarui data dengan set dan merge
+                                        memberDocRef.set(personalData, SetOptions.merge())
+                                            .addOnSuccessListener {
+                                                onComplete(true) // Sukses meng-update data pengguna ke unit yang dipilih
+                                            }
+                                            .addOnFailureListener { e ->
+                                                onComplete(false) // Gagal meng-update data pengguna ke unit yang dipilih
+                                            }
+                                    } else { // Jika dokumen tidak ada, buat dokumen baru dengan set
+                                        memberDocRef.set(personalData)
+                                            .addOnSuccessListener {
+                                                onComplete(true) // Sukses menambahkan data pengguna ke unit yang dipilih
+                                            }
+                                            .addOnFailureListener { e ->
+                                                onComplete(false) // Gagal menambahkan data pengguna ke unit yang dipilih
+                                            }
+                                    }
+                                }.addOnFailureListener { e ->
+                                    onComplete(false) // Gagal melakukan pemeriksaan dokumen
+                                }
+                            } else {
+                                onComplete(true) // Jika tidak ada unit yang dipilih, selesaikan proses tanpa menambahkan ke 'organization'
+                            }
+                        }.addOnFailureListener {
+                            onComplete(false) // Gagal menyimpan data pengguna ke 'usersData'
+                        }
+                }?.addOnFailureListener {
+                    onComplete(false) // Gagal mengambil dokumen profil atau dokumen profil tidak ditemukan
+                }
             }
-        }.addOnFailureListener {
-            onComplete(false) // Gagal menyimpan data pengguna ke 'usersData'
         }
     }
 

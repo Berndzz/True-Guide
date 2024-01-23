@@ -1,8 +1,15 @@
 package com.hardus.trueagencyapp.main_content.home.feature_members.presentation
 
 import android.content.ContentValues
+import android.content.ContentValues.TAG
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.ContactsContract
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +45,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -207,6 +215,7 @@ private fun MemberDetail(
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     BackHandler {
         onBackPressed()
     }
@@ -239,7 +248,7 @@ private fun MemberDetail(
             )
             Spacer(modifier = Modifier.padding(20.dp))
             Text("Kode Agent: ${selectedMember.agentCode}")
-            Text("User Id Asal: ${selectedMember.userIdAsal}")
+
             Text(
                 "Tanggal Ujian AAJI: ${
                     selectedMember.ajjExamDate?.toDateA()
@@ -255,7 +264,21 @@ private fun MemberDetail(
             Text("Unit: ${selectedMember.selectedUnit}")
             Spacer(modifier = Modifier.padding(20.dp))
             Text("Alamat: ${selectedMember.address}")
-            Text("Nomor Telepon: ${selectedMember.phoneNumber}")
+            Row {
+                Text(
+                    text = "Nomor Telepon: "
+                    )
+                Text(text = selectedMember.phoneNumber,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.clickable {
+                    // Menampilkan dialog pilihan atau langsung memanggil fungsi untuk menangani klik di sini
+                    //openWith(context, selectedMember.phoneNumber)
+                    openWithWhatsApp(context, selectedMember.phoneNumber)
+                    addToContact(context, selectedMember.phoneNumber)
+                    Log.d(TAG, selectedMember.phoneNumber)
+                })
+            }
+
             Text(
                 "Tanggal Lahir: ${
                     selectedMember.dateOfBirth?.toDateA()
@@ -279,6 +302,36 @@ private fun MemberDetail(
             Text("Visi: ${selectedMember.vision}")
             Text("Moto Hidup: ${selectedMember.lifeMoto}")
         }
+    }
+}
+
+
+fun openWithWhatsApp(context: Context, phoneNumber: String) {
+    val formattedNumber = phoneNumber.removePrefix("0").replaceFirst("^0*(?!$)".toRegex(), "+62")
+    val whatsappIntent =
+        Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=+6281234567890"))
+
+    if (whatsappIntent.resolveActivity(context.packageManager) != null) {
+        context.startActivity(whatsappIntent)
+    } else {
+        Toast.makeText(
+            context,
+            "WhatsApp tidak terinstal atau nomor tidak valid.",
+            Toast.LENGTH_LONG
+        ).show()
+    }
+}
+
+fun addToContact(context: Context, phoneNumber: String) {
+    val addContactIntent = Intent(Intent.ACTION_INSERT).apply {
+        type = ContactsContract.RawContacts.CONTENT_TYPE
+        putExtra(ContactsContract.Intents.Insert.PHONE, phoneNumber)
+    }
+    if (addContactIntent.resolveActivity(context.packageManager) != null) {
+        context.startActivity(addContactIntent)
+    } else {
+        Toast.makeText(context, "Tidak ada aplikasi kontak yang ditemukan.", Toast.LENGTH_LONG)
+            .show()
     }
 }
 

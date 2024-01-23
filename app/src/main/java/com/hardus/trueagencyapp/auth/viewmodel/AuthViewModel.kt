@@ -16,6 +16,7 @@ import com.hardus.trueagencyapp.firebase.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,6 +44,9 @@ class AuthViewModel @Inject constructor(
     private val _isInRegistrationMode = mutableStateOf(false)
     val isInRegistrationMode: State<Boolean> = _isInRegistrationMode
 
+    private val _resetPasswordStatus = MutableStateFlow<Resource<String>>(Resource.Loading)
+    val resetPasswordStatus: StateFlow<Resource<String>> = _resetPasswordStatus.asStateFlow()
+
     // Fungsi untuk mengatur konteks
     fun setRegistrationMode(isInRegistrationMode: Boolean) {
         _isInRegistrationMode.value = isInRegistrationMode
@@ -52,7 +56,6 @@ class AuthViewModel @Inject constructor(
     private val _usernameUser = mutableStateOf("")
     private val _phoneNumberUser = mutableStateOf("")
     private val _passwordUser = mutableStateOf("")
-    private val _repeatPasswordUser = mutableStateOf("")
     private val _privacyPolicyUser = mutableStateOf(false)
     val usernameUserResponse: String
         get() = _usernameUser.value
@@ -69,8 +72,6 @@ class AuthViewModel @Inject constructor(
     val privacyPolicyResponse: Boolean
         get() = _privacyPolicyUser.value
 
-    val repeatPasswordUsersResponse: String
-        get() = _repeatPasswordUser.value
 
     fun onUsernameUserChange(username: String) {
         _usernameUser.value = username
@@ -104,11 +105,6 @@ class AuthViewModel @Inject constructor(
         _privacyPolicyUser.value = status
         validateDataRegisterWithRules()
     }
-
-    fun onRepeatPasswordChange(repeatPassword: String) {
-        _repeatPasswordUser.value = repeatPassword
-    }
-
 
     val currentUser: FirebaseUser?
         get() = repository.currentUser
@@ -235,6 +231,21 @@ class AuthViewModel @Inject constructor(
         Log.d(TAG, "Inside PrintState")
         Log.d(TAG, registrationUIState.value.toString())
     }
+
+
+    fun sendPasswordResetEmail(email: String) {
+        viewModelScope.launch {
+            _resetPasswordStatus.value = Resource.Loading
+            try {
+                val result = repository.sendPasswordResetEmail(email)
+                _resetPasswordStatus.value =
+                    result // Langsung menetapkan hasil ke _resetPasswordStatus
+            } catch (e: Exception) {
+                _resetPasswordStatus.value = Resource.Failure(e)
+            }
+        }
+    }
+
 
     fun logout() {
         repository.logout()

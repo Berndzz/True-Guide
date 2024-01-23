@@ -1,6 +1,8 @@
 package com.hardus.trueagencyapp.firebase
 
+import android.app.Activity
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.flow.Flow
 
 interface AuthFirebase {
     val currentUser: FirebaseUser?
@@ -11,6 +13,8 @@ interface AuthFirebase {
         phoneNumber: String,
         password: String
     ): Resource<FirebaseUser>
+
+    suspend fun sendPasswordResetEmail(email: String): Resource<String>
 
     fun logout()
 }

@@ -1,5 +1,6 @@
 package com.hardus.trueagencyapp.nested_navigation
 
+import android.app.Activity
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

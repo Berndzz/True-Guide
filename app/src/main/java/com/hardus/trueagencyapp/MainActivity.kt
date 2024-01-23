@@ -40,7 +40,6 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             TrueAgencyAppTheme {
-                // A surface container using the 'background' color from the theme
                 val widthSizeClass = calculateWindowSizeClass(this)
                 Surface(
                     modifier = Modifier.fillMaxSize(),

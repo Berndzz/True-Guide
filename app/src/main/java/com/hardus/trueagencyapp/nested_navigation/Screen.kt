@@ -80,8 +80,6 @@ sealed class Screen(
     object Register : Screen("register_screen")
     object ForgotPassword : Screen("forgotPass_screen")
     object TermAndCondition : Screen("termAndCondition_screen")
-    object OtpCode : Screen("otp_screen")
-    object NewPassword : Screen("newPass_screen")
 
     // onboarding root
     object Onboarding : Screen("onboarding_screen")

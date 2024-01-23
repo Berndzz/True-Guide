@@ -1,5 +1,8 @@
 package com.hardus.trueagencyapp.util
 
+import android.content.Context
+import android.widget.Toast
+
 fun validateEmail(email: String): Boolean {
     // Validasi email menggunakan regex
     val regex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")
@@ -44,6 +47,11 @@ fun getEmailError(email: String): String =
         )
     ) "Email tidak valid" else ""
 
+
+fun Context.showMsg(
+    msg:String,
+    duration:Int = Toast.LENGTH_SHORT
+) = Toast.makeText(this,msg,duration).show()
 
 fun getPasswordError(password: String): String =
     if (password.isEmpty()) "Required" else if (password.length < 6) "Password minimal 6 karakter" else ""

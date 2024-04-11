@@ -1,18 +1,12 @@
 package com.hardus.trueagencyapp.main_content.home.feature_qrcode.data.repo
 
 import android.util.Log
-import com.google.mlkit.vision.barcode.common.Barcode
-import com.google.mlkit.vision.codescanner.GmsBarcodeScanner
 import com.hardus.trueagencyapp.main_content.home.feature_qrcode.domain.repo.QrcodeRepo
 import com.hardus.trueagencyapp.main_content.home.presentation.util.isWithinAbsenceWindow
-import com.hardus.trueagencyapp.main_content.home.presentation.util.toJsonString
 import com.hardus.trueagencyapp.util.FirestoreService
 import com.hardus.trueagencyapp.util.await
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONException
@@ -22,22 +16,7 @@ import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 
-class QrcodeRepoImpl @Inject constructor(
-    private val scanner: GmsBarcodeScanner
-) : QrcodeRepo {
-    override fun startScanning(): Flow<String?> {
-        return callbackFlow {
-            scanner.startScan()
-                .addOnSuccessListener {
-                    launch {
-                        send(getDetail(it))
-                    }
-                }.addOnFailureListener {
-                    it.printStackTrace()
-                }
-            awaitClose { }
-        }
-    }
+class QrcodeRepoImpl @Inject constructor() : QrcodeRepo {
 
     override fun saveToFirestore(detail: String, userId: String) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -125,18 +104,6 @@ class QrcodeRepoImpl @Inject constructor(
                 Log.e(TAG, "Error parsing scan detail JSON", e)
             } catch (e: Exception) {
                 Log.e(TAG, "An error occurred while saving scan details", e)
-            }
-        }
-    }
-
-    private fun getDetail(barcode: Barcode): String {
-        return when (barcode.valueType) {
-            Barcode.TYPE_TEXT -> {
-                "${barcode.rawValue}"
-            }
-
-            else -> {
-                "Couldn't determine"
             }
         }
     }

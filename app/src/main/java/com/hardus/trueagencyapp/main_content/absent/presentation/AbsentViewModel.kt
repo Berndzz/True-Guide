@@ -21,10 +21,10 @@ class AbsentViewModel : ViewModel() {
                 AbsentBreed(idAbsent = "1", name = "Q1"),
                 AbsentBreed(idAbsent = "2", name = "Q2"),
                 AbsentBreed(idAbsent = "3", name = "Q3"),
-                AbsentBreed(idAbsent = "4", name = "Material"),
+                AbsentBreed(idAbsent = "4", name = "Mentality & Attitude"),
                 AbsentBreed(idAbsent = "5", name = "PRU Sales Academy"),
-                AbsentBreed(idAbsent = "6", name = "Sertifikat & Knowledge Academy"),
-                AbsentBreed(idAbsent = "7", name = "Sales Skill & Product")
+                AbsentBreed(idAbsent = "6", name = "Product & Knowledge Academy"),
+                AbsentBreed(idAbsent = "7", name = "Sales Skill")
             ),
             selectedBreed = null // atau inisialisasi dengan breed pertama jika diinginkan
         )

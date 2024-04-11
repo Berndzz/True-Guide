@@ -8,7 +8,7 @@ import com.hardus.trueagencyapp.util.await
 import javax.inject.Inject
 
 class AuthFirebaseImpl @Inject constructor(
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
 ) : AuthFirebase {
     override val currentUser: FirebaseUser?
         get() = firebaseAuth.currentUser
@@ -52,7 +52,6 @@ class AuthFirebaseImpl @Inject constructor(
             Resource.Failure(e)
         }
     }
-
 
     private suspend fun saveUserToFirestore(userId: String, name: String, phone: String) {
         try {

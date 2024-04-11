@@ -1,8 +1,8 @@
 package com.hardus.trueagencyapp.auth.screen
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -53,9 +52,6 @@ import com.hardus.trueagencyapp.component.field_component.PasswordTextFieldCompo
 import com.hardus.trueagencyapp.component.field_component.TextButtonComponent
 import com.hardus.trueagencyapp.component.field_component.TextButtonComponent2
 import com.hardus.trueagencyapp.firebase.Resource
-
-//loginViewModel: AuthViewModel? = hiltViewModel(),
-
 @OptIn(
     ExperimentalComposeUiApi::class
 )
@@ -74,15 +70,10 @@ fun LoginScreen(
 
     val loginFlow = loginViewModel.loginFlow.collectAsState()
 
-    LaunchedEffect(Unit) {
-        loginViewModel.setRegistrationMode(false)
-    }
-
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Surface(
-            color = Color.White, modifier = Modifier
+            modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
         ) {
             Column {
                 AppbarAuthentication(stringResource(R.string.login))
@@ -97,7 +88,6 @@ fun LoginScreen(
                             labelValue = stringResource(id = R.string.email),
                             imageVector = Icons.Outlined.Email,
                             onTextSelected = {
-                                //loginViewModel.onEventLogin(LoginUIEvent.EmailChanged(it))
                                 loginViewModel.onEmailUserChange(it)
                             },
                             errorStatus = it.emailError,
@@ -116,7 +106,6 @@ fun LoginScreen(
                             labelValue = stringResource(id = R.string.password),
                             imageVector = Icons.Outlined.Lock,
                             onTextSelected = {
-                                //loginViewModel.onEventLogin(LoginUIEvent.PasswordChanged(it))
                                 loginViewModel.onPasswordUserChange(it)
                             },
                             errorStatus = it.passwordError,
@@ -160,17 +149,7 @@ fun LoginScreen(
                         horizontalArrangement = Arrangement.SpaceEvenly,
 
                         ) {
-                        ButtonComponentWithIcon(value = stringResource(id = R.string.google),
-                            painterResource = painterResource(
-                                id = R.drawable.logo_google
-                            ),
-                            onNavigate = {})
                         Spacer(modifier = Modifier.padding(10.dp))
-                        ButtonComponentWithIcon(value = stringResource(id = R.string.facebook),
-                            painterResource = painterResource(
-                                id = R.drawable.logo_facebook
-                            ),
-                            onNavigate = {})
                     }
                     Spacer(modifier = Modifier.padding(10.dp))
                     TextButtonComponent(

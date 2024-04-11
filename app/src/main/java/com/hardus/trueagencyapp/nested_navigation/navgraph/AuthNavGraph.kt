@@ -35,7 +35,7 @@ fun NavGraphBuilder.authNavGraph(
                     navController.navigate(route = Screen.Register.route)
                 },
                 onForgotPassword = {
-                    navController.popBackStack()
+                    navController.popBackStack  ()
                     navController.navigate(route = Screen.ForgotPassword.route)
                 },
             )

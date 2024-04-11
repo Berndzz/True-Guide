@@ -1,6 +1,7 @@
 package com.hardus.trueagencyapp.component.field_component
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -295,17 +296,17 @@ fun ButtonComponentWithIcon(value: String, painterResource: Painter, onNavigate:
         onClick = onNavigate,
         elevation = ButtonDefaults.buttonElevation(),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.LightGray, // Set background color to gray
+            containerColor = MaterialTheme.colorScheme.onSecondary, // Set background color to gray
+            contentColor = MaterialTheme.colorScheme.onBackground, // Set background color to gray
         ),
         shape = RoundedCornerShape(6.dp),
     ) {
-        Icon(
+        Image(
             modifier = Modifier.padding(end = 5.dp),
             painter = painterResource,
             contentDescription = "",
-            tint = Color.Black, // Set icon color to black
         )
-        Text(text = value, fontSize = 13.sp)
+        Text(text = value, fontSize = 13.sp, fontWeight = FontWeight.Bold)
     }
 }
 

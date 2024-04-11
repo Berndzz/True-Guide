@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "67197148001",
+    "firebase_url": "https://trueguide-846cb-default-rtdb.firebaseio.com",
     "project_id": "trueguide-846cb",
     "storage_bucket": "trueguide-846cb.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "67197148001-6jd1i2lkeraashihit9h9pr3gteerq59.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hardus.trueagencyapp",
+            "certificate_hash": "84d5b49b0d6afe44b664370b7000b14d85f24275"
+          }
+        },
         {
           "client_id": "67197148001-262d56gsn4tgng8qbsv8gvroj8ivacua.apps.googleusercontent.com",
           "client_type": 3

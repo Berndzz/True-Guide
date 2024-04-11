@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TrueAgencyApp</string>
+    <string name="app_name">TrueGuide</string>
     <string name="top_banner">Ini top baner</string>
     <string name="login">Login</string>
     <string name="password_toggle">Password Toggle</string>
@@ -42,5 +42,7 @@
     <string name="close">Close</string>
     <string name="default_title">No Data</string>
     <string name="tidak_tersedia">Tidak Tersedia</string>
+    <string name="scan_code">Scan Code</string>
     <string name="members">Members</string>
+    <string name="web_client_id">67197148001-262d56gsn4tgng8qbsv8gvroj8ivacua.apps.googleusercontent.com</string>
 </resources>

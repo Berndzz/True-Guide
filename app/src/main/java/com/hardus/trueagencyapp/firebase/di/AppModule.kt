@@ -4,15 +4,11 @@ import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.google.firebase.auth.FirebaseAuth
-import com.google.mlkit.vision.barcode.common.Barcode
-import com.google.mlkit.vision.codescanner.GmsBarcodeScanner
-import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
-import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import com.hardus.trueagencyapp.firebase.AuthFirebase
 import com.hardus.trueagencyapp.firebase.AuthFirebaseImpl
 import com.hardus.trueagencyapp.main_content.home.feature_note.data.data_source.NoteDatabase
-import com.hardus.trueagencyapp.main_content.home.feature_note.domain.repository.NoteRepository
 import com.hardus.trueagencyapp.main_content.home.feature_note.data.repository.NoteRepositoryImpl
+import com.hardus.trueagencyapp.main_content.home.feature_note.domain.repository.NoteRepository
 import com.hardus.trueagencyapp.main_content.home.feature_note.domain.use_case.AddNote
 import com.hardus.trueagencyapp.main_content.home.feature_note.domain.use_case.DeleteNote
 import com.hardus.trueagencyapp.main_content.home.feature_note.domain.use_case.GetNote
@@ -27,6 +23,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 class AppModule {
+
+    // add fungsi google sign in disini, kalau bisa
     @Provides
     @Singleton
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
@@ -34,7 +32,6 @@ class AppModule {
     @Provides
     @Singleton
     fun provideAuthFirebase(impl: AuthFirebaseImpl): AuthFirebase = impl
-
 
     @Provides
     @Singleton
@@ -52,7 +49,6 @@ class AppModule {
         return NoteRepositoryImpl(db.noteDao)
     }
 
-
     @Provides
     @Singleton
     fun provideNoteUseCases(repository: NoteRepository): NoteUseCases {
@@ -68,23 +64,6 @@ class AppModule {
     @Singleton
     fun provideContext(app: Application): Context {
         return app.applicationContext
-    }
-    @Provides
-    @Singleton
-    fun provideBarCodeOptions(): GmsBarcodeScannerOptions {
-        return GmsBarcodeScannerOptions.Builder()
-            .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS)
-            .enableAutoZoom()
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideBarCodeScanner(
-        context: Context,
-        options: GmsBarcodeScannerOptions
-    ): GmsBarcodeScanner {
-        return GmsBarcodeScanning.getClient(context, options)
     }
 
 }

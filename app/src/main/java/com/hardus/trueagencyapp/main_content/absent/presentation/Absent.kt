@@ -40,6 +40,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -173,7 +174,6 @@ fun CardAbsent(
                 color = Color.White,
                 modifier = Modifier.padding(start = 20.dp, end = 20.dp)
             )
-
         }
     }
     if (openDialog) {
@@ -214,9 +214,25 @@ fun CardAbsent(
                     },
                     modifier = Modifier.padding(15.dp),
                 ) {
-                    Text("Close")
+                    Text(
+                        "Close",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             },
+            dismissButton = {
+                TextButton(
+                    onClick = {},
+                    modifier = Modifier.padding(15.dp),
+                ) {
+                    Text(
+                        "Hapus",
+                        color = MaterialTheme.colorScheme.error,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
         )
     }
 }
@@ -229,6 +245,8 @@ fun HeaderCard(subAbsent: SubAbsent) {
     ) {
         Text(
             text = subAbsent.headerTitle,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             style = TextStyle(
                 fontWeight = FontWeight.Bold, fontSize = 20.sp, fontFamily = FontFamily.SansSerif
             ),
@@ -244,6 +262,8 @@ fun HeaderCard(subAbsent: SubAbsent) {
         )
         Text(
             text = subAbsent.bodyTitle,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .padding(start = 10.dp),

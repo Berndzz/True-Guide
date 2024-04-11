@@ -33,6 +33,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hardus.trueagencyapp.main_content.home.feature_members.data.AbsentBreedMember
@@ -177,6 +178,8 @@ fun HeaderCardMember(subAbsent: SubAbsentMember) {
     ) {
         Text(
             text = subAbsent.headerTitle,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
@@ -194,6 +197,8 @@ fun HeaderCardMember(subAbsent: SubAbsentMember) {
         )
         Text(
             text = subAbsent.bodyTitle,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .padding(start = 10.dp),

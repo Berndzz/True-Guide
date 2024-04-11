@@ -264,7 +264,7 @@ fun ProgramImage(post: Program, modifier: Modifier = Modifier) {
             contentScale = ContentScale.FillHeight,
         )
         Text(
-            text = post.judul_program,
+            text = "",
             style = MaterialTheme.typography.displaySmall,
             textAlign = TextAlign.Center,
             color = Color.White,
@@ -362,7 +362,7 @@ fun ProgramDetail(
                     Image(
                         painter = painter,
                         contentDescription = null,
-                        alignment = Alignment.TopCenter,
+                        alignment = Alignment.Center,
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -376,7 +376,7 @@ fun ProgramDetail(
                         .align(Alignment.BottomStart)
                         .background(
                             Brush.verticalGradient(
-                                listOf(Color.Transparent, MaterialTheme.colorScheme.scrim), 0f, 400f
+                                listOf(Color.Transparent, MaterialTheme.colorScheme.scrim), 0f, 800f
                             )
                         )
                         .clip(MaterialTheme.shapes.medium)
@@ -406,7 +406,7 @@ fun ProgramDetail(
             Spacer(modifier = Modifier.padding(10.dp))
             ActivityScreen(post = selectedPost)
             Text(
-                text = program.deskripsi_program,
+                text = program.deskripsi_program2,
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Justify,
                 modifier = Modifier.padding(
@@ -513,7 +513,8 @@ fun ActivityText(subTraining: Aktivitas) {
             maxLines = 1, //change with colorSchame
             overflow = TextOverflow.Ellipsis
         )
-        Text(text = "(${subTraining.hari_aktivitas.formatToString()})", maxLines = 1)
+        //Text(text = "(${subTraining.hari_aktivitas.formatToString()})", maxLines = 1)
+        Text(text = "(${subTraining.body_aktivitas})", maxLines = 1)
         Spacer(Modifier.padding(3.dp))
         Divider(
             color = Color.White, thickness = 2.dp, modifier = Modifier.background(

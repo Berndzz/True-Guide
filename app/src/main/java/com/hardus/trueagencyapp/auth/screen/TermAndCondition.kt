@@ -3,6 +3,7 @@ package com.hardus.trueagencyapp.auth.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,6 +16,9 @@ import com.hardus.trueagencyapp.component.field_component.HeadingTextComponent
 
 @Composable
 fun TermAndConditionScreen() {
+//    Scaffold(
+//        Top
+//    )
     Surface(
         modifier = Modifier
             .fillMaxSize()

@@ -5,14 +5,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,6 +38,7 @@ import com.hardus.trueagencyapp.R
 import com.hardus.trueagencyapp.nested_navigation.AUTH_GRAPH_ROUTE
 import com.hardus.trueagencyapp.onboarding.viewmodel.OnBoardingViewModel
 import com.hardus.trueagencyapp.util.OnBoardingPage
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -48,6 +52,7 @@ fun OnboardingScreenOne(
         OnBoardingPage.Third
     )
     val pagerState = rememberPagerState()
+    val coroutineScope = rememberCoroutineScope()
     Column(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(
             modifier = Modifier.weight(10f),
@@ -68,12 +73,26 @@ fun OnboardingScreenOne(
             )
         FinishButton(
             modifier = Modifier.weight(1f),
-            pagerState = pagerState
-        ) {
-            onboardingViewModel.saveOnBoardingState(completed = true)
-            navController.popBackStack()
-            navController.navigate(route = AUTH_GRAPH_ROUTE)
-        }
+            pagerState = pagerState,
+            onNext = {
+                // Aksi untuk "Next", seperti misalnya scroll ke halaman berikutnya
+                coroutineScope.launch {
+                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                }
+            },
+            onBack = {
+                // Aksi untuk "Back", seperti misalnya scroll ke halaman sebelumnya
+                coroutineScope.launch {
+                    pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                }
+            },
+            onFinish = {
+                // Aksi untuk "Finish", seperti yang sudah ada dalam kode Anda
+                onboardingViewModel.saveOnBoardingState(completed = true)
+                navController.popBackStack()
+                navController.navigate(route = AUTH_GRAPH_ROUTE)
+            }
+        )
     }
 }
 
@@ -119,19 +138,33 @@ fun PagerScreen(onBoardingPage: OnBoardingPage) {
 fun FinishButton(
     modifier: Modifier,
     pagerState: PagerState,
-    onClick: () -> Unit,
+    onNext: () -> Unit,
+    onBack: () -> Unit,
+    onFinish: () -> Unit,
 ) {
     Row(
-        Modifier.padding(horizontal = 40.dp),
+        Modifier
+            .padding(horizontal = 40.dp)
+            .fillMaxWidth(),
         verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        AnimatedVisibility(
-            visible = pagerState.currentPage == 2,
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        if (pagerState.currentPage > 0) {
+            Button(onClick = onBack) {
+                Text(text = "Back")
+            }
+        } else {
+            Spacer(modifier = Modifier.width(0.dp)) // Untuk menjaga jarak jika tidak ada tombol "Back"
+        }
+
+        if (pagerState.currentPage < pagerState.pageCount - 1) {
+            Button(onClick = onNext) {
+                Text(text = "Next")
+            }
+        } else {
+            // Jika ini halaman terakhir, tampilkan "Finish"
             Button(
-                onClick = onClick,
+                onClick = onFinish,
                 colors = ButtonDefaults.buttonColors(contentColor = Color.White)
             ) {
                 Text(text = "Finish")

@@ -7,6 +7,7 @@ data class Program(
     val id_program: Long = 0L, // Atau String, tergantung pada tipe data Anda
     val judul_program: String = "",
     val deskripsi_program: String = "",
+    val deskripsi_program2: String = "",
     val photo_program: String = "" // Asumsi Anda menyimpan URL gambar
     //Add body_program
 )

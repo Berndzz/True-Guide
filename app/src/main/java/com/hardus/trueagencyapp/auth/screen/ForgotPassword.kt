@@ -27,6 +27,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -38,6 +39,7 @@ import com.hardus.trueagencyapp.R
 import com.hardus.trueagencyapp.auth.viewmodel.AuthViewModel
 import com.hardus.trueagencyapp.component.AppbarAddOne
 import com.hardus.trueagencyapp.component.field_component.ButtonComponent
+import com.hardus.trueagencyapp.component.field_component.ButtonComponentWithIcon
 import com.hardus.trueagencyapp.component.field_component.MyTextField
 import com.hardus.trueagencyapp.firebase.Resource
 

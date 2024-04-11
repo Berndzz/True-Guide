@@ -24,10 +24,10 @@ class MembersViewModel : ViewModel() {
                 AbsentBreedMember(idAbsent = "1", name = "Q1"),
                 AbsentBreedMember(idAbsent = "2", name = "Q2"),
                 AbsentBreedMember(idAbsent = "3", name = "Q3"),
-                AbsentBreedMember(idAbsent = "4", name = "Material"),
+                AbsentBreedMember(idAbsent = "4", name = "Mentality & Attitude"),
                 AbsentBreedMember(idAbsent = "5", name = "PRU Sales Academy"),
-                AbsentBreedMember(idAbsent = "6", name = "Sertifikat & Knowledge Academy"),
-                AbsentBreedMember(idAbsent = "7", name = "Sales Skill & Product")
+                AbsentBreedMember(idAbsent = "6", name = "Product & Knowledge Academy"),
+                AbsentBreedMember(idAbsent = "7", name = "Sales Skill")
             ),
             selectedBreedMember = null // atau inisialisasi dengan breed pertama jika diinginkan
         )

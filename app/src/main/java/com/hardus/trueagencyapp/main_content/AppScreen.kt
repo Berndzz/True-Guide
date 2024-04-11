@@ -25,15 +25,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.hardus.trueagencyapp.main_content.home.feature_qrcode.presentation.QrScanViewModel
 import com.hardus.auth.screen.view.setting.task.AboutScreen
-import com.hardus.auth.screen.view.setting.task.ChangeLanguageScreen
-import com.hardus.auth.screen.view.setting.task.NotificationScreen
 import com.hardus.auth.screen.view.setting.task.PrivacyScreen
 import com.hardus.auth.screen.view.setting.task.ReportScreen
 import com.hardus.auth.screen.view.setting.task.TermsScreen
 import com.hardus.trueagencyapp.main_content.absent.presentation.AbsentScreen
 import com.hardus.trueagencyapp.main_content.home.domain.model.HomeViewModel
+import com.hardus.trueagencyapp.main_content.home.feature_qrcode.presentation.QrScanViewModel
 import com.hardus.trueagencyapp.main_content.home.feature_userForm.domain.model.FormViewModel
 import com.hardus.trueagencyapp.main_content.home.presentation.HomeScreen
 import com.hardus.trueagencyapp.main_content.program.ProgramScreen
@@ -68,7 +66,7 @@ fun AppScreen(
                         formViewModel = formViewModel,
                         onUserForm = { navController.navigate(Screen.FormUsers.route) },
                         onNote = { navController.navigate(Screen.NoteSc.route) },
-                        onScan = { qrViewModel.startScanning() },
+                        onScan = { navController.navigate(Screen.QrCode.route) },
                         onMember = { navController.navigate(Screen.Members.route) })
                 }
                 composable(Screen.Program.route) {
@@ -93,20 +91,6 @@ fun AppScreen(
                         onPrivacy = { bottomNavController.navigate(Screen.Privacy.route) },
                         onAboutApp = { bottomNavController.navigate(Screen.About.route) },
                     )
-                }
-                composable(Screen.ChangeLanguage.route) {
-                    // Content untuk Ganti Bahasa screen
-                    ChangeLanguageScreen(onNavigate = {
-                        bottomNavController.popBackStack()
-                        bottomNavController.navigate(Screen.Setting.route)
-                    })
-                }
-                composable(Screen.Notification.route) {
-                    // Content untuk Ganti Bahasa screen
-                    NotificationScreen(onNavigate = {
-                        bottomNavController.popBackStack()
-                        bottomNavController.navigate(Screen.Setting.route)
-                    })
                 }
                 composable(Screen.Report.route) {
                     // Content untuk Report screen
@@ -156,7 +140,8 @@ fun BottomNavigationBar(
     NavigationBar {
         Row(modifier = Modifier.background(MaterialTheme.colorScheme.inverseOnSurface)) {
             items.forEachIndexed { index, bottomItem ->
-                NavigationBarItem(selected = selected.intValue == index,
+                NavigationBarItem(
+                    selected = selected.intValue == index,
                     onClick = {
                         selected.intValue = index
                         bottomNavController.popBackStack()

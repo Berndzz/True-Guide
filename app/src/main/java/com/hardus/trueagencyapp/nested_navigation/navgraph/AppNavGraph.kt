@@ -1,6 +1,7 @@
 package com.hardus.trueagencyapp.nested_navigation.navgraph
 
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -15,6 +16,7 @@ import com.hardus.trueagencyapp.main_content.home.feature_members.presentation.M
 import com.hardus.trueagencyapp.main_content.home.feature_note.domain.model.NoteCategory
 import com.hardus.trueagencyapp.main_content.home.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import com.hardus.trueagencyapp.main_content.home.feature_note.presentation.notes.NoteScreen
+import com.hardus.trueagencyapp.main_content.home.feature_qrcode.presentation.QrScanViewModel
 import com.hardus.trueagencyapp.main_content.home.feature_qrcode.presentation.QrScanningScreen
 import com.hardus.trueagencyapp.main_content.home.feature_userForm.domain.model.FormViewModel
 import com.hardus.trueagencyapp.main_content.home.feature_userForm.presentation.FormRoute
@@ -58,10 +60,15 @@ fun NavGraphBuilder.appNavGraph(
             )
         }
         composable(route = Screen.QrCode.route) {
-            QrScanningScreen(onNavigate = {
-                navController.popBackStack()
-                navController.navigate(route = Screen.Home.route)
-            })
+            val viewModel: QrScanViewModel = hiltViewModel()
+            QrScanningScreen(
+                onNavigate = {
+                    navController.popBackStack()
+                    navController.navigate(route = Screen.Home.route)
+                },
+                navController = navController,
+                viewModel = viewModel
+            )
         }
         composable(route = Screen.Members.route) {
             val membersViewModel: MembersViewModel = viewModel()

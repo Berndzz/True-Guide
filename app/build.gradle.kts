@@ -57,6 +57,9 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    buildFeatures{
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -109,22 +112,27 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // coil
-    implementation("io.coil-kt:coil-compose:1.3.2")
+    implementation("io.coil-kt:coil-compose:2.2.2")
+
+    // retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     // Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.48.1")
     implementation("com.google.firebase:firebase-database-ktx:20.3.0")
     kapt("com.google.dagger:hilt-android-compiler:2.48.1")
-    kapt("androidx.hilt:hilt-compiler:1.1.0")
+    kapt("androidx.hilt:hilt-compiler:1.2.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
-    //QR CODE by google
-    implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
+    //QR CODE by ZXING
+    implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation ("com.google.zxing:core:3.4.1")
 
     // firebase
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-auth:22.3.0")
+    implementation ("com.google.firebase:firebase-auth-ktx:22.3.1")
     implementation("com.google.firebase:firebase-firestore-ktx")
 
     //swap refresh

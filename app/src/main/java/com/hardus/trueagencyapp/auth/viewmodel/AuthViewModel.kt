@@ -14,6 +14,7 @@ import com.hardus.trueagencyapp.component.rules.Validator
 import com.hardus.trueagencyapp.firebase.AuthFirebase
 import com.hardus.trueagencyapp.firebase.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val repository: AuthFirebase
+    private val repository: AuthFirebase,
 ) : ViewModel() {
     private val TAG = AuthViewModel::class.simpleName
 
@@ -57,6 +58,15 @@ class AuthViewModel @Inject constructor(
     private val _phoneNumberUser = mutableStateOf("")
     private val _passwordUser = mutableStateOf("")
     private val _privacyPolicyUser = mutableStateOf(false)
+
+    val triggerGoogleSignInEvent = Channel<Unit>(Channel.CONFLATED)
+
+    fun triggerGoogleSignIn() {
+        viewModelScope.launch {
+            triggerGoogleSignInEvent.send(Unit)
+        }
+    }
+
     val usernameUserResponse: String
         get() = _usernameUser.value
 
@@ -135,6 +145,7 @@ class AuthViewModel @Inject constructor(
         }
         validateLoginUIDataWithRules()
     }
+
 
     private fun login() {
         Log.d(TAG, "Inside_register()")
@@ -252,5 +263,4 @@ class AuthViewModel @Inject constructor(
         _registerFlow.value = null
         _loginFlow.value = null
     }
-
 }

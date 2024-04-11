@@ -8,7 +8,6 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -55,7 +54,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,13 +61,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.hardus.trueagencyapp.R
+import com.hardus.trueagencyapp.RequestPermission
 import com.hardus.trueagencyapp.auth.viewmodel.AuthViewModel
-import com.hardus.trueagencyapp.main_content.home.data.Aktivitas
-import com.hardus.trueagencyapp.main_content.home.data.ProgramWithActivities
+import com.hardus.trueagencyapp.main_content.home.domain.AktivitasApi
 import com.hardus.trueagencyapp.main_content.home.domain.model.HomeViewModel
 import com.hardus.trueagencyapp.main_content.home.feature_userForm.domain.model.FormViewModel
-import com.hardus.trueagencyapp.main_content.home.presentation.util.formatToString
-import com.hardus.trueagencyapp.util.generateFakeData
 
 
 @Composable
@@ -105,8 +101,8 @@ fun HomeScreen(
                     Surface {
                         LeaderStatus(
                             name = authViewModel.currentUser?.displayName ?: "",
-                            status = personalData?.leaderStatus ?: "-",
-                            hierarchy = personalData?.leaderTitle ?: "-",
+                            status = personalData?.leaderStatus ?: " ",
+                            hierarchy = personalData?.leaderTitle ?: " ",
                             onUserForm = onUserForm
                         )
                     }
@@ -125,17 +121,38 @@ fun HomeScreen(
                     )
                     Spacer(modifier = Modifier.padding(10.dp))
                 }
-                if (isLoading) {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
-                    }
-                } else {
-                    if (programs.isNotEmpty()) {
-                        programs.forEach { programWithActivities ->
-                            TrainingScreen(programWithActivities = programWithActivities)
+                listOf(
+                    "Training SM7" to "SM7",
+                    "Product Knowledge" to "PRODUCT_&_KNOWLEDGE",
+                    "Pru Sales Academy" to "PRU_SALES_ACADEMY",
+                    "Sales SKill" to "SALES_SKILL",
+                    "Personal Excellent Mentality Attitude" to "PERSONAL_EXCELLENT_MENTALITY_ATTITUDE"
+                ).forEach { (title, category) ->
+                    if (isLoading) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
                         }
                     } else {
-                        CircularProgressIndicator()
+                        Text(title,modifier= Modifier.padding(start = 16.dp))
+                        Row(
+                            modifier = Modifier
+                                .horizontalScroll(rememberScrollState())
+                                .padding(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            if (programs.isNotEmpty()) {
+                                programs.filter { it.category == category }
+                                    .forEach { aktivitasApi ->
+                                        TrainingScreen(aktivitas = aktivitasApi)
+                                    }
+                            } else {
+                                Text("Kegiatan tersebut tidak ada hari ini", color = Color.Gray)
+                            }
+                        }
+                        Spacer(modifier = Modifier.padding(10.dp))
                     }
                 }
             }
@@ -144,7 +161,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun PostText(aktivitas: Aktivitas) {
+fun PostText(aktivitas: AktivitasApi) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -152,13 +169,17 @@ fun PostText(aktivitas: Aktivitas) {
         Arrangement.Center,
         Alignment.CenterHorizontally
     ) {
-        Text(
-            text = aktivitas.judul_aktivitas,
-            color = Color.Black,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-        Text(text = "(${aktivitas.hari_aktivitas.formatToString()})", maxLines = 1)
+        aktivitas.judul_aktivitas?.let { title ->
+            Text(
+                text = title,
+                color = Color.Black,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        aktivitas.hari_aktivitas?.let { day ->
+            Text(text = "($day)", maxLines = 1)
+        }
         Spacer(Modifier.padding(3.dp))
         Divider(
             color = Color.White, thickness = 2.dp, modifier = Modifier.background(
@@ -169,11 +190,12 @@ fun PostText(aktivitas: Aktivitas) {
     }
 }
 
+
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun PostImage(aktivitas: Aktivitas, modifier: Modifier = Modifier) {
+fun PostImage(aktivitas: AktivitasApi, modifier: Modifier = Modifier) {
     val urlImage = aktivitas.gambar_aktivitas
-    val painter = if (urlImage.isNotEmpty()) {
+    val painter = if (!urlImage.isNullOrEmpty()) {
         rememberImagePainter(data = urlImage)
     } else {
         painterResource(id = R.drawable.placeholder)
@@ -187,7 +209,7 @@ fun PostImage(aktivitas: Aktivitas, modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostCard(
-    aktivitas: Aktivitas
+    aktivitas: AktivitasApi
 ) {
     var openDialog by remember { mutableStateOf(false) }
     Card(modifier = Modifier
@@ -205,14 +227,20 @@ fun PostCard(
         AlertDialog(modifier = Modifier.height(500.dp),
             onDismissRequest = { openDialog = false },
             title = {
-                Text(
-                    text = aktivitas.judul_aktivitas, style = MaterialTheme.typography.titleLarge
-                )
+                aktivitas.judul_aktivitas.let { title ->
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
             },
             text = {
-                Text(
-                    text = aktivitas.deskripsi_aktivitas, style = MaterialTheme.typography.bodyLarge
-                )
+                aktivitas.deskripsi_aktivitas?.let { description ->
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             },
             confirmButton = {
                 TextButton(
@@ -228,29 +256,11 @@ fun PostCard(
 }
 
 @Composable
-fun TrainingScreen(programWithActivities: ProgramWithActivities) {
-    Column(modifier = Modifier.padding(10.dp)) {
-        Text(
-            text = programWithActivities.program.judul_program, fontWeight = FontWeight.Bold
-        )
-        Spacer(Modifier.padding(bottom = 5.dp))
-        Row(
-            modifier = Modifier
-                .horizontalScroll(rememberScrollState())
-                .height(IntrinsicSize.Max)
-                .padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            if (programWithActivities.activities.isNotEmpty()) {
-                programWithActivities.activities.forEach { aktivitas ->
-                    PostCard(aktivitas = aktivitas)
-                }
-            } else {
-                // Handle case when data is empty
-                Text("No activity data available", color = Color.Gray)
-            }
-        }
-    }
+fun TrainingScreen(aktivitas: AktivitasApi) {
+    // Menampilkan setiap aktivitas dalam baris horizontal
+    PostCard(aktivitas = aktivitas)
 }
+
 
 @Composable
 fun Menu(onNote: () -> Unit, onScan: () -> Unit, onMember: () -> Unit) {
@@ -292,6 +302,7 @@ fun Menu(onNote: () -> Unit, onScan: () -> Unit, onMember: () -> Unit) {
             color = MaterialTheme.colorScheme.primary,
             shape = MaterialTheme.shapes.small,
         ) {
+            RequestPermission()
             Icon(
                 imageVector = Icons.Outlined.QrCodeScanner,
                 contentDescription = "qr code",
@@ -348,9 +359,7 @@ fun TopAppBarHome() {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
 @Composable
 fun LeaderStatus(name: String, status: String, hierarchy: String, onUserForm: () -> Unit) {
-    val urlImage =
-        "https://images.unsplash.com/photo-1554151228-14d9def656e4?q=80&w=986&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    val painter = rememberImagePainter(data = urlImage)
+    val painter = painterResource(R.drawable.icon)
     Row {
         Card(
             modifier = Modifier.size(45.dp),
@@ -366,8 +375,11 @@ fun LeaderStatus(name: String, status: String, hierarchy: String, onUserForm: ()
             Text(text = name)
             Row {
                 Text(text = status)
-                Text(text = " | ")
-                Text(text = hierarchy)
+                if (hierarchy.isEmpty()) {
+                    Text(text = " ")
+                } else {
+                    Text(text = " | $hierarchy")
+                }
             }
         }
     }
@@ -385,24 +397,4 @@ fun CheckMenu() {
     Menu(onNote = {}, onScan = {}, onMember = {})
 }
 
-@Preview(showBackground = true)
-@Composable
-fun TrainingScreenPreview() {
-    val fakePost = generateFakeData().firstOrNull() ?: return
-    //TrainingScreen(post = fakePost)
-}
-
-@Preview(showBackground = true, showSystemUi = true, name = "Hardus")
-@Composable
-//CheckNewPasswordScreenPhone
-fun CheckHomeScreenPhone() {
-    //HomeScreen(rememberNavController())
-}
-
-@Preview(showBackground = true, showSystemUi = true, name = "Hardus", device = Devices.TABLET)
-@Composable
-//CheckNewPasswordScreenPhone
-fun CheckHomeScreenPhoneTablet() {
-    //HomeScreen(rememberNavController())
-}
 

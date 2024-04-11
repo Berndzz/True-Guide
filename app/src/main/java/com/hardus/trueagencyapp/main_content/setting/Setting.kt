@@ -84,19 +84,6 @@ fun SettingScreen(
                 }
 
                 item {
-                    SettingComponents(
-                        iconStart = Icons.Default.Language,
-                        iconEnd = Icons.Default.ArrowForwardIos,
-                        text = "Ganti Bahasa",
-                        onNavigate = onChangeLanguage,
-                    )
-
-                    SettingComponents(
-                        iconStart = Icons.Default.Notifications,
-                        iconEnd = Icons.Default.ArrowForwardIos,
-                        text = "Pengaturan Notifikasi",
-                        onNavigate = onNotification
-                    )
 
                     SettingComponents(
                         iconStart = Icons.Default.Message,

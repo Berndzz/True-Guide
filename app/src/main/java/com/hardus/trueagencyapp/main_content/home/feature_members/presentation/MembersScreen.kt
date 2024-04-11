@@ -6,7 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.ContactsContract
+import android.text.util.Linkify
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
@@ -18,6 +20,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -52,6 +55,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
@@ -226,8 +231,6 @@ private fun MemberDetail(
                     navController.navigate(
                         Screen.EachMemberAbsentScreen.route + "?memberIdAsal=${selectedMember.userIdAsal}&memberFullname=${selectedMember.fullName}"
                     )
-                    Log.d(ContentValues.TAG, "${selectedMember.userIdAsal}")
-                    Log.d(ContentValues.TAG, "${selectedMember.fullName}")
                 },
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.background
@@ -239,8 +242,11 @@ private fun MemberDetail(
         Column(
             modifier = modifier
                 .padding(paddingValue)
-                .padding(20.dp)
+                .padding(start = 20.dp, end = 20.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.Start
         ) {
+            Spacer(modifier = Modifier.height(80.dp))
             Text(
                 text = "Nama Lengkap: ${
                     selectedMember.fullName
@@ -267,15 +273,15 @@ private fun MemberDetail(
             Row {
                 Text(
                     text = "Nomor Telepon: "
-                    )
-                Text(text = selectedMember.phoneNumber,
-                    color = MaterialTheme.colorScheme.tertiary,
-                    modifier = Modifier.clickable {
-                    // Menampilkan dialog pilihan atau langsung memanggil fungsi untuk menangani klik di sini
-                    //openWith(context, selectedMember.phoneNumber)
-                    openWithWhatsApp(context, selectedMember.phoneNumber)
-                    addToContact(context, selectedMember.phoneNumber)
-                    Log.d(TAG, selectedMember.phoneNumber)
+                )
+                AndroidView(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp), factory = {
+                    val textView = TextView(context)
+                    textView.text = selectedMember.phoneNumber
+                    textView.textSize = 17.sp.value
+                    Linkify.addLinks(textView, Linkify.ALL)
+                    textView
                 })
             }
 
@@ -302,36 +308,6 @@ private fun MemberDetail(
             Text("Visi: ${selectedMember.vision}")
             Text("Moto Hidup: ${selectedMember.lifeMoto}")
         }
-    }
-}
-
-
-fun openWithWhatsApp(context: Context, phoneNumber: String) {
-    val formattedNumber = phoneNumber.removePrefix("0").replaceFirst("^0*(?!$)".toRegex(), "+62")
-    val whatsappIntent =
-        Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=+6281234567890"))
-
-    if (whatsappIntent.resolveActivity(context.packageManager) != null) {
-        context.startActivity(whatsappIntent)
-    } else {
-        Toast.makeText(
-            context,
-            "WhatsApp tidak terinstal atau nomor tidak valid.",
-            Toast.LENGTH_LONG
-        ).show()
-    }
-}
-
-fun addToContact(context: Context, phoneNumber: String) {
-    val addContactIntent = Intent(Intent.ACTION_INSERT).apply {
-        type = ContactsContract.RawContacts.CONTENT_TYPE
-        putExtra(ContactsContract.Intents.Insert.PHONE, phoneNumber)
-    }
-    if (addContactIntent.resolveActivity(context.packageManager) != null) {
-        context.startActivity(addContactIntent)
-    } else {
-        Toast.makeText(context, "Tidak ada aplikasi kontak yang ditemukan.", Toast.LENGTH_LONG)
-            .show()
     }
 }
 

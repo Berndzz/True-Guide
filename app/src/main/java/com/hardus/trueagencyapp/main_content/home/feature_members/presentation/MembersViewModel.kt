@@ -35,7 +35,6 @@ class MembersViewModel : ViewModel() {
     val uiStateTab: StateFlow<AbsentMemberUiState> = _uiStateTab
 
     private val _isLoadingTab = MutableStateFlow(true)
-    val isLoadingTab: StateFlow<Boolean> = _isLoadingTab
 
     private val _uiStateMember = MutableStateFlow(MemberUiState())
     val uiStateMember: StateFlow<MemberUiState> = _uiStateMember.asStateFlow()

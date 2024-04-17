@@ -15,10 +15,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForwardIos
-import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.Message
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.material3.Card
@@ -28,7 +26,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,28 +47,17 @@ import com.hardus.trueagencyapp.auth.viewmodel.AuthViewModel
 import com.hardus.trueagencyapp.component.field_component.ButtonComponent
 import com.hardus.trueagencyapp.component.setting_component.SettingComponents
 import com.hardus.trueagencyapp.nested_navigation.AUTH_GRAPH_ROUTE
-import com.hardus.trueagencyapp.util.ProgramContentType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
     navController: NavController,
-    windowSize: WindowWidthSizeClass,
-    onBackPressed: () -> Unit,
-    onChangeLanguage: () -> Unit,
-    onNotification: () -> Unit,
     onReport: () -> Unit,
     onTermApps: () -> Unit,
     onPrivacy: () -> Unit,
     onAboutApp: () -> Unit,
 ) {
     val viewModel = hiltViewModel<AuthViewModel>()
-    val contentType = when (windowSize) {
-        WindowWidthSizeClass.Compact, WindowWidthSizeClass.Medium -> ProgramContentType.ListOnly
-
-        WindowWidthSizeClass.Expanded -> ProgramContentType.ListAndDetail
-        else -> ProgramContentType.ListOnly
-    }
 
     Scaffold(topBar = {}, content = { paddingValue ->
         Surface(
@@ -143,13 +129,14 @@ fun ProfileCard(viewModel: AuthViewModel) {
 
 @Composable
 fun CardImage() {
+    val painter = painterResource(R.drawable.icon_true)
     Card(
         shape = CircleShape,
-        border = BorderStroke(2.dp, color = Color.Gray),
+        border = BorderStroke(2.dp, color = MaterialTheme.colorScheme.primary),
         modifier = Modifier.size(50.dp),
     ) {
         Image(
-            painter = painterResource(id = R.drawable.placeholder),
+            painter = painter,
             contentScale = ContentScale.Crop,
             modifier = Modifier.size(48.dp),
             contentDescription = "Profile picture holder"
@@ -201,15 +188,9 @@ fun Logout(viewModel: AuthViewModel, navController: NavController) {
 
 @Preview(showBackground = true, showSystemUi = true, name = "Hardus")
 @Composable
-//CheckNewPasswordScreenPhone
 fun CheckHomeScreenPhone() {
-    val viewModel = hiltViewModel<AuthViewModel>()
     SettingScreen(
         navController = rememberNavController(),
-        windowSize = WindowWidthSizeClass.Compact,
-        onBackPressed = { /*TODO*/ },
-        onChangeLanguage = { /*TODO*/ },
-        onNotification = { /*TODO*/ },
         onReport = { /*TODO*/ },
         onTermApps = { /*TODO*/ },
         onPrivacy = { /*TODO*/ },

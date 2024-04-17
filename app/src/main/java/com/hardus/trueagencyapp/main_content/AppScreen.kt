@@ -19,7 +19,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -31,7 +30,6 @@ import com.hardus.auth.screen.view.setting.task.ReportScreen
 import com.hardus.auth.screen.view.setting.task.TermsScreen
 import com.hardus.trueagencyapp.main_content.absent.presentation.AbsentScreen
 import com.hardus.trueagencyapp.main_content.home.domain.model.HomeViewModel
-import com.hardus.trueagencyapp.main_content.home.feature_qrcode.presentation.QrScanViewModel
 import com.hardus.trueagencyapp.main_content.home.feature_userForm.domain.model.FormViewModel
 import com.hardus.trueagencyapp.main_content.home.presentation.HomeScreen
 import com.hardus.trueagencyapp.main_content.program.ProgramScreen
@@ -49,7 +47,6 @@ fun AppScreen(
     val programViewModel: ProgramViewModel = viewModel()
     val homeViewModel: HomeViewModel = viewModel()
     val formViewModel: FormViewModel = viewModel()
-    val qrViewModel: QrScanViewModel = hiltViewModel()
     val bottomNavController = rememberNavController()
     Scaffold(bottomBar = {
         BottomNavigationBar(bottomNavController = bottomNavController)
@@ -82,10 +79,6 @@ fun AppScreen(
                 composable(Screen.Setting.route) {
                     SettingScreen(
                         navController = navController,
-                        windowSize = windowSize,
-                        onBackPressed = onBackPressed,
-                        onChangeLanguage = { bottomNavController.navigate(Screen.ChangeLanguage.route) },
-                        onNotification = { bottomNavController.navigate(Screen.Notification.route) },
                         onReport = { bottomNavController.navigate(Screen.Report.route) },
                         onTermApps = { bottomNavController.navigate(Screen.Terms.route) },
                         onPrivacy = { bottomNavController.navigate(Screen.Privacy.route) },

@@ -1,5 +1,6 @@
 package com.hardus.trueagencyapp.firebase
 
+import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -66,6 +67,20 @@ class AuthFirebaseImpl @Inject constructor(
                 .await()
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+
+    override suspend fun updatePhotoUrl(photoUrl: String) {
+        val user = firebaseAuth.currentUser
+        if (user != null) {
+            val profileUpdates = UserProfileChangeRequest.Builder()
+                .setPhotoUri(Uri.parse(photoUrl))
+                .build()
+
+            user.updateProfile(profileUpdates).await()
+        } else {
+            throw Exception("User not logged in")
         }
     }
 

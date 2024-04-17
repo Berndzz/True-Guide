@@ -19,7 +19,7 @@
     <string name="enter_new_password">Enter\nNew Password</string>
     <string name="enter_otp_code">Enter\nOTP Code !!</string>
     <string name="an_4_digit_code_has_sent_to">An 4 Digit code has sent to %1$s</string>
-    <string name="username">Username</string>
+    <string name="username">Formal Name</string>
     <string name="fullname">Full name</string>
     <string name="agent_code">Agent Code</string>
     <string name="address">Address</string>
@@ -44,5 +44,10 @@
     <string name="tidak_tersedia">Tidak Tersedia</string>
     <string name="scan_code">Scan Code</string>
     <string name="members">Members</string>
+    <string name="about_setting">TrueGuide adalah aplikasi berbasis mobile khususnya untuk para pengguna android. Aplikasi ini dibangun untuk memudahkan para agent baru untuk selalu up to date ke berbagai kegiatan yang dilaksanakan oleh TrueAgency, kegiatan yang dimaksud meliputi Tranning PSA, SM7, Academy, Sertifikasi product dsbnya. Aplikasi ini juga menyediakan notepad bagi para agent yang memiliki daftar prospek yang potensial, daftar rekruit pontensial dan catatan-catatan lain yang sekirannya bisa dicatat untuk menunjang kebutuhan para agent baru.</string>
+    <string name="privacy_setting">Kami dari TrueGuide by TrueAgency menghormati privasi dan keamanan data pengguna kami. Kebijakan privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi pribadi pengguna.</string>
+    <string name="privacy_setting2">Informasi yang Kami Kumpulkan: Kami dapat mengumpulkan informasi pribadi seperti nama, alamat email, dan informasi kontak lainnya ketika kamu mendaftar atau menggunakan layanan kami. Informasi yang kami kumpulkan digunakan untuk menyediakan layanan kepada kamu, termasuk untuk mengirimkan pembaruan tentang kegiatan TrueAgency dan menyampaikan informasi penting lainnya.</string>
+    <string name="privacy_setting3">Kami mengambil langkah-langkah keamanan yang wajar untuk melindungi informasi pribadi pengguna dari akses, penggunaan, atau pengungkapan yang tidak sah.</string>
+    <string name="terms_setting">Dengan menggunakan aplikasi TrueGuide, kamu setuju dengan syarat dan ketentuan yang berlaku. Aplikasi ini dirancang khusus untuk membantu agen baru TrueAgency tetap terhubung dengan berbagai kegiatan seru, mulai dari pelatihan hingga sertifikasi produk. Selain itu, kamu juga bisa menggunakan fitur notepad untuk mencatat daftar prospek potensial atau informasi penting lainnya yang bisa mendukung aktivitasmu sebagai agen. Kami jamin bahwa data pribadi kamu aman dan akan dijaga kerahasiaannya. Oh iya, jangan lupa untuk sesekali cek update syarat dan ketentuan, ya! Jika ada masalah, silahkan ke halaman Laporan Keluhan ya, kamu dianggap menyetujui semua dari aplikasi ini. Jadi, ayo bergabung dan nikmati fitur-fitur keren yang kami sediakan!</string>
     <string name="web_client_id">67197148001-262d56gsn4tgng8qbsv8gvroj8ivacua.apps.googleusercontent.com</string>
 </resources>

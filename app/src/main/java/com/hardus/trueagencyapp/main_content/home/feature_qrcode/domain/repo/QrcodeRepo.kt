@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface QrcodeRepo {
     //fun startScanning(): Flow<String?>
-    fun saveToFirestore(detail: String, userId: String)
+    fun saveToFirestore(detail: String, userId: String, callback: (Boolean) -> Unit)
 }

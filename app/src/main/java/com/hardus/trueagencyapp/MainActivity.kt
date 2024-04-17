@@ -49,7 +49,6 @@ class MainActivity : ComponentActivity() {
             !splashViewModel.isLoading.value
         }
         setContent {
-
             TrueAgencyAppTheme {
                 val widthSizeClass = calculateWindowSizeClass(this)
                 Surface(

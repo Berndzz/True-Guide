@@ -1,24 +1,13 @@
 package com.hardus.trueagencyapp.main_content.home.feature_members.presentation
 
-import android.content.ContentValues
-import android.content.ContentValues.TAG
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.provider.ContactsContract
 import android.text.util.Linkify
-import android.util.Log
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -32,7 +21,6 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -85,8 +73,7 @@ fun MembersScreen(
 
     val contentType = when (windowSize) {
         WindowWidthSizeClass.Compact, WindowWidthSizeClass.Medium -> MemberContentType.ListOnly
-
-        WindowWidthSizeClass.Expanded -> MemberContentType.ListAndDetail
+        WindowWidthSizeClass.Expanded -> MemberContentType.ListOnly
         else -> MemberContentType.ListOnly
     }
 
@@ -111,14 +98,6 @@ fun MembersScreen(
             viewModel = viewModel
         )
     }, content = { paddingValue ->
-        if (isLoading) {
-            // Tampilkan indikator loading
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        } else if (uiState.memberList.isEmpty()) {
-            Text("Data tidak ada")
-        } else {
             // Tampilkan daftar member
             if (contentType == MemberContentType.ListAndDetail) {
                 uiState.currentMember?.let {
@@ -175,7 +154,6 @@ fun MembersScreen(
                     }
                 }
             }
-        }
         errorMessage?.let {
             Text(text = it, color = MaterialTheme.colorScheme.error)
         }

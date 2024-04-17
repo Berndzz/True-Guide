@@ -1,11 +1,10 @@
 package com.hardus.trueagencyapp.main_content.home.feature_qrcode.presentation
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.FlashOn
@@ -20,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +34,9 @@ import com.hardus.trueagencyapp.util.findActivity
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
 import com.journeyapps.barcodescanner.camera.CameraSettings
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,9 +49,12 @@ fun QrScanningScreen(
 
     val context = LocalContext.current
     var scannedData by remember { mutableStateOf("") }
-    val scope = rememberCoroutineScope() // Buat scope coroutine
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(R.string.scan_code)) },
@@ -90,23 +94,32 @@ fun QrScanningScreen(
                                     // Cek apakah hasil pemindaian sesuai dengan format JSON yang diharapkan
                                     if (isValidJson(scannedData)) {
                                         // Panggil fungsi ViewModel untuk menyimpan data hasil pemindaian ke Firestore
-                                        viewModel.startScanningAndSaveToFirestore(scannedData)
-                                        navController.navigate(Screen.Home.route)
-                                        binding.barcodeView.pause()
+                                        viewModel.startScanningAndSaveToFirestore(scannedData) { success ->
+                                            if (success) {
+                                                // Menampilkan Snackbar jika pemindaian berhasil
+                                                CoroutineScope(Dispatchers.Main).launch {
+                                                    snackbarHostState.showSnackbar("Scan berhasil!")
+                                                    //navController.navigate(Screen.Home.route)
+                                                    binding.barcodeView.pause()
+                                                }
+                                            } else {
+                                                // Menampilkan Snackbar jika terjadi kesalahan
+                                                CoroutineScope(Dispatchers.Main).launch {
+                                                    snackbarHostState.showSnackbar("Scan Gagal")
+                                                }
+                                            }
+                                        }
                                     } else {
                                         // Format QR code tidak sesuai, tampilkan pesan kesalahan
-                                        Toast.makeText(
-                                            context,
-                                            "Invalid QR code format",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        CoroutineScope(Dispatchers.Main).launch {
+                                            snackbarHostState.showSnackbar("Invalid QR code format")
+                                        }
                                     }
                                 } catch (e: Exception) {
-                                    Toast.makeText(
-                                        context,
-                                        "Error processing QR code",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    // Menampilkan Snackbar jika terjadi kesalahan
+                                    CoroutineScope(Dispatchers.Main).launch {
+                                        snackbarHostState.showSnackbar("Error processing QR code")
+                                    }
                                 }
                             }
 

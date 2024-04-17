@@ -12,7 +12,7 @@ sealed class OnBoardingPage(
     object First : OnBoardingPage(
         image= R.drawable.first_onboarrding,
         title  = "True Partner",
-        description = "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+        description = "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut"
     )
 
     object Second : OnBoardingPage(
@@ -23,7 +23,7 @@ sealed class OnBoardingPage(
     object Third : OnBoardingPage(
         image= R.drawable.third_onboarding,
         title  = "True Gether",
-        description = "Ut enim ad minim veniam, quis nostrud exercitation ullamcnisi ut "
+        description = "Ut enim ad minim veniam, quis nostrud exercitation ullamcnisi ut"
     )
 
 }

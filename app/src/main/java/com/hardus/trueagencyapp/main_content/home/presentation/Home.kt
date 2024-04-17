@@ -112,8 +112,7 @@ fun HomeScreen(
                     }
                     Spacer(modifier = Modifier.padding(10.dp))
                     Text(
-                        "Kegiatan di Minggu Ini",
-                        style = TextStyle(
+                        "Kegiatan di Minggu Ini", style = TextStyle(
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily.SansSerif,
                             fontSize = 20.sp,
@@ -130,13 +129,12 @@ fun HomeScreen(
                 ).forEach { (title, category) ->
                     if (isLoading) {
                         Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
                         ) {
                             CircularProgressIndicator()
                         }
                     } else {
-                        Text(title,modifier= Modifier.padding(start = 16.dp))
+                        Text(title, modifier = Modifier.padding(start = 16.dp))
                         Row(
                             modifier = Modifier
                                 .horizontalScroll(rememberScrollState())
@@ -171,10 +169,7 @@ fun PostText(aktivitas: AktivitasApi) {
     ) {
         aktivitas.judul_aktivitas?.let { title ->
             Text(
-                text = title,
-                color = Color.Black,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                text = title, color = Color.Black, maxLines = 1, overflow = TextOverflow.Ellipsis
             )
         }
         aktivitas.hari_aktivitas?.let { day ->
@@ -229,16 +224,14 @@ fun PostCard(
             title = {
                 aktivitas.judul_aktivitas.let { title ->
                     Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleLarge
+                        text = title, style = MaterialTheme.typography.titleLarge
                     )
                 }
             },
             text = {
                 aktivitas.deskripsi_aktivitas?.let { description ->
                     Text(
-                        text = description,
-                        style = MaterialTheme.typography.bodyLarge
+                        text = description, style = MaterialTheme.typography.bodyLarge
                     )
                 }
             },
@@ -293,7 +286,8 @@ fun Menu(onNote: () -> Unit, onScan: () -> Unit, onMember: () -> Unit) {
             )
         }
         Divider(
-            color = MaterialTheme.colorScheme.onSecondary, modifier = Modifier
+            color = MaterialTheme.colorScheme.onSecondary,
+            modifier = Modifier
                 .width(3.dp)
                 .fillMaxHeight()
         )
@@ -315,7 +309,8 @@ fun Menu(onNote: () -> Unit, onScan: () -> Unit, onMember: () -> Unit) {
             )
         }
         Divider(
-            color = MaterialTheme.colorScheme.onSecondary, modifier = Modifier
+            color = MaterialTheme.colorScheme.onSecondary,
+            modifier = Modifier
                 .width(3.dp)
                 .fillMaxHeight()
         )
@@ -359,7 +354,7 @@ fun TopAppBarHome() {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
 @Composable
 fun LeaderStatus(name: String, status: String, hierarchy: String, onUserForm: () -> Unit) {
-    val painter = painterResource(R.drawable.icon)
+    val painter = painterResource(R.drawable.icon_true)
     Row {
         Card(
             modifier = Modifier.size(45.dp),

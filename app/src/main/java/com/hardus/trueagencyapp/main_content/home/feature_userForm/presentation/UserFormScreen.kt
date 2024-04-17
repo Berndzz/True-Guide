@@ -1,17 +1,16 @@
 package com.hardus.trueagencyapp.main_content.home.feature_userForm.presentation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -22,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -78,10 +76,11 @@ fun UserFormScreen(viewModel: FormViewModel, onNavigate: () -> Unit, onFormPage:
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .fillMaxWidth()
                     .padding(paddingValue)
                     .padding(10.dp),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
+//                verticalArrangement = Arrangement.Top,
+//                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (personalData != null) {
                     Box(
@@ -134,9 +133,6 @@ fun UserFormScreen(viewModel: FormViewModel, onNavigate: () -> Unit, onFormPage:
                                 Text("Moto Hidup: ${personalData?.lifeMoto ?: stringResource(R.string.tidak_tersedia)}")
                             }
                         }
-                    }
-                    Button(onClick = { /*TODO*/ }) {
-                        Text("EDIT")
                     }
                 } else {
                     EmptyAnim()

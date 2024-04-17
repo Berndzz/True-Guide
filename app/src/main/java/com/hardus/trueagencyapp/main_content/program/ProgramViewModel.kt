@@ -1,7 +1,6 @@
 package com.hardus.trueagencyapp.main_content.program
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hardus.trueagencyapp.main_content.home.data.Aktivitas
@@ -19,7 +18,6 @@ class ProgramViewModel : ViewModel() {
     private val TAG = "YourViewModelTag"
     private val _uiState = MutableStateFlow(ProgramUiState())
     val uiState: StateFlow<ProgramUiState> = _uiState
-    val isLoading = mutableStateOf(true)
 
     private var dataLoaded = false
 
@@ -32,7 +30,6 @@ class ProgramViewModel : ViewModel() {
             return // Jika data sudah dimuat, tidak perlu memuat lagi
         }
         viewModelScope.launch {
-            isLoading.value = true
             try {
                 val programDocuments = db.collection("programs")
                     .orderBy("id_program")
@@ -46,12 +43,14 @@ class ProgramViewModel : ViewModel() {
                     val activities = activityDocuments.map { it.toObject(Aktivitas::class.java) }
                     ProgramWithActivities(program, activities)
                 }
+                // Set currentProgram jika data berhasil dimuat
+                if (programList.isNotEmpty()) {
+                    updateCurrentProgram(programList.first())
+                }
                 _uiState.value = uiState.value.copy(programList = programList)
-                isLoading.value = false
                 dataLoaded = true
             } catch (e: Exception) {
                 Log.w(TAG, "Error getting documents.", e)
-                isLoading.value = false
             }
         }
     }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.hardus.trueagencyapp.auth.data.login.LoginUIEvent
 import com.hardus.trueagencyapp.auth.data.login.LoginUIState
@@ -257,6 +258,12 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+
+    fun updatePhotoUrl(photoUrl: String) {
+        viewModelScope.launch {
+            repository.updatePhotoUrl(photoUrl)
+        }
+    }
 
     fun logout() {
         repository.logout()

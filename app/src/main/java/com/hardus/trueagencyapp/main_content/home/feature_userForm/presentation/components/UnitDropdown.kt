@@ -7,6 +7,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -80,7 +81,7 @@ fun UnitDropdown(
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
             },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+            colors = ExposedDropdownMenuDefaults.textFieldColors(focusedTextColor = MaterialTheme.colorScheme.onBackground),
             modifier = modifier.menuAnchor()
         )
 
@@ -90,7 +91,7 @@ fun UnitDropdown(
         ) {
             unitOptions.forEach { unit ->
                 DropdownMenuItem(
-                    text = { Text(text = unit) },
+                    text = { Text(text = unit, color = MaterialTheme.colorScheme.onBackground) },
                     onClick = {
                         onUnitSelected(unit)
                         isExpanded = false

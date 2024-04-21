@@ -66,7 +66,6 @@ fun NavGraphBuilder.appNavGraph(
                     navController.popBackStack()
                     navController.navigate(route = Screen.Home.route)
                 },
-                navController = navController,
                 viewModel = viewModel
             )
         }

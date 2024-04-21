@@ -107,7 +107,7 @@ fun MyTextField(
             focusedBorderColor = colorResource(id = R.color.black),
             focusedLabelColor = colorResource(id = R.color.black),
         ),
-
+        textStyle = TextStyle(MaterialTheme.colorScheme.onBackground),
         singleLine = true,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
@@ -157,7 +157,7 @@ fun MottoTextArea(
         modifier = modifier
             .fillMaxWidth()
             .height(150.dp), // Atur tinggi sesuai kebutuhan
-        textStyle = TextStyle(fontSize = 16.sp, textAlign = TextAlign.Start),
+        textStyle = TextStyle(fontSize = 16.sp, textAlign = TextAlign.Start, color = MaterialTheme.colorScheme.onBackground),
         maxLines = 10, // Atur jumlah maksimal baris atau biarkan tidak terbatas
         colors = OutlinedTextFieldDefaults.colors(
             cursorColor = colorResource(id = R.color.black),
@@ -195,6 +195,7 @@ fun PasswordTextFieldComponent(
         onValueChange = {
             onTextSelected(it)
         },
+        textStyle = TextStyle(MaterialTheme.colorScheme.onBackground),
         visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         leadingIcon = {
             Icon(imageVector = imageVector, contentDescription = "")
@@ -236,7 +237,7 @@ fun CheckboxComponents(
                 Log.d("Checkbox Clicked", "$isChecked")
             }
         )
-        ClickableTextComponents(value = value, onTextSelected = onTextSelected)
+        ClickableTextComponents(value = value, onTextSelected = onTextSelected,)
     }
 }
 
@@ -282,7 +283,10 @@ fun ButtonComponent(
             .fillMaxWidth()
             .height(56.dp)
             .padding(horizontal = 35.dp),
-        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primaryContainer),
+        colors = ButtonDefaults.buttonColors(
+            containerColor =  MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onBackground
+        ),
         shape = RoundedCornerShape(6.dp),
         enabled = isEnabled
     ) {

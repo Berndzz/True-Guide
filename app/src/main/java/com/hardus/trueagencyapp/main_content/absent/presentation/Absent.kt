@@ -49,6 +49,9 @@ import com.hardus.trueagencyapp.main_content.absent.data.AbsentBreed
 import com.hardus.trueagencyapp.main_content.absent.data.SubAbsent
 import com.hardus.trueagencyapp.main_content.absent.presentation.components.AbsentTabs
 import com.hardus.trueagencyapp.ui.theme.TrueAgencyAppTheme
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun AbsentScreen() {
@@ -182,11 +185,15 @@ fun CardAbsent(
             title = {
                 Column {
                     Text(
-                        text = subAbsent.headerTitle, style = MaterialTheme.typography.bodyLarge
+                        text = subAbsent.headerTitle,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                     Spacer(modifier = Modifier.padding(3.dp))
                     Text(
-                        text = subAbsent.bodyTitle, style = MaterialTheme.typography.bodyLarge
+                        text = subAbsent.bodyTitle,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
             },
@@ -194,6 +201,9 @@ fun CardAbsent(
                 Column {
                     Text(
                         text = subAbsent.date, style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                            text = "${DateToDay(dateString = subAbsent.date)}", style = MaterialTheme.typography.bodyMedium
                     )
                     Spacer(modifier = Modifier.padding(3.dp))
                     Text(
@@ -203,7 +213,7 @@ fun CardAbsent(
                     Text(
                         text = buttonText,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                     )
                 }
             },
@@ -221,20 +231,21 @@ fun CardAbsent(
                     )
                 }
             },
-            dismissButton = {
-                TextButton(
-                    onClick = {},
-                    modifier = Modifier.padding(15.dp),
-                ) {
-                    Text(
-                        "Hapus",
-                        color = MaterialTheme.colorScheme.error,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
         )
     }
+}
+
+@Composable
+fun DateToDay(dateString: String) {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val date = inputFormat.parse(dateString)
+    val dayFormat = SimpleDateFormat("EEEE", Locale.getDefault())
+    val dayOfWeek = dayFormat.format(date ?: Date())
+
+    Text(
+        text = dayOfWeek,
+        style = MaterialTheme.typography.bodyMedium
+    )
 }
 
 @Composable

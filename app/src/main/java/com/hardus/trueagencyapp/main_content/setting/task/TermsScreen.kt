@@ -9,6 +9,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,26 +26,37 @@ import com.hardus.trueagencyapp.R
 fun TermsScreen(onNavigate: () -> Unit) {
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(title = { Text(text = "Syarat dan Ketentuan") },
+            CenterAlignedTopAppBar(title = {
+                Text(
+                    text = "Syarat dan Ketentuan",
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            },
                 navigationIcon = {
                     IconButton(onClick = onNavigate) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "back"
+                            contentDescription = "back",
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 })
         },
         content = { paddingValue ->
-            Surface(modifier = Modifier
-                .padding(paddingValue)
-                .padding(start = 20.dp, end = 20.dp)) {
+            Surface(
+                modifier = Modifier
+                    .padding(paddingValue)
+                    .padding(start = 20.dp, end = 20.dp)
+            ) {
                 LazyColumn(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    item{
-                        Text(text = stringResource(id = R.string.terms_setting), textAlign = TextAlign.Justify)
+                    item {
+                        Text(
+                            text = stringResource(id = R.string.terms_setting),
+                            textAlign = TextAlign.Justify
+                        )
                     }
                 }
             }

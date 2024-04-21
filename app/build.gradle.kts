@@ -65,6 +65,8 @@ android {
 dependencies {
 
     implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.camera:camera-lifecycle:1.3.3")
+    implementation("androidx.media3:media3-common:1.3.1")
     val room_version = "2.6.1"
 
     implementation("androidx.core:core-ktx:1.9.0")
@@ -137,6 +139,8 @@ dependencies {
 
     //swap refresh
     implementation ("com.google.accompanist:accompanist-swiperefresh:0.24.13-rc")
+
+    implementation ("com.karumi:dexter:6.2.3")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

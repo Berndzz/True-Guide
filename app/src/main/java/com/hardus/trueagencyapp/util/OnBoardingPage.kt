@@ -10,20 +10,22 @@ sealed class OnBoardingPage(
     val description: String
 ) {
     object First : OnBoardingPage(
-        image= R.drawable.first_onboarrding,
-        title  = "True Partner",
-        description = "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut"
+        image = R.drawable.first_onboarrding,
+        title = "True Partner",
+        description = "TrueGuide adalah aplikasi mobile untuk parar bisnis partner di TrueAgency. Training, info kegiatan, dan notepad untuk pengembangan."
     )
 
     object Second : OnBoardingPage(
-        image= R.drawable.second_onboarding,
-        title  = "True Leader",
-        description = "Ut enim ad minim veniam, quis nostrud exercitatio"
+        image = R.drawable.second_onboarding,
+        title = "True Leader",
+        description = "TrueGuide, Jadi pemimpin! Akses pelatihan, info terbaru, dan kembangkan kepemimpinanmu."
     )
+
     object Third : OnBoardingPage(
-        image= R.drawable.third_onboarding,
-        title  = "True Gether",
-        description = "Ut enim ad minim veniam, quis nostrud exercitation ullamcnisi ut"
+        image = R.drawable.third_onboarding,
+        title = "True Gether",
+        description = "TrueGuide, tetap terhubung! Notepad untuk catatan prospek, rekrutmen, dan pertumbuhan."
     )
+
 
 }

@@ -1,6 +1,7 @@
 package com.hardus.trueagencyapp.main_content.home.feature_userForm.presentation.components
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -102,7 +103,7 @@ fun FormTopAppBar(
                     Icon(
                         Icons.Filled.Close,
                         contentDescription = stringResource(id = R.string.close),
-                        tint = MaterialTheme.colorScheme.onSurface.copy(stronglyDeemphasizedAlpha)
+                        tint = MaterialTheme.colorScheme.onBackground.copy(stronglyDeemphasizedAlpha)
                     )
                 }
             }
@@ -138,12 +139,12 @@ private fun TopAppBarTitle(
         Text(
             text = (questionIndex + 1).toString(),
             style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = stronglyDeemphasizedAlpha)
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = stronglyDeemphasizedAlpha)
         )
         Text(
             text = stringResource(R.string.question_count, totalQuestionsCount),
             style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.38f)
         )
     }
 }
@@ -189,7 +190,7 @@ fun BottomFormPersonalData(
                     enabled = isNextButtonEnabled,
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primaryContainer),
                 ) {
-                    Text(text = "Done", style = MaterialTheme.typography.labelSmall)
+                    Text(text = "Done", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onBackground)
                 }
             } else {
                 Button(
@@ -198,12 +199,16 @@ fun BottomFormPersonalData(
                         .height(48.dp),
                     onClick = onNextPressed,
                     enabled = isNextButtonEnabled,
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = stronglyDeemphasizedAlpha)
+                    ),
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primaryContainer),
                 ) {
                     Text(
                         text = "Next",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onPrimary
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
             }

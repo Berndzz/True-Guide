@@ -44,7 +44,7 @@ fun PersonalScreenOne(viewModel: FormViewModel, modifier: Modifier = Modifier) {
 
     val radioButtonColors = RadioButtonDefaults.colors(
         selectedColor = MaterialTheme.colorScheme.primaryContainer,
-        unselectedColor = MaterialTheme.colorScheme.onSurface
+        unselectedColor = MaterialTheme.colorScheme.onBackground
     )
 
     LazyColumn(

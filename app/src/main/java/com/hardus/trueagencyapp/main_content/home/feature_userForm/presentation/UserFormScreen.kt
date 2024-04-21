@@ -58,7 +58,8 @@ fun UserFormScreen(viewModel: FormViewModel, onNavigate: () -> Unit, onFormPage:
                     IconButton(onClick = onNavigate) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Localized description"
+                            contentDescription = "Localized description",
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 },

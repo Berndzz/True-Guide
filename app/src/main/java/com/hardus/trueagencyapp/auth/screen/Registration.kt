@@ -1,7 +1,6 @@
 package com.hardus.trueagencyapp.auth.screen
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -28,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -73,10 +71,8 @@ fun RegistrationScreen(
         modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
     ) {
         Surface(
-            color = Color.White,
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
         ) {
             Column {
                 AppbarAuthentication(name = stringResource(id = R.string.register))

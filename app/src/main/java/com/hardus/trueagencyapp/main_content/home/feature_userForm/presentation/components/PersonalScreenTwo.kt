@@ -1,6 +1,5 @@
 package com.hardus.trueagencyapp.main_content.home.feature_userForm.presentation.components
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +17,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hardus.trueagencyapp.R
@@ -47,7 +48,10 @@ fun PersonalScreenTwo(viewModel: FormViewModel, modifier: Modifier = Modifier) {
                 onTextSelected = viewModel::onAgentCodeChanged,
                 errorStatus = true,
                 focusAgentCode,
-                keyboardOptions = KeyboardOptions.Default,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Phone,
+                    imeAction = ImeAction.Next,
+                ),
                 keyboardActions = KeyboardActions.Default,
                 modifier = Modifier
                     .fillMaxWidth()

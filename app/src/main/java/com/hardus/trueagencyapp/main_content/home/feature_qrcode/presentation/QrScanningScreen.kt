@@ -7,12 +7,11 @@ import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,12 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavController
 import com.google.zxing.ResultPoint
 import com.google.zxing.client.android.BeepManager
 import com.hardus.trueagencyapp.R
 import com.hardus.trueagencyapp.databinding.BarcodeLayoutBinding
-import com.hardus.trueagencyapp.nested_navigation.Screen
 import com.hardus.trueagencyapp.util.findActivity
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
@@ -43,7 +40,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun QrScanningScreen(
     onNavigate: () -> Unit,
-    navController: NavController,
     viewModel: QrScanViewModel
 ) {
 
@@ -57,20 +53,21 @@ fun QrScanningScreen(
         },
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(stringResource(R.string.scan_code)) },
+                title = {
+                    Text(
+                        stringResource(R.string.scan_code),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onNavigate) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "back"
+                            contentDescription = "back",
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 })
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = {}) {
-                Icon(imageVector = Icons.Filled.FlashOn, contentDescription = "qr_icon")
-            }
         },
         content = { paddingValue ->
             Column(modifier = Modifier.padding(paddingValue)) {

@@ -59,7 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.hardus.trueagencyapp.R
 import com.hardus.trueagencyapp.RequestPermission
 import com.hardus.trueagencyapp.auth.viewmodel.AuthViewModel
@@ -191,7 +191,7 @@ fun PostText(aktivitas: AktivitasApi) {
 fun PostImage(aktivitas: AktivitasApi, modifier: Modifier = Modifier) {
     val urlImage = aktivitas.gambar_aktivitas
     val painter = if (!urlImage.isNullOrEmpty()) {
-        rememberImagePainter(data = urlImage)
+        rememberAsyncImagePainter(model = urlImage)
     } else {
         painterResource(id = R.drawable.placeholder)
     }
@@ -219,12 +219,14 @@ fun PostCard(
         }
     }
     if (openDialog) {
-        AlertDialog(modifier = Modifier.height(500.dp),
+        AlertDialog(modifier = Modifier.height(350.dp),
             onDismissRequest = { openDialog = false },
             title = {
                 aktivitas.judul_aktivitas.let { title ->
                     Text(
-                        text = title, style = MaterialTheme.typography.titleLarge
+                        text = title,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
             },

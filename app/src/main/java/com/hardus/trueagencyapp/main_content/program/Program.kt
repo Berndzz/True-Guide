@@ -259,7 +259,7 @@ fun CardScreen(
     val program = post.program
     Card(elevation = CardDefaults.cardElevation(4.dp),
         modifier = modifier,
-        colors = CardDefaults.cardColors(Color.White),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onSecondary),
         shape = MaterialTheme.shapes.small,
         onClick = { onItemClick(post) }) {
         Row(
@@ -435,12 +435,13 @@ fun ActivityCard(
         }
     }
     if (openDialog) {
-        AlertDialog(modifier = Modifier.height(500.dp),
+        AlertDialog(modifier = Modifier.height(350.dp),
             onDismissRequest = { openDialog = false },
             title = {
                 Text(
                     text = subTraining.judul_aktivitas,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             },
             text = {

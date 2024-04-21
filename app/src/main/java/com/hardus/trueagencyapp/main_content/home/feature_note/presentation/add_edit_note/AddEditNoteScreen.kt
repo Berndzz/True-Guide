@@ -20,7 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +29,7 @@ import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -103,22 +104,25 @@ fun AddEditNoteScreen(
             ) {
                 FloatingActionButton(
                     onClick = onNavigate,
-                    containerColor = MaterialTheme.colorScheme.background,
-                    contentColor = Color.Black
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.secondary
                 ) {
                     Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Save note")
                 }
 
-                FloatingActionButton(
+                ExtendedFloatingActionButton(
                     onClick = {
                         viewModel.onEvent(AddEditNoteEvent.SaveNote)
                     },
+                    text = {
+                        Text(text = "Simpan Catatan")
+                    },
+                    icon = {
+                        Icon(imageVector = Icons.Default.Save, contentDescription = "Save note")
+                    },
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = Color.White
-                ) {
-                    Icon(imageVector = Icons.Default.Save, contentDescription = "Save note")
-                }
-
+                    contentColor = Color.White,
+                )
             }
         },
         snackbarHost = {

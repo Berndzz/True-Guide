@@ -49,9 +49,6 @@ import com.hardus.trueagencyapp.main_content.absent.data.AbsentBreed
 import com.hardus.trueagencyapp.main_content.absent.data.SubAbsent
 import com.hardus.trueagencyapp.main_content.absent.presentation.components.AbsentTabs
 import com.hardus.trueagencyapp.ui.theme.TrueAgencyAppTheme
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun AbsentScreen() {
@@ -202,9 +199,6 @@ fun CardAbsent(
                     Text(
                         text = subAbsent.date, style = MaterialTheme.typography.bodyMedium
                     )
-                    Text(
-                            text = "${DateToDay(dateString = subAbsent.date)}", style = MaterialTheme.typography.bodyMedium
-                    )
                     Spacer(modifier = Modifier.padding(3.dp))
                     Text(
                         text = subAbsent.location, style = MaterialTheme.typography.bodyMedium
@@ -233,19 +227,6 @@ fun CardAbsent(
             },
         )
     }
-}
-
-@Composable
-fun DateToDay(dateString: String) {
-    val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    val date = inputFormat.parse(dateString)
-    val dayFormat = SimpleDateFormat("EEEE", Locale.getDefault())
-    val dayOfWeek = dayFormat.format(date ?: Date())
-
-    Text(
-        text = dayOfWeek,
-        style = MaterialTheme.typography.bodyMedium
-    )
 }
 
 @Composable

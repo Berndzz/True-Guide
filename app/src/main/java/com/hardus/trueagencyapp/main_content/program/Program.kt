@@ -373,7 +373,7 @@ fun ProgramDetail(
             }
             Text(
                 text = program.deskripsi_program,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Justify,
                 modifier = Modifier.padding(
                     vertical = dimensionResource(R.dimen.padding_medium),
@@ -384,7 +384,7 @@ fun ProgramDetail(
             ActivityScreen(post = selectedPost)
             Text(
                 text = program.deskripsi_program2,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Justify,
                 modifier = Modifier.padding(
                     vertical = dimensionResource(R.dimen.padding_medium),
